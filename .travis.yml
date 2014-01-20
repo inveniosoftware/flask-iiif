@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of Flask-IIIF
+# Copyright (C) 2014 CERN.
+#
+# Flask-IIIF is free software; you can redistribute it and/or modify
+# it under the terms of the Revised BSD License; see LICENSE file for
+# more details.
+
+# Travis CI file, that integrates with coveralls for reporting test coverage.
+
+language: python
+
+python:
+  - "2.6"
+  - "2.7"
+  - "3.3"
+  - "3.4"
+
+install:
+  - pip install --upgrade pip  --use-mirrors
+  - pip install coveralls --use-mirrors
+  - pip install .
+
+script:
+  - coverage run --source=flask_iiif setup.py test
+
+after_success:
+  - coveralls
+
+notifications:
+  email: false
