@@ -31,11 +31,11 @@ class TestMultimediaAPI(FlaskTestCase):
         # Initialize it for our object and create and instance for
         # each test
         tmp_file.seek(0)
-        self.image_resize = MultimediaImage.from_file(tmp_file)
+        self.image_resize = MultimediaImage.from_string(tmp_file)
         tmp_file.seek(0)
-        self.image_crop = MultimediaImage.from_file(tmp_file)
+        self.image_crop = MultimediaImage.from_string(tmp_file)
         tmp_file.seek(0)
-        self.image_rotate = MultimediaImage.from_file(tmp_file)
+        self.image_rotate = MultimediaImage.from_string(tmp_file)
 
     def test_image_resize(self):
         """Test image resize function."""

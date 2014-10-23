@@ -67,8 +67,8 @@ class IIIF(object):
         api.add_resource(
             IIIFImageAPI,
             ("/api/multimedia/image/<string:version>/<string:uuid>/"
-             "<string:region>/<string:size>/<string:rotation>/<string:quality>."
-             "<string:image_format>"),
+             "<string:region>/<string:size>/<string:rotation>/"
+             "<string:quality>.<string:image_format>"),
         )
 
     def uuid_to_path_handler(self, callback):

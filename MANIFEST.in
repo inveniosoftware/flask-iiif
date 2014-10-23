@@ -7,9 +7,11 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-include LICENSE AUTHORS CHANGES CONTRIBUTING.rst README.rst
-include .coveragerc run-tests.sh
+include *.py *.sh
+include .coveragerc pytest.ini run-tests.sh
+include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
+include RELEASE-NOTES.rst
 include docs/*.rst docs/*.py docs/Makefile
-include tests/*.py
-recursive-include docs/_themes *.py *.css *.css_t *.conf *.html README
+include tox.ini tests/*.py
 recursive-include docs/_templates *.html
+recursive-include docs/_themes *.py *.css *.css_t *.conf *.html

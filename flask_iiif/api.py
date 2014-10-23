@@ -37,7 +37,7 @@ class MultimediaObject(object):
 
 class MultimediaImage(MultimediaObject):
 
-    """Multimedia Image API.
+    r"""Multimedia Image API.
 
     Initializes an image api with IIIF standards. You can:
 
@@ -104,6 +104,18 @@ class MultimediaImage(MultimediaObject):
                 "The requested image {0} not found".format(path))
 
         image = Image.open(path)
+        return cls(image)
+
+    @classmethod
+    def from_string(cls, source):
+        """Create an :class:`MultimediaImage` instance from string.
+
+        :param source: The image image string
+        :type source: :class:`StringIO.StringIO` object
+        :returns: a :class:`~flask_iiif.api.MultimediaImage`
+                  instance
+        """
+        image = Image.open(source)
         return cls(image)
 
     def resize(self, dimensions, resample=Image.NEAREST):

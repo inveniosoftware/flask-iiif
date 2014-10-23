@@ -7,9 +7,38 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-from setuptools import setup
 import os
 import re
+import sys
+
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
+
+
+class PyTest(TestCommand):
+
+    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        try:
+            from ConfigParser import ConfigParser
+        except ImportError:
+            from configparser import ConfigParser
+        config = ConfigParser()
+        config.read("pytest.ini")
+        self.pytest_args = config.get("pytest", "addopts").split(" ")
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
 
 # Get the version string.  Cannot be done with import!
 with open(os.path.join('flask_iiif', 'version.py'), 'rt') as f:
@@ -17,6 +46,14 @@ with open(os.path.join('flask_iiif', 'version.py'), 'rt') as f:
         '__version__\s*=\s*"(?P<version>.*)"\n',
         f.read()
     ).group('version')
+
+tests_require = [
+    'pytest-cache>=1.0',
+    'pytest-cov>=1.8.0',
+    'pytest-pep8>=1.0.6',
+    'pytest>=2.6.1',
+    'coverage'
+]
 
 setup(
     name='Flask-IIIF',
@@ -35,12 +72,15 @@ setup(
         'Flask',
         'Flask-RESTful>=0.2.12',
         'blinker',
+        'redis',
         'six',
         'pillow',
     ],
     extras_require={
         'docs': ['sphinx'],
     },
+    tests_require=tests_require,
+    cmdclass={'test': PyTest},
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -58,6 +98,4 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Development Status :: 5 - Production/Stable',
     ],
-    test_suite='nose.collector',
-    tests_require=['nose', 'coverage'],
 )
