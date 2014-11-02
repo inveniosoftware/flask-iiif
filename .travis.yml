@@ -9,9 +9,6 @@
 
 # Travis CI file, that integrates with coveralls for reporting test coverage.
 
-services:
-  - redis
-
 language: python
 
 python:

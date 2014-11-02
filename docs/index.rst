@@ -100,7 +100,7 @@ Configuration
 =============
 
 .. automodule:: flask_iiif.config
-
+    :members:
 
 API
 ===
@@ -109,18 +109,29 @@ This documentation section is automatically generated from Flask-IIIF's
 source code.
 
 Flask-IIIF
-^^^^^^^^^
+^^^^^^^^^^
 
-.. automodule:: flask_iiif
+.. automodule:: flask_iiif.api
+    :members:
 
-.. autoclass:: IIIF
-   :members:
+Cache
+^^^^^
 
+.. automodule:: flask_iiif.cache.cache
+    :members:
+
+.. automodule:: flask_iiif.cache.simple
+    :members:
+
+RESTful
+^^^^^^^
+
+.. automodule:: flask_iiif.restful
+    :members:
 
 .. include:: ../CHANGES
 
 .. include:: ../CONTRIBUTING.rst
-
 
 License
 =======

@@ -12,14 +12,12 @@
 from flask import current_app, send_file
 from flask.ext.restful import abort, Resource
 from functools import wraps
-from six import StringIO
+from io import BytesIO
 
 from .api import (
-    IIIFImageAPIWrapper, MultimediaImageCache
+    IIIFImageAPIWrapper
 )
-from .config import (
-    MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS
-)
+
 from .errors import (
     MultimediaError, MultmediaImageCropError, MultmediaImageResizeError,
     MultimediaImageFormatError, MultimediaImageRotateError,
@@ -32,17 +30,18 @@ def error_handler(f):
     """error handler."""
     @wraps(f)
     def inner(*args, **kwargs):
+        """wrap the errors."""
         try:
             return f(*args, **kwargs)
         except (MultmediaImageCropError, MultmediaImageResizeError,
                 MultimediaImageFormatError, MultimediaImageRotateError,
-                MultimediaImageQualityError) as e:
-            abort(500, message=e.message, code=500)
-        except IIIFValidatorError as e:
-            abort(400, message=e.message, code=400)
+                MultimediaImageQualityError) as error:
+            abort(500, message=error.message, code=500)
+        except IIIFValidatorError as error:
+            abort(400, message=error.message, code=400)
         except (MultimediaError, MultimediaImageNotFound,
-                MultimediaImageForbidden) as e:
-            abort(e.code, message=e.message, code=e.code)
+                MultimediaImageForbidden) as error:
+            abort(error.code, message=error.message, code=error.code)
     return inner
 
 
@@ -84,7 +83,7 @@ class IIIFImageAPI(Resource):
             image_format=image_format
         )
 
-        cache = MultimediaImageCache()
+        cache_handler = current_app.config['IIIF'].cache()
 
         # build the image key
         key = "iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
@@ -92,11 +91,11 @@ class IIIFImageAPI(Resource):
         )
 
         # Check if its cached
-        cached = cache.get_value(key)
+        cached = cache_handler.get(key)
 
         # If the image is cached loaded from cache
         if cached:
-            to_serve = StringIO(cached)
+            to_serve = BytesIO(cached)
             to_serve.seek(0)
         # Otherwise build create the image
         else:
@@ -114,10 +113,10 @@ class IIIFImageAPI(Resource):
             # prepare image to be serve
             to_serve = image.serve(image_format=image_format)
             # to_serve = image.serve(image_format=image_format)
-            cache.cache(key, to_serve.getvalue())
+            cache_handler.set(key, to_serve.getvalue())
 
         # decide the mime_type from the requested image_format
-        mimetype = MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS.get(
+        mimetype = current_app.config['IIIF_FORMATS'].get(
             image_format, 'image/jpeg'
         )
         return send_file(to_serve, mimetype=mimetype)

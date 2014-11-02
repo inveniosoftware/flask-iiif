@@ -28,7 +28,9 @@ or alternatively using the factory pattern:
 from __future__ import absolute_import
 
 
-from flask import current_app, request
+from flask import current_app
+from six import string_types
+from werkzeug.utils import cached_property, import_string
 
 from . import config
 from .version import __version__
@@ -44,6 +46,20 @@ class IIIF(object):
 
         if app is not None:
             self.init_app(app)
+
+    @cached_property
+    def cache():
+        """Return the cache handler.
+
+        .. note::
+
+            You can create your own cache handler by change the
+            :py:attr:`~flask_iiif.config.IIIF_CACHE_HANDLER`. More infos
+            could be found in :py:mod:`~flask_iiif.cache.cache`.
+        """
+        handler = self.app.config['IIIF_CACHE_HANDLER']
+        return import_string(handler) if isinstance(handler, string_types) \
+            else handler
 
     def init_app(self, app):
         """Initialize a Flask application."""

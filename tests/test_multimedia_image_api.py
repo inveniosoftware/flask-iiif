@@ -9,7 +9,7 @@
 
 """Multimedia Image API Tests."""
 
-from six import StringIO
+from io import BytesIO
 
 from .helpers import FlaskTestCase
 
@@ -23,7 +23,7 @@ class TestMultimediaAPI(FlaskTestCase):
         # Create an image in memory
         from PIL import Image
         from flask_iiif.api import MultimediaImage
-        tmp_file = StringIO()
+        tmp_file = BytesIO()
         # create a new image
         image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
         image.save(tmp_file, 'png')

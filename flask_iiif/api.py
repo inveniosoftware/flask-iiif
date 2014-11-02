@@ -13,21 +13,17 @@ import itertools
 import math
 import os
 import re
-from decimal import Decimal
-from six import StringIO
+
 from PIL import Image
-from .config import (
-    MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS, MULTIMEDIA_IMAGE_CACHE_TIME,
-    MULTIMEDIA_IMAGE_API_QUALITIES, MULTIMEDIA_IMAGE_API_COVERTERS,
-    IIIF_API_VALIDATIONS
-)
+from flask import current_app
+from six import BytesIO
+
 from .errors import (
     MultmediaImageCropError, MultmediaImageResizeError,
     MultimediaImageFormatError, MultimediaImageRotateError,
     MultimediaImageQualityError, MultimediaImageNotFound,
     IIIFValidatorError
 )
-from .utils import initialize_redis
 
 
 class MultimediaObject(object):
@@ -108,10 +104,10 @@ class MultimediaImage(MultimediaObject):
 
     @classmethod
     def from_string(cls, source):
-        """Create an :class:`MultimediaImage` instance from string.
+        """Create an :class:`~flask_iiif.api.MultimediaImage` instance.
 
-        :param source: The image image string
-        :type source: :class:`StringIO.StringIO` object
+        :param str source: The image image string
+        :type source: `BytesIO` object
         :returns: a :class:`~flask_iiif.api.MultimediaImage`
                   instance
         """
@@ -123,7 +119,7 @@ class MultimediaImage(MultimediaObject):
 
         :param str dimensions: The dimensions to resize the image
         :param resample: The algorithm to be used
-        :type resample: `PIL.Image` algorithm
+        :type resample: :py:mod:`PIL.Image` algorithm
 
         .. note::
 
@@ -140,24 +136,15 @@ class MultimediaImage(MultimediaObject):
 
         # Check if it is `pct:`
         if dimensions.startswith('pct:'):
-            percent = Decimal(str(dimensions.split(':')[1])) * Decimal(0.01)
-            if percent < Decimal(0):
+            percent = float(dimensions.split(':')[1]) * 0.01
+            if percent < 0:
                 raise MultmediaImageResizeError(
                     ("Image percentance could not be negative, {0} has been"
                      " given").format(percent)
                 )
 
-            width_decimal = real_width * percent
-            height_decimal = real_height * percent
-
-            # Sanitize decimal lower than 1
-            if 0 < width_decimal < 1:
-                width_decimal = 1
-            if 0 < height_decimal < 1:
-                height_decimal = 1
-
-            width = int(width_decimal)
-            height = int(height_decimal)
+            width = int(real_width * percent)
+            height = int(real_height * percent)
 
         # Check if it is `,h`
         elif dimensions.startswith(','):
@@ -165,19 +152,19 @@ class MultimediaImage(MultimediaObject):
             # find the ratio
             ratio = self.reduce_by(height, real_height)
             # calculate width
-            width = real_width * ratio
+            width = int(real_width * ratio)
 
         # Check if it is `!w,h`
         elif dimensions.startswith('!'):
-            x, y = map(int, dimensions[1:].split(','))
+            point_x, point_y = map(int, dimensions[1:].split(','))
             # find the ratio
-            ratio_x = self.reduce_by(x, real_width)
-            ratio_y = self.reduce_by(y, real_height)
+            ratio_x = self.reduce_by(point_x, real_width)
+            ratio_y = self.reduce_by(point_y, real_height)
             # take the min
             ratio = min(ratio_x, ratio_y)
             # calculate the dimensions
-            width = x * ratio
-            height = y * ratio
+            width = int(point_x * ratio)
+            height = int(point_y * ratio)
 
         # Check if it is `w,`
         elif dimensions.endswith(','):
@@ -185,7 +172,7 @@ class MultimediaImage(MultimediaObject):
             # find the ratio
             ratio = self.reduce_by(width, real_width)
             # calculate the height
-            height = real_height * ratio
+            height = int(real_height * ratio)
 
         # Normal mode `w,h`
         else:
@@ -197,8 +184,8 @@ class MultimediaImage(MultimediaObject):
                 )
 
         # If a dimension is missing throw error
-        if any((dimension <= 0 and dimension is not None) for
-                dimension in (width, height)):
+        if any((dimension <= 0 and
+                dimension is not None) for dimension in (width, height)):
             raise MultmediaImageResizeError(
                 ("Width and height cannot be zero or negative, {0},{1} has"
                  " been given").format(width, height)
@@ -223,12 +210,15 @@ class MultimediaImage(MultimediaObject):
         real_width, real_height = self.image.size
         real_dimensions = itertools.cycle((real_width, real_height))
 
+        dimensions = []
         percentance = False
         if coordinates.startswith('pct:'):
-            dimensions = map(float, coordinates.split(':')[1].split(','))
+            for coordinate in coordinates.split(':')[1].split(','):
+                dimensions.append(float(coordinate))
             percentance = True
         else:
-            dimensions = map(int, coordinates.split(','))
+            for coordinate in coordinates.split(','):
+                dimensions.append(int(coordinate))
 
         # First check if it has 4 coordinates x,y,w,h
         dimensions_length = len(dimensions)
@@ -250,23 +240,27 @@ class MultimediaImage(MultimediaObject):
                     "Dimensions could not be grater than 100%")
 
             # Calculate the dimensions
-            x, y, width, height = [int(math.floor(
-                                   self.percent_to_decimal(dimension) *
-                                   real_dimensions.next())) for dimension
-                                   in dimensions]
+            start_x, start_y, width, height = [
+                int(
+                    math.floor(
+                        self.percent_to_number(dimension) *
+                        next(real_dimensions)
+                    )
+                ) for dimension in dimensions
+            ]
         else:
-            x, y, width, height = dimensions
+            start_x, start_y, width, height = dimensions
 
         # Check if any of the requested axis is outside of image borders
-        if any(axis > real_dimensions.next() for axis in (x, y)):
+        if any(axis > next(real_dimensions) for axis in (start_x, start_y)):
             raise MultmediaImageCropError(
                 "Outside of image borders {0},{1}".
                 format(real_width, real_height)
             )
 
         # Calculate the final dimensions
-        max_x = x + width
-        max_y = y + height
+        max_x = start_x + width
+        max_y = start_y + height
         # Check if the final width is bigger than the the real image width
         if max_x > real_width:
             max_x = real_width
@@ -275,7 +269,7 @@ class MultimediaImage(MultimediaObject):
         if max_y > real_height:
             max_y = real_height
 
-        self.image = self.image.crop((x, y, max_x, max_y))
+        self.image = self.image.crop((start_x, start_y, max_x, max_y))
 
     def rotate(self, degrees, mirror=False):
         """Rotate the image by given degress.
@@ -321,7 +315,7 @@ class MultimediaImage(MultimediaObject):
             an "RGB" image).
 
         """
-        qualities = MULTIMEDIA_IMAGE_API_QUALITIES
+        qualities = current_app.config['IIIF_QUALITIES']
         if quality not in qualities:
             raise MultimediaImageQualityError(
                 ("{0} does not supported, pleae select on of the"
@@ -329,7 +323,7 @@ class MultimediaImage(MultimediaObject):
             )
 
         qualities_by_code = zip(qualities,
-                                MULTIMEDIA_IMAGE_API_COVERTERS)
+                                current_app.config['IIIF_CONVERTERS'])
 
         if quality not in ('default', 'color'):
             # Convert image to RGB read the note
@@ -358,8 +352,8 @@ class MultimediaImage(MultimediaObject):
 
         .. note::
 
-            `image_format` = jpg will not be recognized by PIL and it will be
-            changed to jpeg.
+            `image_format` = jpg will not be recognized by :py:mod:`PIL.Image`
+            and it will be changed to jpeg.
 
         """
         # transform `image_format` is lower case and not equals to jpg
@@ -367,18 +361,18 @@ class MultimediaImage(MultimediaObject):
         self.image.save(path, cleaned_image_format, quality=quality)
 
     def serve(self, image_format="png", quality=90):
-        """Return a StringIO object to easily serve it thought HTTTP.
+        """Return a BytesIO object to easily serve it thought HTTTP.
 
         :param str image_format: (gif, jpeg, pdf, png)
         :param int quality: The image quality; [1, 100]
 
         .. note::
 
-            `image_format` = jpg will not be recognized by PIL and it will be
-            changed to jpeg.
+            `image_format` = jpg will not be recognized by
+            :py:mod:`PIL.Image` and it will be changed to jpeg.
 
         """
-        image_buffer = StringIO()
+        image_buffer = BytesIO()
         # transform `image_format` is lower case and not equals to jpg
         cleaned_image_format = self._prepare_for_output(image_format)
         self.image.save(image_buffer, cleaned_image_format, quality=quality)
@@ -398,7 +392,7 @@ class MultimediaImage(MultimediaObject):
 
         """
         image_format = self.sanitize_format_name(requested_format)
-        format_keys = MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS.keys()
+        format_keys = current_app.config['IIIF_FORMATS'].keys()
 
         if image_format not in format_keys:
             raise MultimediaImageFormatError(
@@ -415,12 +409,12 @@ class MultimediaImage(MultimediaObject):
     @staticmethod
     def reduce_by(nominally, dominator):
         """Calculate the ratio."""
-        return Decimal(nominally) / dominator
+        return float(nominally) / float(dominator)
 
     @staticmethod
-    def percent_to_decimal(number):
+    def percent_to_number(number):
         """Calculate the percentance."""
-        return Decimal(number) / Decimal(100.0)
+        return float(number) / 100.0
 
     @staticmethod
     def sanitize_format_name(value):
@@ -459,11 +453,11 @@ class IIIFImageAPIWrapper(MultimediaImage):
         # Get the api version
         version = kwargs.get('version', 'v2')
         # Get the validations and ignore cases
-        cases = IIIF_API_VALIDATIONS.get(version)
+        cases = current_app.config['IIIF_VALIDATIONS'].get(version)
         for key in cases.keys():
             # If the parameter don't match with iiif casess
             if not re.search(
-                cases.get(key, {}).get('validate', ''), kwargs.get(key)
+                    cases.get(key, {}).get('validate', ''), kwargs.get(key)
             ):
                 raise IIIFValidatorError(
                     ("value: `{0}` for parameter: `{1}` is not supported").
@@ -499,7 +493,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
         # Get the api version
         version = kwargs.get('version', 'v2')
         # Get the validations and ignore cases
-        cases = IIIF_API_VALIDATIONS.get(version)
+        cases = current_app.config['IIIF_VALIDATIONS'].get(version)
         # Set the apply order
         order = 'region', 'size', 'rotate', 'quality'
         # Set the functions to be applied
@@ -544,35 +538,6 @@ class IIIFImageAPIWrapper(MultimediaImage):
     def apply_quality(self, value):
         """IIIF apply quality.
 
-        Apply :func:`~flask_iiif.api.MultimediaImage.quality`
+        Apply :func:`~flask_iiif.api.MultimediaImage.quality`.
         """
         self.quality(value)
-
-
-class MultimediaImageCache(MultimediaObject):
-
-    """Initializes an image cached layer."""
-
-    def __init__(self):
-        """Initialize the cache."""
-        self.redis = initialize_redis()
-
-    def has_key(self, key):
-        """Return if a key exists."""
-        return self.redis.exists(key)
-
-    def get_value(self, key):
-        """Return the key value."""
-        return self.redis.get(key)
-
-    def cache(self, key, value, time=MULTIMEDIA_IMAGE_CACHE_TIME):
-        """Cache the object."""
-        self.redis.setex(key, value, time)
-
-    def save(self, key, value):
-        """Save to a specific key."""
-        self.redis.set(key, value)
-
-    def _delete(self, key):
-        """Delete the specific key."""
-        self.redis.delete(key)

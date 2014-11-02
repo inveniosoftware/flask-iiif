@@ -7,21 +7,64 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-"""Multimedia configuration."""
+"""IIIF configuration.
 
-# Multimedia Image cache duration
+.. py:data:: IIIF_CACHE_HANDLER
+
+    Add the prefered cache adaptor.
+
+    .. seealso:: :py:class:`~flask_iiif.cache.cache.ImageCache`
+
+.. py:data:: IIIF_CACHE_TIME
+
+    How much time the image would be cached.
+
+.. py:data:: IIIF_QUALITIES
+
+    The supported image qualities.
+
+    .. seealso::
+
+            `IIIF Image API
+            <http://iiif.io/api/image/2.0/#quality>`_
+
+.. py:data:: IIIF_CONVERTERS
+
+    The supported image converters.
+
+.. py:data: IIIF_FORMATS
+
+    The supported image formats with their MIME type.
+
+.. py:data:: IIIF_VALIDATIONS
+
+    The IIIF Image API validation.
+
+    .. seealso::
+
+        `IIIF Image API v1
+        <http://iiif.io/api/image/1.1/>`_ and
+        `IIIF Image API v2
+        <http://iiif.io/api/image/2.0/>`_
+
+"""
+# Cache handler
+IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
+
+# Cache duration
 # 60 seconds * 60 minutes (1 hour) * 24 (24 hours) * 2 (2 days) = 172800 secs
 # 60 seconds * 60 (1 hour) * 24 (1 day) * 2 (2 days)
-
-MULTIMEDIA_IMAGE_CACHE_TIME = 60 * 60 * 24 * 2
+IIIF_CACHE_TIME = 60 * 60 * 24 * 2
 
 # Supported qualities
-MULTIMEDIA_IMAGE_API_QUALITIES = ('default', 'grey', 'bitonal',
-                                  'color', 'native')
-MULTIMEDIA_IMAGE_API_COVERTERS = '', 'L', '1', '', ''
+IIIF_QUALITIES = (
+    'default', 'grey', 'bitonal', 'color', 'native'
+)
+# Suported coverters
+IIIF_CONVERTERS = '', 'L', '1', '', ''
 
 # Supported multimedia image API formats
-MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS = {
+IIIF_FORMATS = {
     'gif': 'image/gif',
     'jpeg': 'image/jpeg',
     'jpg': 'image/jpeg',
@@ -29,8 +72,8 @@ MULTIMEDIA_IMAGE_API_SUPPORTED_FORMATS = {
     'png': 'image/png',
 }
 
-# Regular expressions to validate each parameter of iiif API v2.0
-IIIF_API_VALIDATIONS = {
+# Regular expressions to validate each parameter
+IIIF_VALIDATIONS = {
     "v1": {
         "region": {
             "ignore": "full",
@@ -80,7 +123,7 @@ IIIF_API_VALIDATIONS = {
 }
 
 # Qualities per image mode
-IIIF_QUALITIES_PER_IMAGE_MODE = {
+IIIF__MODE = {
     '1': ['default', 'bitonal'],
     'L': ['default', 'gray', 'bitonal'],
     'P': ['default', 'gray', 'bitonal'],
