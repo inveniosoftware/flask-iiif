@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -30,7 +30,7 @@ from __future__ import absolute_import
 
 from flask import current_app
 from six import string_types
-from werkzeug.utils import cached_property, import_string
+from werkzeug.utils import import_string
 
 from . import config
 from .version import __version__
@@ -47,7 +47,7 @@ class IIIF(object):
         if app is not None:
             self.init_app(app)
 
-    @cached_property
+    @staticmethod
     def cache():
         """Return the cache handler.
 
@@ -57,7 +57,7 @@ class IIIF(object):
             :py:attr:`~flask_iiif.config.IIIF_CACHE_HANDLER`. More infos
             could be found in :py:mod:`~flask_iiif.cache.cache`.
         """
-        handler = self.app.config['IIIF_CACHE_HANDLER']
+        handler = current_app.config['IIIF_CACHE_HANDLER']
         return import_string(handler) if isinstance(handler, string_types) \
             else handler
 

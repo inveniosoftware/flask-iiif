@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -83,7 +83,7 @@ class IIIFImageAPI(Resource):
             image_format=image_format
         )
 
-        cache_handler = current_app.config['IIIF'].cache()
+        cache_handler = current_app.extensions['iiif'].cache()
 
         # build the image key
         key = "iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(

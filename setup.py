@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -54,6 +54,16 @@ tests_require = [
     'pytest>=2.6.1',
     'coverage'
 ]
+install_requires = [
+    'Flask',
+    'Flask-RESTful>=0.2.12',
+    'blinker',
+    'six',
+    'pillow',
+]
+
+if tuple(sys.version_info) < (2, 7):
+    install_requires.append('ordereddict')
 
 setup(
     name='Flask-IIIF',
@@ -68,14 +78,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
-    install_requires=[
-        'Flask',
-        'Flask-RESTful>=0.2.12',
-        'blinker',
-        'redis',
-        'six',
-        'pillow',
-    ],
+    install_requires=install_requires,
     extras_require={
         'docs': ['sphinx'],
     },

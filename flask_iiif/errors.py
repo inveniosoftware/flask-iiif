@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-""" Multimedia error."""
+"""Multimedia error."""
 
 
 class MultimediaError(Exception):
@@ -21,7 +21,7 @@ class MultimediaError(Exception):
         self.code = code or 500
 
     def __str__(self):
-        """Error message. """
+        """Error message."""
         return repr("Error message: {message}. Error code: {code}"
                     .format(message=self.message, code=self.code))
 
