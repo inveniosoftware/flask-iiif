@@ -30,7 +30,7 @@ Homepage
 
    https://github.com/inveniosoftware/flask-iiif
 
-Good luck and thanks for choosing Flask-IIIF.
+Happy hacking and thanks for choosing Flask-IIIF.
 
 | Invenio Development Team
 |   Email: info@invenio-software.org
