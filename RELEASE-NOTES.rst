@@ -1,18 +1,19 @@
-==============================
+===============================
  Flask-IIIF v0.1.0 is released
-==============================
+===============================
 
-Flask-IIIF v0.1.0 was released on FIXME.
+Flask-IIIF v0.1.0 was released on April 28, 2015.
 
 About
 -----
 
-Flask-IIIF is a Flask extension FIXME.
+Flask-IIIF is a Flask extension permitting easy integration with the
+International Image Interoperability Framework (IIIF) API standards.
 
 What's new
 ----------
 
-- FIXME
+- Initial public release.
 
 Installation
 ------------
@@ -22,7 +23,7 @@ Installation
 Documentation
 -------------
 
-   http://flask-iiif.readthedocs.org/
+   http://flask-iiif.readthedocs.org/en/v0.1.0
 
 Homepage
 --------

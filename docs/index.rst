@@ -18,8 +18,8 @@
     </p>
 
 
-Flask-IIIF is a Flask extension permitting easy integration with the image
-IIIF API standards.
+Flask-IIIF is a Flask extension permitting easy integration with the
+International Image Interoperability Framework (IIIF) API standards.
 
 Contents
 --------

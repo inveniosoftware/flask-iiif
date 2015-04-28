@@ -7,6 +7,8 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
+"""Flask-IIIF extension provides easy IIIF API standard integration."""
+
 import os
 import re
 import sys
@@ -72,7 +74,7 @@ setup(
     license='BSD',
     author='Invenio collaboration',
     author_email='info@invenio-software.org',
-    description='Flask-IIIF multimedia extension.',
+    description=__doc__,
     long_description=open('README.rst').read(),
     packages=['flask_iiif'],
     zip_safe=False,
