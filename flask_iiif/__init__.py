@@ -44,8 +44,8 @@ class IIIF(object):
 
     def __init__(self, app=None):
         """Initialize login callback."""
-        self.uuid_to_path = None
-
+        self.uuid_to_image_opener = None
+        self.api_decorator_callback = None
         if app is not None:
             self.init_app(app)
 
@@ -100,13 +100,38 @@ class IIIF(object):
              "<string:quality>.<string:image_format>"),
         )
 
-    def uuid_to_path_handler(self, callback):
-        """Set the callback for the ``uuid`` to ``path`` convertion.
+    def uuid_to_image_opener_handler(self, callback):
+        """Set the callback for the ``uuid`` to ``image`` convertion.
 
-        :param callback: The callback for login.
-        :type callback: function
+        .. note:
+
+            The supported file type is either ``fullpath`` or ``bytestream``
+            object anything else will raise
+            :class:`~flask_iiif.errors.MultimediaImageNotFound`
+
+        .. code-block:: python
+
+            def uuid_to_path(uuid):
+                # do something magical
+
+            iiif.uuid_to_image_opener_handler(uuid_to_path)
         """
-        self.uuid_to_path = callback
+        self.uuid_to_image_opener = callback
 
+    def api_decorator_handler(self, callback):
+        """Protect API handler.
+
+        .. code-block:: python
+
+            def protect_api():
+                return
+            iiif.api_decorator_handler(protect_api)
+
+        .. note::
+
+            The API would be always decorated with ``api_decorator_handler``.
+            If is not defined, it would just pass.
+        """
+        self.api_decorator_callback = callback
 
 __all__ = ('IIIF', '__version__')

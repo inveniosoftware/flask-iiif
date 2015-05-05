@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -15,14 +15,15 @@ import os
 import re
 
 from PIL import Image
+
 from flask import current_app
+
 from six import BytesIO
 
 from .errors import (
-    MultmediaImageCropError, MultmediaImageResizeError,
-    MultimediaImageFormatError, MultimediaImageRotateError,
-    MultimediaImageQualityError, MultimediaImageNotFound,
-    IIIFValidatorError
+    IIIFValidatorError, MultimediaImageCropError, MultimediaImageFormatError,
+    MultimediaImageNotFound, MultimediaImageQualityError,
+    MultimediaImageResizeError, MultimediaImageRotateError
 )
 
 
@@ -138,7 +139,7 @@ class MultimediaImage(MultimediaObject):
         if dimensions.startswith('pct:'):
             percent = float(dimensions.split(':')[1]) * 0.01
             if percent < 0:
-                raise MultmediaImageResizeError(
+                raise MultimediaImageResizeError(
                     ("Image percentance could not be negative, {0} has been"
                      " given").format(percent)
                 )
@@ -178,15 +179,15 @@ class MultimediaImage(MultimediaObject):
         else:
             try:
                 width, height = map(int, dimensions.split(','))
-            except:
-                raise MultmediaImageResizeError(
+            except ValueError:
+                raise MultimediaImageResizeError(
                     "The request must contain width,height sequence"
                 )
 
         # If a dimension is missing throw error
         if any((dimension <= 0 and
                 dimension is not None) for dimension in (width, height)):
-            raise MultmediaImageResizeError(
+            raise MultimediaImageResizeError(
                 ("Width and height cannot be zero or negative, {0},{1} has"
                  " been given").format(width, height)
             )
@@ -223,20 +224,20 @@ class MultimediaImage(MultimediaObject):
         # First check if it has 4 coordinates x,y,w,h
         dimensions_length = len(dimensions)
         if dimensions_length != 4:
-            raise MultmediaImageCropError(
+            raise MultimediaImageCropError(
                 "Must have 4 dimensions {0} has been given".
                 format(dimensions_length))
 
         # Make sure that there is not any negative dimension
         if any(coordinate < 0 for coordinate in dimensions):
-            raise MultmediaImageCropError(
+            raise MultimediaImageCropError(
                 "Dimensions cannot be negative {0} has been given".
                 format(dimensions)
             )
 
         if percentance:
             if any(coordinate > 100.0 for coordinate in dimensions):
-                raise MultmediaImageCropError(
+                raise MultimediaImageCropError(
                     "Dimensions could not be grater than 100%")
 
             # Calculate the dimensions
@@ -253,7 +254,7 @@ class MultimediaImage(MultimediaObject):
 
         # Check if any of the requested axis is outside of image borders
         if any(axis > next(real_dimensions) for axis in (start_x, start_y)):
-            raise MultmediaImageCropError(
+            raise MultimediaImageCropError(
                 "Outside of image borders {0},{1}".
                 format(real_width, real_height)
             )
@@ -291,7 +292,7 @@ class MultimediaImage(MultimediaObject):
                 format(degrees)
             )
 
-        if degrees in transforms.keys():
+        if str(degrees) in transforms.keys():
             self.image = self.image.transpose(transforms.get(str(degrees)))
         else:
             # transparent background if degress not multiple of 90
@@ -440,7 +441,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
                 version=version,
                 region=region,
                 size=size,
-                rotate=rotation,
+                rotation=rotation,
                 quality=quality,
                 image_format=image_format
             )
@@ -479,7 +480,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
                 version=version,
                 region=region,
                 size=size,
-                rotate=rotation,
+                rotation=rotation,
                 quality=quality
             )
 
@@ -495,12 +496,12 @@ class IIIFImageAPIWrapper(MultimediaImage):
         # Get the validations and ignore cases
         cases = current_app.config['IIIF_VALIDATIONS'].get(version)
         # Set the apply order
-        order = 'region', 'size', 'rotate', 'quality'
+        order = 'region', 'size', 'rotation', 'quality'
         # Set the functions to be applied
         tools = {
             "region": self.apply_region,
             "size": self.apply_size,
-            "rotate": self.apply_rotate,
+            "rotation": self.apply_rotate,
             "quality": self.apply_quality
         }
 
@@ -541,3 +542,21 @@ class IIIFImageAPIWrapper(MultimediaImage):
         Apply :func:`~flask_iiif.api.MultimediaImage.quality`.
         """
         self.quality(value)
+
+    @classmethod
+    def open_image(cls, source):
+        """Create an :class:`~flask_iiif.api.MultimediaImage` instance.
+
+        :param str source: The image image string
+        :type source: `BytesIO` object
+        :param str source_type: the type of ``data``
+        :returns: a :class:`~flask_iiif.api.MultimediaImage`
+                  instance
+        """
+        try:
+            image = Image.open(source)
+        except IOError:
+            raise MultimediaImageNotFound(
+                "The requested image cannot be opened"
+            )
+        return cls(image)

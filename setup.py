@@ -50,11 +50,12 @@ with open(os.path.join('flask_iiif', 'version.py'), 'rt') as f:
     ).group('version')
 
 tests_require = [
+    'coverage',
+    "Flask-Testing>=0.4.1",
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.6.1',
-    'coverage'
 ]
 install_requires = [
     'Flask',

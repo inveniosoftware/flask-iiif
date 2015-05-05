@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -11,10 +11,10 @@
 
 from io import BytesIO
 
-from .helpers import FlaskTestCase
+from .helpers import IIIFTestCase
 
 
-class TestMultimediaAPI(FlaskTestCase):
+class TestMultimediaAPI(IIIFTestCase):
 
     """Multimedia Image API test case."""
 
@@ -36,6 +36,10 @@ class TestMultimediaAPI(FlaskTestCase):
         self.image_crop = MultimediaImage.from_string(tmp_file)
         tmp_file.seek(0)
         self.image_rotate = MultimediaImage.from_string(tmp_file)
+        tmp_file.seek(0)
+        self.image_errors = MultimediaImage.from_string(tmp_file)
+        tmp_file.seek(0)
+        self.image_convert = MultimediaImage.from_string(tmp_file)
 
     def test_image_resize(self):
         """Test image resize function."""
@@ -58,6 +62,72 @@ class TestMultimediaAPI(FlaskTestCase):
         self.image_resize.resize('pct:90')
         self.assertEqual(str(self.image_resize.size()), str((286, 270)))
 
+        # Resize.image_resize to !100,100
+        self.image_resize.resize('!100,100')
+        self.assertEqual(str(self.image_resize.size()), str((34, 34)))
+
+    def test_errors(self):
+        """Test errors."""
+        from flask_iiif.errors import (
+            MultimediaImageResizeError, MultimediaImageCropError,
+            MultimediaImageNotFound, MultimediaImageQualityError,
+            MultimediaImageFormatError
+        )
+        # Test resize errors
+        self.assertRaises(
+            MultimediaImageResizeError,
+            self.image_errors.resize,
+            'pct:-12222'
+        )
+        self.assertRaises(
+            MultimediaImageResizeError,
+            self.image_errors.resize,
+            '2'
+        )
+        self.assertRaises(
+            MultimediaImageResizeError,
+            self.image_errors.resize,
+            '-22,100'
+        )
+        # Test crop errors
+        self.assertRaises(
+            MultimediaImageCropError,
+            self.image_errors.crop,
+            '22,100,222'
+        )
+        self.assertRaises(
+            MultimediaImageCropError,
+            self.image_errors.crop,
+            '-22,100,222,323'
+        )
+        self.assertRaises(
+            MultimediaImageCropError,
+            self.image_errors.crop,
+            'pct:222,100,222,323'
+        )
+        self.assertRaises(
+            MultimediaImageCropError,
+            self.image_errors.crop,
+            '2000,2000,2000,2000'
+        )
+        # Test not found error
+        self.assertRaises(
+            MultimediaImageNotFound,
+            self.image_errors.from_file,
+            'pct:222,100,222,323'
+        )
+        with self.app.app_context():
+            self.assertRaises(
+                MultimediaImageQualityError,
+                self.image_errors.quality,
+                'pct:222,100,222,323'
+            )
+            self.assertRaises(
+                MultimediaImageFormatError,
+                self.image_errors._prepare_for_output,
+                'pct:222,100,222,323'
+            )
+
     def test_image_crop(self):
         """Test the crop function."""
         # Crop image x,y,w,h
@@ -71,4 +141,7 @@ class TestMultimediaAPI(FlaskTestCase):
     def test_image_rotate(self):
         """Test image rotate function."""
         self.image_rotate.rotate(90)
+        self.assertEqual(str(self.image_rotate.size()), str((1024, 1280)))
+
+        self.image_rotate.rotate(120)
         self.assertEqual(str(self.image_rotate.size()), str((1024, 1280)))

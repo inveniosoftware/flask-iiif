@@ -35,21 +35,12 @@ class MultimediaImageNotFound(MultimediaError):
         super(MultimediaImageNotFound, self).__init__(message, code=404)
 
 
-class MultimediaImageForbidden(MultimediaError):
-
-    """Access to the image is forbidden."""
-
-    def __init__(self, message=None, code=None):
-        """Init with status code 401."""
-        super(MultimediaImageForbidden, self).__init__(message, code=401)
-
-
-class MultmediaImageCropError(MultimediaError):
+class MultimediaImageCropError(MultimediaError):
 
     """Image on crop error."""
 
 
-class MultmediaImageResizeError(MultimediaError):
+class MultimediaImageResizeError(MultimediaError):
 
     """Image resize error."""
 
