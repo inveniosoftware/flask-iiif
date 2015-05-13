@@ -13,12 +13,116 @@ from io import BytesIO
 
 from PIL import Image
 
+from flask import url_for
+
 from .helpers import IIIFTestCase
 
 
 class TestRestAPI(IIIFTestCase):
 
     """Test signals and decorators."""
+
+    def test_api_base(self):
+        """Test API Base."""
+        data = dict(
+            uuid="valid:id",
+            version="v2"
+        )
+        get_the_response = self.get(
+            'iiifimagebase',
+            urlargs=data
+        )
+        self.assertEqual(get_the_response.status_code, 303)
+
+    def test_api_info(self):
+        """Test API Info not found case."""
+        from flask import jsonify
+        id_v1 = url_for(
+            'iiifimagebase', uuid="valid:id", version="v1", _external=True
+        )
+        id_v2 = url_for(
+            'iiifimagebase', uuid="valid:id", version="v2", _external=True
+        )
+
+        expected = {
+            "v1": {
+                "@context": (
+                    "http://library.stanford.edu/iiif/"
+                    "image-api/1.1/context.json"
+                ),
+                "@id": id_v1,
+                "width": 1280,
+                "height": 1024,
+                "profile": (
+                    "http://library.stanford.edu/iiif/image-api/compliance"
+                    ".html#level1"
+                ),
+                "tile_width": 256,
+                "tile_height": 256,
+                "scale_factors": [
+                    1, 2, 4, 8, 16, 32, 64
+                ]
+            },
+            "v2": {
+                "@context": "http://iiif.io/api/image/2/context.json",
+                "@id": id_v2,
+                "protocol": "http://iiif.io/api/image",
+                "width": 1280,
+                "height": 1024,
+                "tiles": [
+                    {
+                        "width": 256,
+                        "scaleFactors": [
+                            1, 2, 4, 8, 16, 32, 64
+                        ]
+                    }
+                ],
+                "profile": [
+                    "http://iiif.io/api/image/2/level2.json",
+                ]
+            }
+        }
+        get_the_response = self.get(
+            'iiifimageinfo',
+            urlargs=dict(
+                uuid='valid:id',
+                version='v2',
+            )
+        )
+        self.assert200(get_the_response)
+        get_the_response = self.get(
+            'iiifimageinfo',
+            urlargs=dict(
+                uuid='valid:id',
+                version='v2',
+            )
+        )
+        self.assertEqual(
+            jsonify(expected.get('v2')).data, get_the_response.data
+        )
+
+        get_the_response = self.get(
+            'iiifimageinfo',
+            urlargs=dict(
+                uuid='valid:id',
+                version='v1',
+            )
+        )
+        self.assert200(get_the_response)
+        self.assertEqual(
+            jsonify(expected.get('v1')).data, get_the_response.data
+        )
+
+    def test_api_info_not_found(self):
+        """Test API Info."""
+        get_the_response = self.get(
+            'iiifimageinfo',
+            urlargs=dict(
+                uuid='notfound',
+                version='v2',
+            )
+        )
+        self.assert404(get_the_response)
 
     def test_api_not_found(self):
         """Test API not found case."""
@@ -123,3 +227,38 @@ class TestRestAPI(IIIFTestCase):
             )
         )
         self.assert403(get_the_response)
+
+    def test_api_abort_all_methods_except_get(self):
+        """Abort all methods but GET."""
+        data = dict(
+            uuid='valid:id',
+            version='v2',
+            region='full',
+            size='full',
+            rotation='0',
+            quality='default',
+            image_format='png'
+        )
+        get_the_response = self.post(
+            'iiifimageapi',
+            urlargs=data
+        )
+        self.assert405(get_the_response)
+
+        get_the_response = self.put(
+            'iiifimageapi',
+            urlargs=data
+        )
+        self.assert405(get_the_response)
+
+        get_the_response = self.delete(
+            'iiifimageapi',
+            urlargs=data
+        )
+        self.assert405(get_the_response)
+
+        get_the_response = self.patch(
+            'iiifimageapi',
+            urlargs=data
+        )
+        self.assert405(get_the_response)

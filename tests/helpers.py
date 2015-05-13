@@ -55,6 +55,22 @@ class IIIFTestCase(TestCase):
         """Simulate a GET request."""
         return self.make_request(self.client.get, *args, **kwargs)
 
+    def post(self, *args, **kwargs):
+        """Simulate a POST request."""
+        return self.make_request(self.client.post, *args, **kwargs)
+
+    def put(self, *args, **kwargs):
+        """Simulate a PUT request."""
+        return self.make_request(self.client.put, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """Simulate a DELETE request."""
+        return self.make_request(self.client.delete, *args, **kwargs)
+
+    def patch(self, *args, **kwargs):
+        """Simulate a PATCH request."""
+        return self.make_request(self.client.patch, *args, **kwargs)
+
     def make_request(self, client_func, endpoint, urlargs={}):
         """Simulate a request."""
         url = url_for(endpoint, **urlargs)

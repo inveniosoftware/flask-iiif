@@ -31,6 +31,7 @@ from flask import current_app
 
 from six import string_types
 
+from werkzeug.urls import url_join
 from werkzeug.utils import import_string
 
 from . import config
@@ -89,15 +90,58 @@ class IIIF(object):
             )
             app.context_processor(lambda: ctx)
 
-    def init_restful(self, api):
-        """Setup the urls."""
-        from .restful import IIIFImageAPI
+    def init_restful(self, api, prefix='/api/multimedia/image/'):
+        """Setup the urls.
+
+        :param str prefix: the url perfix
+
+        .. note::
+
+            In IIIF Image API the Image Request URI Syntax must following
+
+                ``{scheme}://{server}{/prefix}/{identifier}/
+                    {region}/{size}/{rotation}/{quality}.{format}``
+
+            pattern, the default prefix is ``/api/multimedia/image`` but
+            this can be changes by changing the ``prefix`` paremeter. The
+            ``prefix`` MUST always start and end with `/`
+
+        .. seealso::
+            `IIIF IMAGE API URI Syntax
+            <http://iiif.io/api/image/2.0/#uri-syntax>`
+        """
+        from .restful import IIIFImageAPI, IIIFImageInfo, IIIFImageBase
+
+        if not prefix.startswith('/') or not prefix.endswith('/'):
+            raise RuntimeError(
+                "The `prefix` must always start and end with `/`"
+            )
 
         api.add_resource(
             IIIFImageAPI,
-            ("/api/multimedia/image/<string:version>/<string:uuid>/"
-             "<string:region>/<string:size>/<string:rotation>/"
-             "<string:quality>.<string:image_format>"),
+            url_join(
+                prefix,
+                (
+                    "<string:version>/<string:uuid>/"
+                    "<string:region>/<string:size>/<string:rotation>/"
+                    "<string:quality>.<string:image_format>"
+                )
+            )
+        )
+
+        api.add_resource(
+            IIIFImageInfo,
+            url_join(
+                prefix,
+                "<string:version>/<string:uuid>/info.json"
+            )
+        )
+        api.add_resource(
+            IIIFImageBase,
+            url_join(
+                prefix,
+                "<string:version>/<string:uuid>"
+            )
         )
 
     def uuid_to_image_opener_handler(self, callback):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -47,7 +47,18 @@
         `IIIF Image API v2
         <http://iiif.io/api/image/2.0/>`_
 
+.. py:data:: IIIF_API_INFO_RESPONSE_SKELETON
+
+    Information request document for the image.
+
+    .. seealso::
+        `IIIF Image API v1 Information request
+        <http://iiif.io/api/image/1.1/#information-request>`_ and
+        `IIIF Image API v2 Information request
+        <http://iiif.io/api/image/2.0/#information-request>`_
+
 """
+
 # Cache handler
 IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
 
@@ -133,4 +144,42 @@ IIIF__MODE = {
     'YCbCr': ['default', 'color', 'gray', 'bitonal'],
     'I': ['default', 'color', 'gray', 'bitonal'],
     'F': ['default', 'color', 'gray', 'bitonal']
+}
+
+# API Info
+IIIF_API_INFO_RESPONSE_SKELETON = {
+    "v1": {
+        "@context": (
+            "http://library.stanford.edu/iiif/image-api/1.1/context.json"
+        ),
+        "@id": "",
+        "width": "",
+        "height": "",
+        "profile": (
+            "http://library.stanford.edu/iiif/image-api/compliance.html#level1"
+        ),
+        "tile_width": 256,
+        "tile_height": 256,
+        "scale_factors": [
+            1, 2, 4, 8, 16, 32, 64
+        ]
+    },
+    "v2": {
+        "@context": "http://iiif.io/api/image/2/context.json",
+        "@id": "",
+        "protocol": "http://iiif.io/api/image",
+        "width": "",
+        "height": "",
+        "tiles": [
+            {
+                "width": 256,
+                "scaleFactors": [
+                    1, 2, 4, 8, 16, 32, 64
+                ]
+            }
+        ],
+        "profile": [
+            "http://iiif.io/api/image/2/level2.json",
+        ]
+    }
 }

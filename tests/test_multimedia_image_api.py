@@ -40,6 +40,16 @@ class TestMultimediaAPI(IIIFTestCase):
         self.image_errors = MultimediaImage.from_string(tmp_file)
         tmp_file.seek(0)
         self.image_convert = MultimediaImage.from_string(tmp_file)
+        tmp_file.seek(0)
+        self.image_save = MultimediaImage.from_string(tmp_file)
+
+        # NOT RGBA
+        tmp_file = BytesIO()
+        # create a new image
+        image = Image.new("RGB", (1280, 1024), (255, 0, 0, 0))
+        image.save(tmp_file, 'jpeg')
+        tmp_file.seek(0)
+        self.image_not_rgba = MultimediaImage.from_string(tmp_file)
 
     def test_image_resize(self):
         """Test image resize function."""
@@ -110,11 +120,10 @@ class TestMultimediaAPI(IIIFTestCase):
             self.image_errors.crop,
             '2000,2000,2000,2000'
         )
-        # Test not found error
         self.assertRaises(
             MultimediaImageNotFound,
             self.image_errors.from_file,
-            'pct:222,100,222,323'
+            "unicorn"
         )
         with self.app.app_context():
             self.assertRaises(
@@ -138,6 +147,10 @@ class TestMultimediaAPI(IIIFTestCase):
         self.image_crop.crop('pct:20,20,40,30')
         self.assertEqual(str(self.image_crop.size()), str((160, 90)))
 
+        # Check if exeeds image borders
+        self.image_crop.crop('10,10,160,90')
+        self.assertEqual(str(self.image_crop.size()), str((150, 80)))
+
     def test_image_rotate(self):
         """Test image rotate function."""
         self.image_rotate.rotate(90)
@@ -145,3 +158,16 @@ class TestMultimediaAPI(IIIFTestCase):
 
         self.image_rotate.rotate(120)
         self.assertEqual(str(self.image_rotate.size()), str((1024, 1280)))
+
+    def test_image_mode(self):
+        """Test image mode."""
+        self.image_not_rgba.quality('grey')
+        self.assertEqual(self.image_not_rgba.image.mode, "L")
+
+    def test_image_saving(self):
+        """Test image saving."""
+        tmp_file = BytesIO()
+        compare_file = BytesIO()
+        self.assertEqual(tmp_file.getvalue(), compare_file.getvalue())
+        self.image_save.save(tmp_file)
+        self.assertNotEqual(str(tmp_file.getvalue()), compare_file.getvalue())
