@@ -18,10 +18,10 @@ python:
   - "3.4"
 
 install:
-  - pip install --upgrade pip  --use-mirrors
-  - pip install coveralls pep257 --use-mirrors
-  - pip install pytest pytest-pep8 pytest-cov pytest-cache --use-mirrors
-  - pip install -e .[docs]
+  - "travis_retry pip install --upgrade pip"
+  - "travis_retry pip install coveralls pep257"
+  - "travis_retry pip install pytest pytest-pep8 pytest-cov pytest-cache"
+  - "travis_retry pip install -e .[docs]"
 
 script:
   - pep257 flask_iiif
