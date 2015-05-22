@@ -43,7 +43,7 @@ class MultimediaImage(MultimediaObject):
     * Rotate :func:`rotate`.
     * Change image quality :func:`quality`.
 
-    Example of editing and image and save it to disk:
+    Example of editing an image and saving it to disk:
 
     .. code-block:: python
 
@@ -70,11 +70,11 @@ class MultimediaImage(MultimediaObject):
 
         @blueprint.route('/serve/<string:uuid>/<string:size>')
         def serve_thumbnail(uuid, size):
-            \"\"\"Serve the image thumbnail.
+            \"""Serve the image thumbnail.
 
             :param uuid: The document uuid.
             :param size: The desired image size.
-            \"\"\"
+            \"""
             # Initialize the image with the uuid
             path = current_app.extensions['iiif'].uuid_to_path(uuid)
             image = IIIFImageAPIWrapper.from_file(path)
@@ -107,7 +107,7 @@ class MultimediaImage(MultimediaObject):
     def from_string(cls, source):
         """Create an :class:`~flask_iiif.api.MultimediaImage` instance.
 
-        :param str source: The image image string
+        :param str source: the image string
         :type source: `BytesIO` object
         :returns: a :class:`~flask_iiif.api.MultimediaImage`
                   instance
@@ -128,7 +128,7 @@ class MultimediaImage(MultimediaObject):
 
                 * 'w,': The exact width, height will be calculated.
                 * ',h': The exact height, width will be calculated.
-                * 'pct:n': Image percentance scale.
+                * 'pct:n': Image percentage scale.
                 * 'w,h': The extact width and height.
                 * '!w,h': Best fit for the given width and height.
 
@@ -140,7 +140,7 @@ class MultimediaImage(MultimediaObject):
             percent = float(dimensions.split(':')[1]) * 0.01
             if percent < 0:
                 raise MultimediaImageResizeError(
-                    ("Image percentance could not be negative, {0} has been"
+                    ("Image percentage could not be negative, {0} has been"
                      " given").format(percent)
                 )
 
@@ -204,7 +204,7 @@ class MultimediaImage(MultimediaObject):
             * `coordinates` must have the following pattern:
 
                 * 'x,y,w,h': in pixels.
-                * 'pct:x,y,w,h': percentance.
+                * 'pct:x,y,w,h': percentage.
 
         """
         # Get image full dimensions
@@ -212,11 +212,11 @@ class MultimediaImage(MultimediaObject):
         real_dimensions = itertools.cycle((real_width, real_height))
 
         dimensions = []
-        percentance = False
+        percentage = False
         if coordinates.startswith('pct:'):
             for coordinate in coordinates.split(':')[1].split(','):
                 dimensions.append(float(coordinate))
-            percentance = True
+            percentage = True
         else:
             for coordinate in coordinates.split(','):
                 dimensions.append(int(coordinate))
@@ -235,7 +235,7 @@ class MultimediaImage(MultimediaObject):
                 format(dimensions)
             )
 
-        if percentance:
+        if percentage:
             if any(coordinate > 100.0 for coordinate in dimensions):
                 raise MultimediaImageCropError(
                     "Dimensions could not be grater than 100%")
@@ -273,9 +273,9 @@ class MultimediaImage(MultimediaObject):
         self.image = self.image.crop((start_x, start_y, max_x, max_y))
 
     def rotate(self, degrees, mirror=False):
-        """Rotate the image by given degress.
+        """Rotate the image by given degrees.
 
-        :param float degress: The degrees, should be in range of [0, 360]
+        :param float degrees: The degrees, should be in range of [0, 360]
         :param bool mirror: Flip image from left to right
         """
         transforms = {
@@ -285,7 +285,7 @@ class MultimediaImage(MultimediaObject):
             'mirror': Image.FLIP_LEFT_RIGHT,
         }
 
-        # Check if we have the right degress
+        # Check if we have the right degrees
         if not 0.0 <= float(degrees) <= 360.0:
             raise MultimediaImageRotateError(
                 "Degrees must be between 0 and 360, {0} has been given".
@@ -295,7 +295,7 @@ class MultimediaImage(MultimediaObject):
         if str(degrees) in transforms.keys():
             self.image = self.image.transpose(transforms.get(str(degrees)))
         else:
-            # transparent background if degress not multiple of 90
+            # transparent background if degrees not multiple of 90
             self.image = self.image.convert('RGBA')
             self.image = self.image.rotate(float(degrees), expand=0)
 
@@ -414,7 +414,7 @@ class MultimediaImage(MultimediaObject):
 
     @staticmethod
     def percent_to_number(number):
-        """Calculate the percentance."""
+        """Calculate the percentage."""
         return float(number) / 100.0
 
     @staticmethod
@@ -487,7 +487,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
         .. note::
 
             * If the version is not specified it will fallback to version 2.0.
-            * Please note the :func:`validate_api` should be ran before
+            * Please note the :func:`validate_api` should be run before
               :func:`apply_api`.
 
         """

@@ -11,7 +11,7 @@
 
 .. py:data:: IIIF_CACHE_HANDLER
 
-    Add the prefered cache adaptor.
+    Add the preferred cache adaptor.
 
     .. seealso:: :py:class:`~flask_iiif.cache.cache.ImageCache`
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -27,16 +27,16 @@ class ImageCache(object):
     def get(self, key):
         """Return the key value.
 
-        :param string key: The object's key
+        :param string key: the object's key
         """
 
     def set(self, key, value, timeout=timeout):
         """Cache the object.
 
-        :param string key: The object's key
+        :param string key: the object's key
         :param value: the stored object
         :type value: :class:`StringIO.StringIO` object
-        :param int timeout: The cache timeout in seconds
+        :param int timeout: the cache timeout in seconds
         """
 
     def delete(self, key):

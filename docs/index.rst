@@ -66,9 +66,10 @@ Quickstart
 This part of the documentation will show you how to get started in using
 Flask-IIIF with Flask.
 
-This guide assumes you have successfully installed Flask-IIIF and a working
-understanding of Flask. If not, follow the installation steps and read about
-Flask at http://flask.pocoo.org/docs/.
+This guide assumes that you have successfully installed Flask-IIIF and
+that you have a working understanding of Flask framework.  If not,
+please follow the installation steps and read about Flask at
+http://flask.pocoo.org/docs/.
 
 
 A Minimal Example
@@ -105,7 +106,7 @@ Configuration
 API
 ===
 
-This documentation section is automatically generated from Flask-IIIF's
+This documentation section is automatically generated from Flask-IIIF
 source code.
 
 Flask-IIIF

@@ -44,7 +44,7 @@ class IIIFImageBase(Resource):
 
         .. note::
 
-            I will redirect to ``iiifimageinfo`` endpoint with status code
+            It will redirect to ``iiifimageinfo`` endpoint with status code
             303.
         """
         return redirect(
