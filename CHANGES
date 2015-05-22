@@ -4,6 +4,29 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.2.0 (released 2015-05-11)
+
+- BETTER Adds better testing cases and increases the overall test
+  efficiency.
+
+- NEW Adds new signals to REST API that permits to have access before
+  and after process of the request as well as after the validation of
+  IIIF.
+
+- NEW Adds a configurable decorator to the REST API which can be
+  configure with the `api_decorator_handler`.
+
+- NEW Adds the `uuid_to_image_opener_handler` which can handle both
+  `fullpath` and `bytestream` as source.
+
+- INCOMPATIBLE Removes `uuid_to_path_handler` callback.
+
+- INCOMPATIBLE Updates error classes names (MultimediaImageResizeError
+  and MultimediaImageCropError).
+
+- NOTE The decorator can be used to restrict access to the REST
+  API.
+
 Version 0.1.0 (released 2015-04-28)
 
 - Initial public release.
