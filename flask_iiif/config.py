@@ -60,7 +60,7 @@
 """
 
 # Cache handler
-IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
+IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:cache'
 
 # Cache duration
 # 60 seconds * 60 minutes (1 hour) * 24 (24 hours) * 2 (2 days) = 172800 secs

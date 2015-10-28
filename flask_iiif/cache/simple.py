@@ -10,6 +10,7 @@
 """Implement a simple cache."""
 
 from __future__ import absolute_import
+
 from werkzeug.contrib.cache import SimpleCache
 
 from .cache import ImageCache
@@ -52,3 +53,5 @@ class ImageSimpleCache(ImageCache):
     def flush(self):
         """Flush the cache."""
         self.cache.clear()
+
+cache = ImageCache()
