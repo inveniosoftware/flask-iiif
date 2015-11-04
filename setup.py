@@ -10,7 +10,6 @@
 """Flask-IIIF extension provides easy IIIF API standard integration."""
 
 import os
-import re
 import sys
 
 from setuptools import setup
@@ -18,52 +17,72 @@ from setuptools.command.test import test as TestCommand
 
 
 class PyTest(TestCommand):
+    """PyTest Test."""
 
-    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
 
     def initialize_options(self):
+        """Init pytest."""
         TestCommand.initialize_options(self)
+        self.pytest_args = []
         try:
             from ConfigParser import ConfigParser
         except ImportError:
             from configparser import ConfigParser
         config = ConfigParser()
-        config.read("pytest.ini")
-        self.pytest_args = config.get("pytest", "addopts").split(" ")
+        config.read('pytest.ini')
+        self.pytest_args = config.get('pytest', 'addopts').split(' ')
 
     def finalize_options(self):
+        """Finalize pytest."""
         TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
+        if hasattr(self, '_test_args'):
+            self.test_suite = ''
+        else:
+            self.test_args = []
+            self.test_suite = True
 
     def run_tests(self):
+        """Run tests."""
         # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
-# Get the version string.  Cannot be done with import!
-with open(os.path.join('flask_iiif', 'version.py'), 'rt') as f:
-    version = re.search(
-        '__version__\s*=\s*"(?P<version>.*)"\n',
-        f.read()
-    ).group('version')
+# Get the version string. Cannot be done with import!
+g = {}
+with open(os.path.join('flask_iiif', 'version.py'), 'rt') as fp:
+    exec(fp.read(), g)
+    version = g['__version__']
 
 tests_require = [
-    'coverage',
-    "Flask-Testing>=0.4.1",
+    'flask-testing>=0.4.1',
+    'check-manifest>=0.25',
+    'coverage>=3.7,<4.0',
+    'pep257>=0.7.0',
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.6.1',
 ]
+
 install_requires = [
-    'Flask',
+    'Flask>=0.10.1',
     'Flask-RESTful>=0.2.12',
-    'blinker',
-    'six',
-    'pillow',
+    'blinker>=1.4',
+    'six>=1.7.2',
+    'pillow>=2.9,<3.0',
 ]
+
+extra_require = {
+    'docs': [
+        'sphinx>=1.3',
+    ]
+}
+
+extra_require['all'] = []
+for reqs in extra_require.values():
+    extra_require['all'].extend(reqs)
 
 if tuple(sys.version_info) < (2, 7):
     install_requires.append('ordereddict')
@@ -82,9 +101,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=install_requires,
-    extras_require={
-        'docs': ['sphinx'],
-    },
+    extras_require=extra_require,
     tests_require=tests_require,
     cmdclass={'test': PyTest},
     classifiers=[
@@ -97,7 +114,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',

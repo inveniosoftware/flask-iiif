@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -11,22 +11,32 @@
 
 language: python
 
+cache:
+  - pip
+
+env:
+  - REQUIREMENTS=lowest
+  - REQUIREMENTS=release
+
 python:
-  - "2.6"
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
+
+before_install:
+  - "travis_retry pip install --upgrade pip setuptools py"
+  - "travis_retry pip install coveralls pep257 requirements-builder"
+  - "travis_retry pip install pytest pytest-pep8 pytest-cov pytest-cache"
+  - "requirements-builder --level=min setup.py > .travis-lowest-requirements.txt"
+  - "requirements-builder --level=pypi setup.py > .travis-release-requirements.txt"
 
 install:
-  - "travis_retry pip install --upgrade pip"
-  - "travis_retry pip install coveralls pep257"
-  - "travis_retry pip install pytest pytest-pep8 pytest-cov pytest-cache"
-  - "travis_retry pip install -e .[docs]"
+  - "travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt"
+  - "pip install -e .[all]"
 
 script:
-  - pep257 flask_iiif
-  - "sphinx-build -qnNW docs docs/_build/html"
-  - python setup.py test
+  - "./run-tests.sh"
 
 after_success:
   - coveralls

@@ -16,7 +16,6 @@ from .cache import ImageCache
 
 
 class ImageSimpleCache(ImageCache):
-
     """Simple image cache."""
 
     timeout = 60 * 60 * 24 * 2

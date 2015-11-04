@@ -40,7 +40,6 @@ from .version import __version__
 
 
 class IIIF(object):
-
     """Flask extension implementation."""
 
     def __init__(self, app=None):

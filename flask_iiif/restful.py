@@ -36,7 +36,6 @@ current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
 
 class IIIFImageBase(Resource):
-
     """IIIF Image Base."""
 
     def get(self, version, uuid):
@@ -53,7 +52,6 @@ class IIIFImageBase(Resource):
 
 
 class IIIFImageInfo(Resource):
-
     """IIIF Image Info."""
 
     method_decorators = [
@@ -98,7 +96,6 @@ class IIIFImageInfo(Resource):
 
 
 class IIIFImageAPI(Resource):
-
     """IIIF API Implementation.
 
     .. note::

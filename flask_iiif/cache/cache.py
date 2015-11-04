@@ -16,7 +16,6 @@ All cache adaptors must at least implement
 
 
 class ImageCache(object):
-
     """Abstract cache layer."""
 
     timeout = 60 * 60 * 24 * 2

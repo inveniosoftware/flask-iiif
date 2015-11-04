@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -267,5 +267,5 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/2.7/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
-    'PIL': ('https://pillow.readthedocs.org/', None),
+    'PIL': ('https://pillow.readthedocs.org/en/latest/', None),
 }

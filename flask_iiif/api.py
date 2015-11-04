@@ -28,12 +28,10 @@ from .errors import (
 
 
 class MultimediaObject(object):
-
     """The Multimedia Object."""
 
 
 class MultimediaImage(MultimediaObject):
-
     r"""Multimedia Image API.
 
     Initializes an image api with IIIF standards. You can:
@@ -424,7 +422,6 @@ class MultimediaImage(MultimediaObject):
 
 
 class IIIFImageAPIWrapper(MultimediaImage):
-
     """IIIF Image API Wrapper."""
 
     @staticmethod
