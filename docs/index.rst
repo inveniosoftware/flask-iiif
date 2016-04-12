@@ -121,6 +121,9 @@ Cache
 .. automodule:: flask_iiif.cache.cache
     :members:
 
+.. automodule:: flask_iiif.cache.redis
+    :members:
+
 .. automodule:: flask_iiif.cache.simple
     :members:
 

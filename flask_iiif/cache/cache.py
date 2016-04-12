@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2014, 2015, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -14,14 +14,20 @@ All cache adaptors must at least implement
 :func:`~flask_iiif.cache.cache.ImageCache.set` methods.
 """
 
+from flask import current_app
+from werkzeug import cached_property
+
 
 class ImageCache(object):
     """Abstract cache layer."""
 
-    timeout = 60 * 60 * 24 * 2
-
     def __init__(self):
         """Initialize the cache."""
+
+    @cached_property
+    def timeout(self):
+        """Return default timeout from config."""
+        return current_app.config['IIIF_CACHE_TIME']
 
     def get(self, key):
         """Return the key value.
@@ -29,7 +35,7 @@ class ImageCache(object):
         :param string key: the object's key
         """
 
-    def set(self, key, value, timeout=timeout):
+    def set(self, key, value, timeout=None):
         """Cache the object.
 
         :param string key: the object's key

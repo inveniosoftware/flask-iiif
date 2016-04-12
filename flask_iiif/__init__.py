@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -59,11 +59,14 @@ class IIIF(object):
             :py:attr:`~flask_iiif.config.IIIF_CACHE_HANDLER`. More infos
             could be found in :py:mod:`~flask_iiif.cache.cache`.
         """
+        from .cache.cache import ImageCache
         handler = current_app.config['IIIF_CACHE_HANDLER']
-        return (
-            import_string(handler) if isinstance(handler, string_types)
-            else handler
-        )
+        if isinstance(handler, string_types):
+            handler = import_string(handler)
+        if callable(handler):
+            handler = handler()
+        assert isinstance(handler, ImageCache)
+        return handler
 
     def init_app(self, app):
         """Initialize a Flask application."""
