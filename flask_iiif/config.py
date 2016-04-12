@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -68,6 +68,9 @@ IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
 # 60 seconds * 60 minutes (1 hour) * 24 (24 hours) * 2 (2 days) = 172800 secs
 # 60 seconds * 60 (1 hour) * 24 (1 day) * 2 (2 days)
 IIIF_CACHE_TIME = 60 * 60 * 24 * 2
+
+# Redis URL Cache
+IIIF_CACHE_REDIS_URL = 'redis://localhost:6379/0'
 
 # Supported qualities
 IIIF_QUALITIES = (

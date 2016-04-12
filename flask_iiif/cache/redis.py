@@ -1,28 +1,31 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015, 2016, 2017 CERN.
+# Copyright (C) 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-"""Implement a simple cache."""
+"""Implements a Redis cache."""
 
 from __future__ import absolute_import
 
-from werkzeug.contrib.cache import SimpleCache
+from flask import current_app
+from redis import StrictRedis
+from werkzeug.contrib.cache import RedisCache
 
 from .cache import ImageCache
 
 
-class ImageSimpleCache(ImageCache):
-    """Simple image cache."""
+class ImageRedisCache(ImageCache):
+    """Redis image cache."""
 
     def __init__(self):
         """Initialize the cache."""
-        super(ImageSimpleCache, self).__init__()
-        self.cache = SimpleCache()
+        super(ImageRedisCache, self).__init__()
+        redis_url = current_app.config['IIIF_CACHE_REDIS_URL']
+        self.cache = RedisCache(host=StrictRedis.from_url(redis_url))
 
     def get(self, key):
         """Return the key value.
@@ -42,7 +45,7 @@ class ImageSimpleCache(ImageCache):
         :param int timeout: the cache timeout in seconds
         """
         timeout = timeout if timeout else self.timeout
-        self.cache.set(key, value, timeout)
+        self.cache.set(key, value, timeout=timeout)
 
     def delete(self, key):
         """Delete the specific key."""
