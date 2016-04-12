@@ -58,6 +58,13 @@ class TestMultimediaAPI(IIIFTestCase):
         tmp_file.seek(0)
         self.image_p_mode = MultimediaImage.from_string(tmp_file)
 
+        # TIFF Image
+        tmp_file = BytesIO()
+        image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
+        image.save(tmp_file, 'tiff')
+        tmp_file.seek(0)
+        self.image_tiff = MultimediaImage.from_string(tmp_file)
+
     def test_image_resize(self):
         """Test image resize function."""
         # Test image size before
@@ -184,3 +191,7 @@ class TestMultimediaAPI(IIIFTestCase):
         self.assertEqual(tmp_file.getvalue(), compare_file.getvalue())
         self.image_save.save(tmp_file)
         self.assertNotEqual(str(tmp_file.getvalue()), compare_file.getvalue())
+
+    def test_image_tiff_support(self):
+        """Test TIFF image support."""
+        self.assertEqual(self.image_tiff.image.format, 'TIFF')

@@ -351,7 +351,7 @@ class MultimediaImage(MultimediaObject):
         """Store the image to the specific path.
 
         :param str path: absolute path
-        :param str image_format: (gif, jpeg, pdf, png)
+        :param str image_format: (gif, jpeg, pdf, png, tif)
         :param int quality: The image quality; [1, 100]
 
         .. note::
@@ -367,7 +367,7 @@ class MultimediaImage(MultimediaObject):
     def serve(self, image_format="png", quality=90):
         """Return a BytesIO object to easily serve it thought HTTTP.
 
-        :param str image_format: (gif, jpeg, pdf, png)
+        :param str image_format: (gif, jpeg, pdf, png, tif)
         :param int quality: The image quality; [1, 100]
 
         .. note::

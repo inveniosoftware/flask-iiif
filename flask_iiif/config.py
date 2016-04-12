@@ -83,6 +83,7 @@ IIIF_FORMATS = {
     'jpg': 'image/jpeg',
     'pdf': 'application/pdf',
     'png': 'image/png',
+    'tif': 'image/tiff',
 }
 
 # Regular expressions to validate each parameter
@@ -107,7 +108,7 @@ IIIF_VALIDATIONS = {
         },
         "image_format": {
             "ignore": "",
-            "validate": "(jpg|png|gif|jp2|jpeg|pdf)"
+            "validate": "(jpg|png|gif|jp2|jpeg|pdf|tif)"
         }
     },
     "v2": {
@@ -130,7 +131,7 @@ IIIF_VALIDATIONS = {
         },
         "image_format": {
             "ignore": "",
-            "validate": "(jpg|png|gif|jp2|jpeg|pdf)"
+            "validate": "(jpg|png|gif|jp2|jpeg|pdf|tif)"
         }
     }
 }
