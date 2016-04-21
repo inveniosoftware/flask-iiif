@@ -51,6 +51,13 @@ class TestMultimediaAPI(IIIFTestCase):
         tmp_file.seek(0)
         self.image_not_rgba = MultimediaImage.from_string(tmp_file)
 
+        # Image in P Mode
+        tmp_file = BytesIO()
+        image = Image.new("P", (1280, 1024))
+        image.save(tmp_file, 'gif')
+        tmp_file.seek(0)
+        self.image_p_mode = MultimediaImage.from_string(tmp_file)
+
     def test_image_resize(self):
         """Test image resize function."""
         # Test image size before
@@ -163,6 +170,12 @@ class TestMultimediaAPI(IIIFTestCase):
         """Test image mode."""
         self.image_not_rgba.quality('grey')
         self.assertEqual(self.image_not_rgba.image.mode, "L")
+
+    def test_image_incompatible_modes(self):
+        """Test P-incompatible image to RGB auto-convert."""
+        tmp_file = BytesIO()
+        self.image_p_mode.save(tmp_file)
+        self.assertEqual(self.image_p_mode.image.mode, "RGB")
 
     def test_image_saving(self):
         """Test image saving."""

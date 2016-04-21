@@ -317,7 +317,7 @@ class MultimediaImage(MultimediaObject):
         qualities = current_app.config['IIIF_QUALITIES']
         if quality not in qualities:
             raise MultimediaImageQualityError(
-                ("{0} does not supported, pleae select on of the"
+                ("{0} is not supported, please select one of the"
                  " valid qualities: {1}").format(quality, qualities)
             )
 
@@ -386,8 +386,8 @@ class MultimediaImage(MultimediaObject):
 
         .. note::
 
-            pdf format can't be saved as `RBGA` so image needs to be converted
-            to `RGB` mode.
+            pdf and jpeg format can't be saved as `RBGA` so image needs to be
+            converted to `RGB` mode.
 
         """
         image_format = self.sanitize_format_name(requested_format)
@@ -399,8 +399,8 @@ class MultimediaImage(MultimediaObject):
                  " formats: {1}").format(requested_format, format_keys)
             )
 
-        # If the the `requested_format` is pdf force mode to RGB
-        if image_format == "pdf":
+        # If the the `requested_format` is pdf or jpeg force mode to RGB
+        if image_format in ("pdf", "jpeg"):
             self.image = self.image.convert('RGB')
 
         return image_format

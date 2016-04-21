@@ -134,7 +134,7 @@ IIIF_VALIDATIONS = {
 }
 
 # Qualities per image mode
-IIIF__MODE = {
+IIIF_MODE = {
     '1': ['default', 'bitonal'],
     'L': ['default', 'gray', 'bitonal'],
     'P': ['default', 'gray', 'bitonal'],
