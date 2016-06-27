@@ -26,7 +26,7 @@ python:
 
 before_install:
   - "travis_retry pip install --upgrade pip setuptools py"
-  - "travis_retry pip install coveralls pep257 requirements-builder"
+  - "travis_retry pip install coveralls pydocstyle requirements-builder"
   - "travis_retry pip install pytest pytest-pep8 pytest-cov pytest-cache"
   - "requirements-builder --level=min setup.py > .travis-lowest-requirements.txt"
   - "requirements-builder --level=pypi setup.py > .travis-release-requirements.txt"
