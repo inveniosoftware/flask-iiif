@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2014, 2015, 2016 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -59,6 +59,7 @@ tests_require = [
     'flask-testing>=0.4.1',
     'check-manifest>=0.25',
     'coverage>=3.7,<4.0',
+    'isort>=4.2.2',
     'pydocstyle>=1.0.0',
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
@@ -77,15 +78,13 @@ install_requires = [
 extra_require = {
     'docs': [
         'sphinx>=1.3',
-    ]
+    ],
+    'tests': tests_require,
 }
 
 extra_require['all'] = []
 for reqs in extra_require.values():
     extra_require['all'].extend(reqs)
-
-if tuple(sys.version_info) < (2, 7):
-    install_requires.append('ordereddict')
 
 setup(
     name='Flask-IIIF',

@@ -11,9 +11,8 @@
 
 from io import BytesIO
 
-from PIL import Image
-
 from flask import url_for
+from PIL import Image
 
 from .helpers import IIIFTestCase
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2016 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -12,17 +12,13 @@
 from functools import wraps
 
 from flask import current_app
-
 from flask_restful import abort
-
 from werkzeug import LocalProxy
 
-from .errors import (
-    IIIFValidatorError, MultimediaError, MultimediaImageCropError,
-    MultimediaImageFormatError, MultimediaImageNotFound,
-    MultimediaImageQualityError, MultimediaImageResizeError,
-    MultimediaImageRotateError
-)
+from .errors import IIIFValidatorError, MultimediaError, \
+    MultimediaImageCropError, MultimediaImageFormatError, \
+    MultimediaImageNotFound, MultimediaImageQualityError, \
+    MultimediaImageResizeError, MultimediaImageRotateError
 
 __all__ = ('api_decorator', 'error_handler', )
 

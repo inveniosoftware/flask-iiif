@@ -10,11 +10,9 @@
 """Flask-IIIF test helpers."""
 
 from contextlib import contextmanager
-
 from io import BytesIO
 
 from flask import Flask, abort, url_for
-
 from flask_testing import TestCase
 
 

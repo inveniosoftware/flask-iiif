@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015 CERN.
+# Copyright (C) 2014, 2015, 2016 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -12,25 +12,13 @@
 from io import BytesIO
 
 from flask import current_app, jsonify, redirect, send_file, url_for
-
 from flask_restful import Resource
 from flask_restful.utils import cors
-
-
 from werkzeug import LocalProxy
 
-
-from .api import (
-    IIIFImageAPIWrapper
-)
-
-from .decorators import (
-    api_decorator, error_handler
-)
-
-from .signals import (
-    iiif_after_process_request, iiif_before_process_request
-)
+from .api import IIIFImageAPIWrapper
+from .decorators import api_decorator, error_handler
+from .signals import iiif_after_process_request, iiif_before_process_request
 
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
