@@ -13,6 +13,7 @@ from io import BytesIO
 
 from flask import url_for
 from PIL import Image
+from werkzeug.utils import secure_filename
 
 from .helpers import IIIFTestCase
 
@@ -197,19 +198,37 @@ class TestRestAPI(IIIFTestCase):
             tmp_file.getvalue()
         )
 
+        urlargs = dict(
+            uuid='valid:id',
+            version='v2',
+            region='200,200,200,200',
+            size='300,300',
+            rotation='!50',
+            quality='color',
+            image_format='pdf',
+        )
+
         get_the_response = self.get(
             'iiifimageapi',
-            urlargs=dict(
-                uuid='valid:id',
-                version='v2',
-                region='200,200,200,200',
-                size='300,300',
-                rotation='!50',
-                quality='color',
-                image_format='pdf'
-            )
+            urlargs=urlargs,
         )
         self.assert200(get_the_response)
+
+        default_name = '{name}-200200200200-300300-color-50.pdf'.format(
+            name=secure_filename(urlargs['uuid'])
+        )
+        for dl, name in (('', default_name), ('1', default_name),
+                         ('foo.pdf', 'foo.pdf')):
+            urlargs['dl'] = dl
+            get_the_response = self.get(
+                'iiifimageapi',
+                urlargs=urlargs,
+            )
+            self.assert200(get_the_response)
+            self.assertEqual(
+                get_the_response.headers['Content-Disposition'],
+                'attachment; filename={name}'.format(name=name)
+            )
 
     def test_api_decorator(self):
         """Test API decorator."""

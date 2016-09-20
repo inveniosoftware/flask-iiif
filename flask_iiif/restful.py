@@ -11,10 +11,11 @@
 
 from io import BytesIO
 
-from flask import current_app, jsonify, redirect, send_file, url_for
+from flask import current_app, jsonify, redirect, request, send_file, url_for
 from flask_restful import Resource
 from flask_restful.utils import cors
 from werkzeug import LocalProxy
+from werkzeug.utils import secure_filename
 
 from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
@@ -129,7 +130,7 @@ class IIIFImageAPI(Resource):
         cache_handler = current_iiif.cache()
 
         # build the image key
-        key = "iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
+        key = 'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
             uuid, region, size, quality, rotation, image_format
         )
 
@@ -171,12 +172,16 @@ class IIIFImageAPI(Resource):
         # Trigger event after proccess the api request
         iiif_after_process_request.send(self, **api_after_request_parameters)
 
-        # Built the after request parameters
-        api_after_request_parameters = dict(
-            mimetype=mimetype,
-            image=to_serve
-        )
+        send_file_kwargs = {'mimetype': mimetype}
+        if 'dl' in request.args:
+            filename = secure_filename(request.args.get('dl', ''))
+            if filename.lower() in {'', '1', 'true'}:
+                filename = '{0}-{1}-{2}-{3}-{4}.{5}'.format(
+                    uuid, region, size, quality, rotation, image_format
+                )
+            send_file_kwargs.update(
+                as_attachment=True,
+                attachment_filename=secure_filename(filename),
+            )
 
-        # Trigger event after proccess the api request
-        iiif_after_process_request.send(self, **api_after_request_parameters)
-        return send_file(to_serve, mimetype=mimetype)
+        return send_file(to_serve, **send_file_kwargs)

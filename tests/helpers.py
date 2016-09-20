@@ -69,9 +69,9 @@ class IIIFTestCase(TestCase):
         """Simulate a PATCH request."""
         return self.make_request(self.client.patch, *args, **kwargs)
 
-    def make_request(self, client_func, endpoint, urlargs={}):
+    def make_request(self, client_func, endpoint, urlargs=None):
         """Simulate a request."""
-        url = url_for(endpoint, **urlargs)
+        url = url_for(endpoint, **(urlargs or {}))
         response = client_func(
             url,
             base_url=self.app.config['SITE_URL']
