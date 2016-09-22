@@ -57,7 +57,7 @@ Installation
 Documentation
 -------------
 
-   http://flask-iiif.readthedocs.org/en/v0.2.0
+   http://flask-iiif.readthedocs.io/en/v0.2.0
 
 Homepage
 --------

@@ -2,14 +2,20 @@
  Flask-IIIF
 ============
 
-.. image:: https://travis-ci.org/inveniosoftware/flask-iiif.png?branch=master
-    :target: https://travis-ci.org/inveniosoftware/flask-iiif
-.. image:: https://coveralls.io/repos/inveniosoftware/flask-iiif/badge.png?branch=master
-    :target: https://coveralls.io/r/inveniosoftware/flask-iiif
-.. image:: https://pypip.in/v/Flask-IIIF/badge.png
-    :target: https://pypi.python.org/pypi/Flask-IIIF/
-.. image:: https://pypip.in/d/Flask-IIIF/badge.png
-    :target: https://pypi.python.org/pypi/Flask-IIIF/
+.. image:: https://img.shields.io/travis/inveniosoftware/flask-iiif.svg
+        :target: https://travis-ci.org/inveniosoftware/flask-iiif
+
+.. image:: https://img.shields.io/coveralls/inveniosoftware/flask-iiif.svg
+        :target: https://coveralls.io/r/inveniosoftware/flask-iiif
+
+.. image:: https://img.shields.io/github/tag/inveniosoftware/flask-iiif.svg
+        :target: https://github.com/inveniosoftware/flask-iiif/releases
+
+.. image:: https://img.shields.io/pypi/dm/flask-iiif.svg
+        :target: https://pypi.python.org/pypi/flask-iiif
+
+.. image:: https://img.shields.io/github/license/inveniosoftware/flask-iiif.svg
+        :target: https://github.com/inveniosoftware/flask-iiif/blob/master/LICENSE
 
 About
 =====
@@ -27,7 +33,7 @@ Flask-IIIF is on PyPI so all you need is: ::
 Documentation
 =============
 
-Documentation is readable at http://flask-iiif.readthedocs.org or can be
+Documentation is readable at http://flask-iiif.readthedocs.io or can be
 built using Sphinx: ::
 
     git submodule init

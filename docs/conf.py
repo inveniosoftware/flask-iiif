@@ -26,6 +26,9 @@ sys.path.append(os.path.abspath('_themes'))
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
 
+# Do not warn on external images.
+suppress_warnings = ['image.nonlocal_uri']
+
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
@@ -269,5 +272,5 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/2.7/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
-    'PIL': ('https://pillow.readthedocs.org/en/latest/', None),
+    'PIL': ('https://pillow.readthedocs.io/en/latest/', None),
 }

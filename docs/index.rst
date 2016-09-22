@@ -3,20 +3,20 @@
 ============
 .. currentmodule:: flask_iiif
 
+.. image:: https://img.shields.io/travis/inveniosoftware/flask-iiif.svg
+        :target: https://travis-ci.org/inveniosoftware/flask-iiif
 
-.. raw:: html
+.. image:: https://img.shields.io/coveralls/inveniosoftware/flask-iiif.svg
+        :target: https://coveralls.io/r/inveniosoftware/flask-iiif
 
-    <p style="height:22px; margin:0 0 0 2em; float:right">
-        <a href="https://travis-ci.org/inveniosoftware/flask-iiif">
-            <img src="https://travis-ci.org/inveniosoftware/flask-iiif.png?branch=master"
-                 alt="travis-ci badge"/>
-        </a>
-        <a href="https://coveralls.io/r/inveniosoftware/flask-iiif">
-            <img src="https://coveralls.io/repos/inveniosoftware/flask-iiif/badge.png?branch=master"
-                 alt="coveralls.io badge"/>
-        </a>
-    </p>
+.. image:: https://img.shields.io/github/tag/inveniosoftware/flask-iiif.svg
+        :target: https://github.com/inveniosoftware/flask-iiif/releases
 
+.. image:: https://img.shields.io/pypi/dm/flask-iiif.svg
+        :target: https://pypi.python.org/pypi/flask-iiif
+
+.. image:: https://img.shields.io/github/license/inveniosoftware/flask-iiif.svg
+        :target: https://github.com/inveniosoftware/flask-iiif/blob/master/LICENSE
 
 Flask-IIIF is a Flask extension permitting easy integration with the
 International Image Interoperability Framework (IIIF) API standards.
