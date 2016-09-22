@@ -9,7 +9,8 @@
 
 include *.py *.sh
 include .coveragerc .travis.yml pytest.ini run-tests.sh
-include .editorconfig .gitmodules
+include .editorconfig .gitmodules .lgtm
+include MAINTAINERS
 include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
 include RELEASE-NOTES.rst
 include docs/*.rst docs/*.py docs/Makefile
