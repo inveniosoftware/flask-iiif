@@ -13,7 +13,7 @@ include .editorconfig .gitmodules .lgtm
 include MAINTAINERS
 include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
 include RELEASE-NOTES.rst
-include docs/*.rst docs/*.py docs/Makefile
+include docs/*.rst docs/*.py docs/Makefile docs/requirements.txt
 include docs/_themes/LICENSE docs/_themes/README
 include tox.ini tests/*.py
 recursive-include docs/_templates *.html
