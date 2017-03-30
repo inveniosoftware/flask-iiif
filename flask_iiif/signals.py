@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2015, 2016 CERN.
+# Copyright (C) 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -45,3 +45,7 @@ _signals = Namespace()
 iiif_before_process_request = _signals.signal('iiif-before-process-request')
 # After request
 iiif_after_process_request = _signals.signal('iiif-after-process-request')
+# Before info.json request
+iiif_before_info_request = _signals.signal('iiif-before-info-request')
+# After info.json request
+iiif_after_info_request = _signals.signal('iiif-after-info-request')
