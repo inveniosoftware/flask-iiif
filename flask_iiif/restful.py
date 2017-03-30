@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -19,7 +19,9 @@ from werkzeug.utils import secure_filename
 
 from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
-from .signals import iiif_after_process_request, iiif_before_process_request
+from .signals import iiif_after_info_request, iiif_after_process_request, \
+    iiif_before_info_request, iiif_before_process_request
+
 
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
@@ -50,6 +52,9 @@ class IIIFImageInfo(Resource):
     @cors.crossdomain(origin='*', methods='GET')
     def get(self, version, uuid):
         """Get IIIF Image Info."""
+        # Trigger event before proccess the api request
+        iiif_before_info_request.send(self, version=version, uuid=uuid)
+
         # Check if its cached
         cache_handler = current_iiif.cache()
 
@@ -81,6 +86,10 @@ class IIIFImageInfo(Resource):
         data["@id"] = base_uri
         data["width"] = width
         data["height"] = height
+
+        # Trigger event after proccess the api request
+        iiif_after_info_request.send(self, **data)
+
         return jsonify(data)
 
 
