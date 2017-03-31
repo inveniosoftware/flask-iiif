@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -139,16 +139,16 @@ class MultimediaImage(MultimediaObject):
                      " given").format(percent)
                 )
 
-            width = int(real_width * percent)
-            height = int(real_height * percent)
+            width = max(1, int(real_width * percent))
+            height = max(1, int(real_height * percent))
 
         # Check if it is `,h`
         elif dimensions.startswith(','):
             height = int(dimensions[1:])
             # find the ratio
             ratio = self.reduce_by(height, real_height)
-            # calculate width
-            width = int(real_width * ratio)
+            # calculate width (minimum 1)
+            width = max(1, int(real_width * ratio))
 
         # Check if it is `!w,h`
         elif dimensions.startswith('!'):
@@ -159,8 +159,8 @@ class MultimediaImage(MultimediaObject):
             # take the min
             ratio = min(ratio_x, ratio_y)
             # calculate the dimensions
-            width = int(point_x * ratio)
-            height = int(point_y * ratio)
+            width = max(1, int(point_x * ratio))
+            height = max(1, int(point_y * ratio))
 
         # Check if it is `w,`
         elif dimensions.endswith(','):
@@ -168,7 +168,7 @@ class MultimediaImage(MultimediaObject):
             # find the ratio
             ratio = self.reduce_by(width, real_width)
             # calculate the height
-            height = int(real_height * ratio)
+            height = max(1, int(real_height * ratio))
 
         # Normal mode `w,h`
         else:
