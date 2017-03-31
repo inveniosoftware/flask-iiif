@@ -16,7 +16,8 @@ import re
 
 from flask import current_app
 from PIL import Image
-from six import BytesIO
+from six import BytesIO, string_types
+from werkzeug import import_string
 
 from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageFormatError, MultimediaImageNotFound, \
@@ -110,7 +111,7 @@ class MultimediaImage(MultimediaObject):
         image = Image.open(source)
         return cls(image)
 
-    def resize(self, dimensions, resample=Image.NEAREST):
+    def resize(self, dimensions, resample=None):
         """Resize the image.
 
         :param str dimensions: The dimensions to resize the image
@@ -129,6 +130,13 @@ class MultimediaImage(MultimediaObject):
 
         """
         real_width, real_height = self.image.size
+        if resample is None:
+            if isinstance(current_app.config['IIIF_RESIZE_RESAMPLE'],
+                          string_types):
+                resample = import_string(
+                    current_app.config['IIIF_RESIZE_RESAMPLE'])
+            else:
+                resample = current_app.config['IIIF_RESIZE_RESAMPLE']
 
         # Check if it is `pct:`
         if dimensions.startswith('pct:'):
