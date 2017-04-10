@@ -23,6 +23,7 @@ from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageFormatError, MultimediaImageNotFound, \
     MultimediaImageQualityError, MultimediaImageResizeError, \
     MultimediaImageRotateError
+from .utils import resize_gif
 
 
 class MultimediaObject(object):
@@ -66,11 +67,11 @@ class MultimediaImage(MultimediaObject):
 
         @blueprint.route('/serve/<string:uuid>/<string:size>')
         def serve_thumbnail(uuid, size):
-            \"""Serve the image thumbnail.
+            \"\"\"Serve the image thumbnail.
 
             :param uuid: The document uuid.
             :param size: The desired image size.
-            \"""
+            \"\"\"
             # Initialize the image with the uuid
             path = current_app.extensions['iiif'].uuid_to_path(uuid)
             image = IIIFImageAPIWrapper.from_file(path)
@@ -195,7 +196,11 @@ class MultimediaImage(MultimediaObject):
                  " been given").format(width, height)
             )
 
-        self.image = self.image.resize((width, height), resample=resample)
+        arguments = dict(size=(width, height), resample=resample)
+        if self.image.format == 'GIF':
+            self.image = resize_gif(self.image, **arguments)
+        else:
+            self.image = self.image.resize(**arguments)
 
     def crop(self, coordinates):
         """Crop the image.
@@ -379,7 +384,12 @@ class MultimediaImage(MultimediaObject):
         image_buffer = BytesIO()
         # transform `image_format` is lower case and not equals to jpg
         cleaned_image_format = self._prepare_for_output(image_format)
-        self.image.save(image_buffer, cleaned_image_format, quality=quality)
+        save_kwargs = dict(quality=quality)
+
+        if self.image.format == 'GIF':
+            save_kwargs.update(save_all=True)
+
+        self.image.save(image_buffer, cleaned_image_format, **save_kwargs)
         image_buffer.seek(0)
 
         return image_buffer

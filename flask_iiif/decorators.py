@@ -44,7 +44,7 @@ def error_handler(f):
 
 
 def api_decorator(f):
-    """API decorator."""
+    """Decorate API method."""
     @wraps(f)
     def inner(*args, **kwargs):
         if current_iiif.api_decorator_callback:
