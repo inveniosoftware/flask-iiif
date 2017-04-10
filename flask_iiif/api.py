@@ -557,7 +557,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
         """
         try:
             image = Image.open(source)
-        except IOError:
+        except (AttributeError, IOError):
             raise MultimediaImageNotFound(
                 "The requested image cannot be opened"
             )
