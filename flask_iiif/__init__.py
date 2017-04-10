@@ -90,7 +90,7 @@ class IIIF(object):
             app.context_processor(lambda: ctx)
 
     def init_restful(self, api, prefix='/api/multimedia/image/'):
-        """Setup the urls.
+        """Set up the urls.
 
         :param str prefix: the url perfix
 

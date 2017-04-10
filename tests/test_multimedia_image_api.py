@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014, 2015, 2016 CERN.
+# Copyright (C) 2014, 2015, 2016, 2017 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -161,7 +161,7 @@ class TestMultimediaAPI(IIIFTestCase):
         self.image_crop.crop('pct:20,20,40,30')
         self.assertEqual(str(self.image_crop.size()), str((160, 90)))
 
-        # Check if exeeds image borders
+        # Check if exceeds image borders
         self.image_crop.crop('10,10,160,90')
         self.assertEqual(str(self.image_crop.size()), str((150, 80)))
 

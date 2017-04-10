@@ -24,6 +24,8 @@ from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageQualityError, MultimediaImageResizeError, \
     MultimediaImageRotateError
 
+from .gif_compat import patch_image
+
 
 class MultimediaObject(object):
     """The Multimedia Object."""
@@ -66,11 +68,11 @@ class MultimediaImage(MultimediaObject):
 
         @blueprint.route('/serve/<string:uuid>/<string:size>')
         def serve_thumbnail(uuid, size):
-            \"""Serve the image thumbnail.
+            \"\"\"Serve the image thumbnail.
 
             :param uuid: The document uuid.
             :param size: The desired image size.
-            \"""
+            \"\"\"
             # Initialize the image with the uuid
             path = current_app.extensions['iiif'].uuid_to_path(uuid)
             image = IIIFImageAPIWrapper.from_file(path)
@@ -82,7 +84,7 @@ class MultimediaImage(MultimediaObject):
 
     def __init__(self, image):
         """Initialize the image."""
-        self.image = image
+        self.image = patch_image(image)  # GIF compatibility
 
     @classmethod
     def from_file(cls, path):
