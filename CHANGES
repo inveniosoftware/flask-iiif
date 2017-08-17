@@ -4,6 +4,21 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.3.0 (released 2017-08-17)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++ New features
+
+  - Adds TIFF image support to the default config.
+
+  - Adds proper GIF resize.
+
+  - Adds optional Redis cache.
+
++ Notes
+
+  - Minimum Pillow version is update to 3.4.
+
 Version 0.2.0 (released 2015-05-22)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

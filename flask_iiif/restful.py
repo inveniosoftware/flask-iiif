@@ -22,7 +22,6 @@ from .decorators import api_decorator, error_handler
 from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
 
-
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
 
