@@ -348,7 +348,6 @@ class MultimediaImage(MultimediaObject):
         """Return the current image size.
 
         :return: the image size
-        :rtype: list
         """
         return self.image.size
 
