@@ -4,6 +4,11 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.3.1 (released 2017-08-18)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Deployment changes.
+
 Version 0.3.0 (released 2017-08-17)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1,8 +1,8 @@
 ===============================
- Flask-IIIF v0.3.0 is released
+ Flask-IIIF v0.3.1 is released
 ===============================
 
-Flask-IIIF v0.3.0 was released on August 17, 2017.
+Flask-IIIF v0.3.1 was released on August 18, 2017.
 
 About
 -----
@@ -25,7 +25,7 @@ Installation
 Documentation
 -------------
 
-   https://flask-iiif.readthedocs.io/en/v0.3.0
+   https://flask-iiif.readthedocs.io/en/v0.3.1
 
 Homepage
 --------
