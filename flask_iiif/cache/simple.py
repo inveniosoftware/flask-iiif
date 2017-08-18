@@ -51,3 +51,5 @@ class ImageSimpleCache(ImageCache):
     def flush(self):
         """Flush the cache."""
         self.cache.clear()
+
+cache = ImageCache()
