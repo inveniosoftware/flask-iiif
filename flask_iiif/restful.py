@@ -46,6 +46,7 @@ class IIIFImageInfo(Resource):
 
     method_decorators = [
         error_handler,
+        api_decorator,
     ]
 
     @cors.crossdomain(origin='*', methods='GET')
