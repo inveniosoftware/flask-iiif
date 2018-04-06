@@ -15,8 +15,8 @@ from unittest import TestCase
 
 from flask import Flask
 
-from flask_iiif import config as default_config
 from flask_iiif import IIIF
+from flask_iiif import config as default_config
 
 
 class TestIIIF(TestCase):
