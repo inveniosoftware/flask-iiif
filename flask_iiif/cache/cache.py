@@ -32,16 +32,16 @@ class ImageCache(object):
     def get(self, key):
         """Return the key value.
 
-        :param string key: the object's key
+        :param key: the object's key
         """
 
     def set(self, key, value, timeout=None):
         """Cache the object.
 
-        :param string key: the object's key
+        :param key: the object's key
         :param value: the stored object
         :type value: :class:`StringIO.StringIO` object
-        :param int timeout: the cache timeout in seconds
+        :param timeout: the cache timeout in seconds
         """
 
     def delete(self, key):
