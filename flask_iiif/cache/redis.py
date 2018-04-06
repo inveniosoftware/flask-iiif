@@ -30,7 +30,7 @@ class ImageRedisCache(ImageCache):
     def get(self, key):
         """Return the key value.
 
-        :param string key: the object's key
+        :param key: the object's key
         :return: the stored object
         :rtype: `BytesIO` object
         """
@@ -39,10 +39,10 @@ class ImageRedisCache(ImageCache):
     def set(self, key, value, timeout=None):
         """Cache the object.
 
-        :param string key: the object's key
+        :param key: the object's key
         :param value: the stored object
         :type value: `BytesIO` object
-        :param int timeout: the cache timeout in seconds
+        :param timeout: the cache timeout in seconds
         """
         timeout = timeout if timeout else self.timeout
         self.cache.set(key, value, timeout=timeout)
