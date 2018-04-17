@@ -59,7 +59,7 @@
 
 """
 # Resampling method
-IIIF_RESIZE_RESAMPLE = 'PIL.Image:NEAREST'
+IIIF_RESIZE_RESAMPLE = 'PIL.Image:BICUBIC'
 
 # Cache handler
 IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
