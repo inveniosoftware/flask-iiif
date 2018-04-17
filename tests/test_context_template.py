@@ -23,20 +23,22 @@ class TestContextTemplates(IIIFTestCase):
 
         with self.app.app_context():
             image_url_default = iiif_image_url(
-                uuid="test"
+                uuid=u"test-ünicode"
             )
             image_url_default_answer = (
-                "/api/multimedia/image/v2/test/full/full/0/default.png"
+                "/api/multimedia/image/v2/"
+                "test-%C3%BCnicode/full/full/0/default.png"
             )
             self.assertEqual(
                 image_url_default_answer,
                 image_url_default
             )
             image_url_custom_answer = (
-                "/api/multimedia/image/v1/test/full/full/180/default.jpg"
+                "/api/multimedia/image/v1/"
+                "test-%C3%BCnicode/full/full/180/default.jpg"
             )
             image_url_custom = iiif_image_url(
-                uuid="test",
+                uuid=u"test-ünicode",
                 image_format="jpg",
                 rotation=180,
                 version="v1"

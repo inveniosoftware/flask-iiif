@@ -38,10 +38,10 @@ class TestRestAPI(IIIFTestCase):
         """Test API Info not found case."""
         from flask import jsonify
         id_v1 = url_for(
-            'iiifimagebase', uuid="valid:id", version="v1", _external=True
+            'iiifimagebase', uuid=u"valid:id-üni", version="v1", _external=True
         )
         id_v2 = url_for(
-            'iiifimagebase', uuid="valid:id", version="v2", _external=True
+            'iiifimagebase', uuid=u"valid:id-üni", version="v2", _external=True
         )
 
         expected = {
@@ -85,7 +85,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageinfo',
             urlargs=dict(
-                uuid='valid:id',
+                uuid=u'valid:id-üni',
                 version='v2',
             )
         )
@@ -93,7 +93,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageinfo',
             urlargs=dict(
-                uuid='valid:id',
+                uuid=u'valid:id-üni',
                 version='v2',
             )
         )
@@ -104,7 +104,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageinfo',
             urlargs=dict(
-                uuid='valid:id',
+                uuid=u'valid:id-üni',
                 version='v1',
             )
         )
@@ -145,7 +145,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageapi',
             urlargs=dict(
-                uuid='valid:id',
+                uuid=u'valid:id-üni',
                 version='v2',
                 region='full',
                 size='full',
@@ -161,7 +161,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageapi',
             urlargs=dict(
-                uuid='valid:id',
+                uuid='valid:id-üni',
                 version='v1',
                 region='200',
                 size='full',
@@ -183,7 +183,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             'iiifimageapi',
             urlargs=dict(
-                uuid='valid:id',
+                uuid=u'valid:id-üni',
                 version='v2',
                 region='full',
                 size='full',
@@ -199,7 +199,7 @@ class TestRestAPI(IIIFTestCase):
         )
 
         urlargs = dict(
-            uuid='valid:id',
+            uuid=u'valid:id-üni',
             version='v2',
             region='200,200,200,200',
             size='300,300',
@@ -214,7 +214,7 @@ class TestRestAPI(IIIFTestCase):
         )
         self.assert200(get_the_response)
 
-        default_name = '{name}-200200200200-300300-color-50.pdf'.format(
+        default_name = u'{name}-200200200200-300300-color-50.pdf'.format(
             name=secure_filename(urlargs['uuid'])
         )
         for dl, name in (('', default_name), ('1', default_name),
@@ -249,7 +249,7 @@ class TestRestAPI(IIIFTestCase):
     def test_api_abort_all_methods_except_get(self):
         """Abort all methods but GET."""
         data = dict(
-            uuid='valid:id',
+            uuid='valid:id-üni',
             version='v2',
             region='full',
             size='full',

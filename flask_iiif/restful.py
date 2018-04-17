@@ -59,9 +59,9 @@ class IIIFImageInfo(Resource):
         cache_handler = current_iiif.cache()
 
         # build the image key
-        key = "iiif:info:{0}/{1}".format(
+        key = u"iiif:info:{0}/{1}".format(
             version, uuid
-        )
+        ).encode('utf8')
 
         # Check if its cached
         cached = cache_handler.get(key)
@@ -139,9 +139,9 @@ class IIIFImageAPI(Resource):
         cache_handler = current_iiif.cache()
 
         # build the image key
-        key = 'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
+        key = u'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
             uuid, region, size, quality, rotation, image_format
-        )
+        ).encode('utf8')
 
         # Check if its cached
         cached = cache_handler.get(key)
@@ -185,7 +185,7 @@ class IIIFImageAPI(Resource):
         if 'dl' in request.args:
             filename = secure_filename(request.args.get('dl', ''))
             if filename.lower() in {'', '1', 'true'}:
-                filename = '{0}-{1}-{2}-{3}-{4}.{5}'.format(
+                filename = u'{0}-{1}-{2}-{3}-{4}.{5}'.format(
                     uuid, region, size, quality, rotation, image_format
                 )
             send_file_kwargs.update(
