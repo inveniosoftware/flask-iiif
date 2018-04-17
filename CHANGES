@@ -4,6 +4,16 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.4.0 (released 2018-04-17)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Fixes unicode filename issues.
+
+- Changes default resampling algorithm to BICUBIC for better image quality.
+
+- Adds support for _external, _scheme etc parameters for iiif_image_url.
+
+
 Version 0.3.2 (released 2018-04-09)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
