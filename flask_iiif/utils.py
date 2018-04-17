@@ -46,6 +46,8 @@ def iiif_image_url(**kwargs):
     except AssertionError:
         abort(404)
     else:
+        url_for_args = {k: v for k, v in kwargs.items() if k.startswith('_')}
+
         return url_for(
             'iiifimageapi',
             image_format=kwargs.get('image_format', 'png'),
@@ -55,6 +57,7 @@ def iiif_image_url(**kwargs):
             size=kwargs.get('size', 'full'),
             uuid=kwargs.get('uuid'),
             version=kwargs.get('version', 'v2'),
+            **url_for_args
         )
 
 
