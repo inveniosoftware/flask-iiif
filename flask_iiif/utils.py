@@ -103,3 +103,41 @@ def resize_gif(image, size, resample):
     """
     return create_gif_from_frames([frame.resize(size, resample=resample)
                                   for frame in ImageSequence.Iterator(image)])
+
+
+def resize_with_background_gif(image, size, resample, demand_w=0, demand_h=0):
+    """Resize a GIF image and fills the missing pixels with black background.
+
+    :param image: the original GIF image
+    :param size: the dimensions to resize to
+    :param resample: the method of resampling
+    :param demand_w: demanded height for thumbnail
+    :param demand_h: demanded width for thumbnail
+    :returns: resized GIF image
+    :rtype: PIL.Image
+    """
+    return create_gif_from_frames([fill_background(
+        frame.resize(size, resample=resample), demand_w, demand_h)
+        for frame in ImageSequence.Iterator(image)])
+
+
+def fill_background(image, demand_width, demand_height):
+    """Fill the background with black (in case of image too small).
+
+    :param image: image which does not fit into the window
+    :param demand_width: demanded thumbnail window width
+    :param demand_height: demanded window height
+    :returns: image of requested size, filled with black background
+    :rtype: PIL.Image
+    """
+    background = Image.new('RGB', (demand_width, demand_height))
+    offset_x, offset_y = 0, 0
+    w, h = image.size
+    if w < demand_width:
+        # set the image in the middle of x axis
+        offset_x = max(1, int((demand_width - w) / 2))
+    if h < demand_height:
+        # set the image in the middle of y axis
+        offset_y = max(1, int((demand_height - h) / 2))
+    background.paste(image, (offset_x, offset_y))
+    return background

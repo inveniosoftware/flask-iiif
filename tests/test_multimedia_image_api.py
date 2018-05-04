@@ -11,6 +11,8 @@
 
 from io import BytesIO
 
+import pytest
+
 from flask_iiif.utils import create_gif_from_frames
 
 from .helpers import IIIFTestCase
@@ -20,22 +22,29 @@ class TestMultimediaAPI(IIIFTestCase):
 
     """Multimedia Image API test case."""
 
-    def setUp(self):
+    @pytest.mark.parametrize("width, height",
+                             [(1280, 1024),
+                              (100, 100),
+                              (1024, 1280),  # portrait
+                              (200, 100),
+                              (1280, 720),
+                              ])
+    def setUp(self, width=1280, height=1024):
         """Run before the test."""
         # Create an image in memory
         from PIL import Image
         from flask_iiif.api import MultimediaImage
         tmp_file = BytesIO()
         # create a new image
-        image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), (255, 0, 0, 0))
         image.save(tmp_file, 'png')
 
         # create a new gif image
         self.image_gif = MultimediaImage(create_gif_from_frames([
-            Image.new("RGB", (1280, 1024), color)
+            Image.new("RGB", (width, height), color)
             for color in ['blue', 'yellow', 'red', 'black', 'white']
         ]))
-
+        self.width, self.height = width, height
         # Initialize it for our object and create and instance for
         # each test
         tmp_file.seek(0)
@@ -54,21 +63,21 @@ class TestMultimediaAPI(IIIFTestCase):
         # NOT RGBA
         tmp_file = BytesIO()
         # create a new image
-        image = Image.new("RGB", (1280, 1024), (255, 0, 0, 0))
+        image = Image.new("RGB", (width, height), (255, 0, 0, 0))
         image.save(tmp_file, 'jpeg')
         tmp_file.seek(0)
         self.image_not_rgba = MultimediaImage.from_string(tmp_file)
 
         # Image in P Mode
         tmp_file = BytesIO()
-        image = Image.new("P", (1280, 1024))
+        image = Image.new("P", (width, height))
         image.save(tmp_file, 'gif')
         tmp_file.seek(0)
         self.image_p_mode = MultimediaImage.from_string(tmp_file)
 
         # TIFF Image
         tmp_file = BytesIO()
-        image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), (255, 0, 0, 0))
         image.save(tmp_file, 'tiff')
         tmp_file.seek(0)
         self.image_tiff = MultimediaImage.from_string(tmp_file)
@@ -78,7 +87,8 @@ class TestMultimediaAPI(IIIFTestCase):
         # Check original size and GIF properties
         self.assertEqual(self.image_gif.image.is_animated, True)
         self.assertEqual(self.image_gif.image.n_frames, 5)
-        self.assertEqual(str(self.image_gif.size()), str((1280, 1024)))
+        self.assertEqual(str(self.image_gif.size()),
+                         str((self.width, self.height)))
 
         # Assert proper resize and preservation of GIF properties
         self.image_gif.resize('720,680')
@@ -86,10 +96,17 @@ class TestMultimediaAPI(IIIFTestCase):
         self.assertEqual(self.image_gif.image.n_frames, 5)
         self.assertEqual(str(self.image_gif.size()), str((720, 680)))
 
+        # test gif resize best fit
+        self.image_gif.resize('!400,220')
+        self.assertEqual(self.image_gif.image.is_animated, True)
+        self.assertEqual(self.image_gif.image.n_frames, 5)
+        self.assertEqual(str(self.image_gif.size()), str((400, 220)))
+
     def test_image_resize(self):
         """Test image resize function."""
         # Test image size before
-        self.assertEqual(str(self.image_resize.size()), str((1280, 1024)))
+        self.assertEqual(str(self.image_resize.size()),
+                         str((self.width, self.height)))
 
         # Resize.image_resize to 720,680
         self.image_resize.resize('720,680')
@@ -109,7 +126,7 @@ class TestMultimediaAPI(IIIFTestCase):
 
         # Resize.image_resize to !100,100
         self.image_resize.resize('!100,100')
-        self.assertEqual(str(self.image_resize.size()), str((34, 34)))
+        self.assertEqual(str(self.image_resize.size()), str((100, 100)))
 
     def test_errors(self):
         """Test errors."""

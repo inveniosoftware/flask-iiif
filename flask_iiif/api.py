@@ -23,7 +23,7 @@ from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageFormatError, MultimediaImageNotFound, \
     MultimediaImageQualityError, MultimediaImageResizeError, \
     MultimediaImageRotateError
-from .utils import resize_gif
+from .utils import fill_background, resize_gif, resize_with_background_gif
 
 
 class MultimediaObject(object):
@@ -126,11 +126,12 @@ class MultimediaImage(MultimediaObject):
                 * 'w,': The exact width, height will be calculated.
                 * ',h': The exact height, width will be calculated.
                 * 'pct:n': Image percentage scale.
-                * 'w,h': The extact width and height.
+                * 'w,h': The exact width and height.
                 * '!w,h': Best fit for the given width and height.
 
         """
         real_width, real_height = self.image.size
+        fits, point_x, point_y = True, 0, 0
         if resample is None:
             if isinstance(current_app.config['IIIF_RESIZE_RESAMPLE'],
                           string_types):
@@ -168,8 +169,11 @@ class MultimediaImage(MultimediaObject):
             # take the min
             ratio = min(ratio_x, ratio_y)
             # calculate the dimensions
-            width = max(1, int(point_x * ratio))
-            height = max(1, int(point_y * ratio))
+            width = max(1, int(real_width * ratio))
+            height = max(1, int(real_height * ratio))
+            # check if it's not too small for the requested window
+            if not (width == point_x and height == point_y):
+                fits = False
 
         # Check if it is `w,`
         elif dimensions.endswith(','):
@@ -198,9 +202,18 @@ class MultimediaImage(MultimediaObject):
 
         arguments = dict(size=(width, height), resample=resample)
         if self.image.format == 'GIF':
-            self.image = resize_gif(self.image, **arguments)
+            if not fits:
+                self.image = resize_with_background_gif(
+                    self.image, demand_w=point_x, demand_h=point_y,
+                    **arguments)
+            else:
+                self.image = resize_gif(self.image, **arguments)
         else:
-            self.image = self.image.resize(**arguments)
+            if fits:
+                self.image = self.image.resize(**arguments)
+            else:
+                self.image = fill_background(self.image.resize(**arguments),
+                                             point_x, point_y)
 
     def crop(self, coordinates):
         """Crop the image.
