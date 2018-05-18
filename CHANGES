@@ -4,6 +4,18 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.5.0 (released 2018-05-18)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++ Fixes
+
+  - wrong ratio calculation for best fit
+
++ New features
+
+  - adds black background to requested best fit thumbnail or gif
+    if the image does not cover the whole window of requested size
+
+
 Version 0.4.0 (released 2018-04-17)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
