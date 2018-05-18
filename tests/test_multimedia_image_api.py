@@ -12,14 +12,15 @@
 from io import BytesIO
 
 import pytest
+from PIL import Image
 
+from flask_iiif.api import MultimediaImage
 from flask_iiif.utils import create_gif_from_frames
 
 from .helpers import IIIFTestCase
 
 
 class TestMultimediaAPI(IIIFTestCase):
-
     """Multimedia Image API test case."""
 
     @pytest.mark.parametrize("width, height",
@@ -32,8 +33,7 @@ class TestMultimediaAPI(IIIFTestCase):
     def setUp(self, width=1280, height=1024):
         """Run before the test."""
         # Create an image in memory
-        from PIL import Image
-        from flask_iiif.api import MultimediaImage
+
         tmp_file = BytesIO()
         # create a new image
         image = Image.new("RGBA", (width, height), (255, 0, 0, 0))
