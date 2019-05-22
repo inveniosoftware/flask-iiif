@@ -28,9 +28,7 @@ or alternatively using the factory pattern:
 from __future__ import absolute_import
 
 from flask import current_app
-
 from six import string_types
-
 from werkzeug.urls import url_join
 from werkzeug.utils import import_string
 
