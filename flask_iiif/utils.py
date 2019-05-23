@@ -141,3 +141,14 @@ def fill_background(image, demand_width, demand_height):
         offset_y = max(1, int((demand_height - h) / 2))
     background.paste(image, (offset_x, offset_y))
     return background
+
+
+def should_cache(request_args):
+    """Check the request args for cache-control specifications.
+
+    :param request_args: flask request args
+    """
+    if "cache-control" in request_args \
+            and request_args['cache-control'] in ["no-cache", "no-store"]:
+        return False
+    return True

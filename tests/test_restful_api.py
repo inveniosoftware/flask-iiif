@@ -280,3 +280,72 @@ class TestRestAPI(IIIFTestCase):
             urlargs=data
         )
         self.assert405(get_the_response)
+
+    def test_api_cache_control(self):
+        """Test cache-control headers"""
+
+        urlargs = dict(
+            uuid=u'valid:id-üni',
+            version='v2',
+            region='200,200,200,200',
+            size='300,300',
+            rotation='!50',
+            quality='color',
+            image_format='pdf',
+        )
+
+        key = u'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
+            urlargs['uuid'],
+            urlargs['region'],
+            urlargs['size'],
+            urlargs['quality'],
+            urlargs['rotation'],
+            urlargs['image_format']
+        ).encode('utf8')
+
+        cache = self.app.config['IIIF_CACHE_HANDLER'].cache
+
+        get_the_response = self.get(
+            'iiifimageapi',
+            urlargs=urlargs,
+        )
+
+        self.assertFalse('cache-control' in urlargs)
+
+        self.assert200(get_the_response)
+
+        self.assertTrue(cache.get(key))
+
+        cache.clear()
+
+        for cache_control, name in (('no-cache', "foo.pdf"),
+                                    ('no-store', "foo.pdf")):
+
+            urlargs['cache-control'] = cache_control
+
+            get_the_response = self.get(
+                'iiifimageapi',
+                urlargs=urlargs,
+            )
+
+            self.assert200(get_the_response)
+
+            self.assertFalse(cache.get(key))
+
+            cache.clear()
+
+        for cache_control, name in (('public', "foo.pdf"),
+                                    ('no-transform', "foo.pdf")):
+
+            urlargs['cache-control'] = cache_control
+
+            get_the_response = self.get(
+                'iiifimageapi',
+                urlargs=urlargs,
+            )
+
+            self.assert200(get_the_response)
+
+            self.assertTrue(cache.get(key))
+
+            cache.clear()
