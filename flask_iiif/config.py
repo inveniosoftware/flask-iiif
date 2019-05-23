@@ -32,7 +32,7 @@
 
     The supported image converters.
 
-.. py:data: IIIF_FORMATS
+.. py:data:: IIIF_FORMATS
 
     The supported image formats with their MIME type.
 
