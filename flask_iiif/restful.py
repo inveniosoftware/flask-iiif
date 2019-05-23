@@ -21,6 +21,7 @@ from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
 from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
+from .utils import should_cache
 
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
@@ -73,7 +74,8 @@ class IIIFImageInfo(Resource):
             data = current_iiif.uuid_to_image_opener(uuid)
             image = IIIFImageAPIWrapper.open_image(data)
             width, height = image.size()
-            cache_handler.set(key, "{0},{1}".format(width, height))
+            if should_cache(request.args):
+                cache_handler.set(key, "{0},{1}".format(width, height))
 
         data = current_app.config['IIIF_API_INFO_RESPONSE_SKELETON'][version]
 
@@ -166,7 +168,8 @@ class IIIFImageAPI(Resource):
             # prepare image to be serve
             to_serve = image.serve(image_format=image_format)
             # to_serve = image.serve(image_format=image_format)
-            cache_handler.set(key, to_serve.getvalue())
+            if should_cache(request.args):
+                cache_handler.set(key, to_serve.getvalue())
 
         # decide the mime_type from the requested image_format
         mimetype = current_app.config['IIIF_FORMATS'].get(
