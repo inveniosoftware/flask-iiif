@@ -4,6 +4,12 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.5.1 (released 2019-05-23)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Fixes syntax error in documentation
+- Fixes import sorting
+
 Version 0.5.0 (released 2018-05-18)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 + Fixes
