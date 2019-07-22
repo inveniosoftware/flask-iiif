@@ -84,3 +84,53 @@ class TestImageRedisCache(IIIFTestCase):
         self.cache.flush()
         for i in [1, 2, 3]:
             self.assertEqual(self.cache.get('foo_{0}'.format(i)), None)
+
+    def test_default_prefix_for_redis(self):
+        """Test default redis prefix"""
+        # Test default prefix for redis keys (when nothing set in config)
+        self.assertEqual(self.cache.cache.key_prefix, 'iiif')
+
+    def test_redis_prefix_set_properly(self):
+        """Test if ImageRedisCache properly sets redis prefix"""
+        from flask import current_app
+        from flask_iiif.cache.redis import ImageRedisCache
+
+        # Store old prefix
+        old_prefix = current_app.config.get('IIIF_CACHE_REDIS_PREFIX')
+        # Set new prefix in config
+        current_app.config['IIIF_CACHE_REDIS_PREFIX'] = "TEST_PREFIX"
+        # Create new ImageRedisCache which should read new prefix from config
+        tmp_redis_cache = ImageRedisCache()
+        # Check prefix set in ImageRedisCache object
+        self.assertEqual(tmp_redis_cache.cache.key_prefix, 'TEST_PREFIX')
+        # Restore old prefix in config
+        current_app.config['IIIF_CACHE_REDIS_PREFIX'] = old_prefix
+
+    def test_removing_keys_removes_only_ones_with_prefix(self):
+        """Test if ImageRedisCache properly removes only keys with it's prefix"""
+        from flask import current_app
+        from flask_iiif.cache.redis import ImageRedisCache
+
+        # Create few keys with default prefix
+        self.cache.set('key_1', 'value_1')
+        self.cache.set('key_2', 'value_2')
+        self.cache.set('key_3', 'value_3')
+
+        # Create RedisCache with different prefix
+        old_prefix = current_app.config.get('IIIF_CACHE_REDIS_PREFIX')
+        current_app.config['IIIF_CACHE_REDIS_PREFIX'] = "TEST_PREFIX"
+        tmp_redis_cache = ImageRedisCache()
+        current_app.config['IIIF_CACHE_REDIS_PREFIX'] = old_prefix
+
+        # Create few keys with different prefix
+        tmp_redis_cache.set("key_1", "value_4")
+        tmp_redis_cache.set("key_2", "value_5")
+        tmp_redis_cache.set("key_3", "value_6")
+
+        # Remove all keys with default prefix
+        self.cache.flush()
+
+        # Check if keys from second prefix are still in redis
+        self.assertEqual(tmp_redis_cache.get("key_1"), "value_4")
+        self.assertEqual(tmp_redis_cache.get("key_2"), "value_5")
+        self.assertEqual(tmp_redis_cache.get("key_3"), "value_6")

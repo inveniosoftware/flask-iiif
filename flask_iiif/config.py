@@ -15,6 +15,10 @@
 
     .. seealso:: :py:class:`~flask_iiif.cache.cache.ImageCache`
 
+.. py:data:: IIIF_CACHE_REDIS_PREFIX
+
+    Sets prefix for redis keys, default: `iiif`
+
 .. py:data:: IIIF_CACHE_TIME
 
     How much time the image would be cached.

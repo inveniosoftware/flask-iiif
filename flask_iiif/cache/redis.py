@@ -25,7 +25,11 @@ class ImageRedisCache(ImageCache):
         """Initialize the cache."""
         super(ImageRedisCache, self).__init__()
         redis_url = current_app.config['IIIF_CACHE_REDIS_URL']
-        self.cache = RedisCache(host=StrictRedis.from_url(redis_url))
+        prefix = current_app.config.get('IIIF_CACHE_REDIS_PREFIX', 'iiif')
+        self.cache = RedisCache(
+            host=StrictRedis.from_url(redis_url),
+            key_prefix=prefix
+        )
 
     def get(self, key):
         """Return the key value.
