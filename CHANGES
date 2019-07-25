@@ -4,6 +4,12 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.5.2 (released 2019-07-25)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Sets Redis cache prefix
+- Fixes cache control headers
+
 Version 0.5.1 (released 2019-05-23)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
