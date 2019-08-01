@@ -11,6 +11,8 @@
 
 from __future__ import absolute_import
 
+from datetime import datetime
+
 from werkzeug.contrib.cache import SimpleCache
 
 from .cache import ImageCache
@@ -43,10 +45,41 @@ class ImageSimpleCache(ImageCache):
         """
         timeout = timeout if timeout else self.timeout
         self.cache.set(key, value, timeout)
+        self.set_last_modification(key, timeout=timeout)
+
+    def get_last_modification(self, key):
+        """Get last modification of cached file.
+
+        :param key: the file object's key
+        """
+        last = self.cache.get(self._last_modification_key_name(key))
+        return last
+
+    def set_last_modification(self, key, last_modification=None, timeout=None):
+        """Set last modification of cached file.
+
+        :param key: the file object's key
+        :param last_modification: Last modification date of
+            file represented by the key
+        :type last_modification: datetime
+        :param timeout: the cache timeout in seconds
+        """
+        if not key:
+            return
+        if not last_modification:
+            last_modification = datetime.utcnow().replace(microsecond=0)
+        timeout = timeout if timeout else self.timeout
+        self.cache.set(
+            self._last_modification_key_name(key),
+            last_modification,
+            timeout
+        )
 
     def delete(self, key):
         """Delete the specific key."""
-        self.cache.delete(key)
+        if key:
+            self.cache.delete(key)
+            self.cache.delete(self._last_modification_key_name(key))
 
     def flush(self):
         """Flush the cache."""

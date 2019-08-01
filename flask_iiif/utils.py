@@ -8,8 +8,10 @@
 # more details.
 
 """Flask-IIIF utilities."""
+import datetime
 import shutil
 import tempfile
+from email.utils import formatdate
 from os.path import dirname, join
 
 from flask import abort, url_for
@@ -152,3 +154,10 @@ def should_cache(request_args):
             and request_args['cache-control'] in ["no-cache", "no-store"]:
         return False
     return True
+
+
+def datetime_to_float(date):
+    """Convert datetime to string accepted by browsers as per RFC 2822."""
+    epoch = datetime.datetime.utcfromtimestamp(0)
+    total_seconds = (date - epoch).total_seconds()
+    return formatdate(total_seconds, usegmt=True)

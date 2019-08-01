@@ -32,6 +32,7 @@ class IIIFTestCase(TestCase):
         app.config['SERVER_NAME'] = "shield.worker.node.1"
         app.config['SITE_URL'] = "http://shield.worker.node.1"
         app.config['IIIF_CACHE_HANDLER'] = ImageSimpleCache()
+        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
         app.logger.disabled = True
 
         api = Api(app=app)
@@ -69,12 +70,14 @@ class IIIFTestCase(TestCase):
         """Simulate a PATCH request."""
         return self.make_request(self.client.patch, *args, **kwargs)
 
-    def make_request(self, client_func, endpoint, urlargs=None):
+    def make_request(self, client_func, endpoint, urlargs=None, *args, **kwargs):
         """Simulate a request."""
         url = url_for(endpoint, **(urlargs or {}))
         response = client_func(
             url,
-            base_url=self.app.config['SITE_URL']
+            base_url=self.app.config['SITE_URL'],
+            *args,
+            **kwargs
         )
         return response
 
