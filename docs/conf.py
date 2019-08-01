@@ -274,3 +274,4 @@ intersphinx_mapping = {
     'flask': ('http://flask.pocoo.org/docs/', None),
     'PIL': ('https://pillow.readthedocs.io/en/latest/', None),
 }
+nitpick_ignore = [('py:class', 'datetime')]

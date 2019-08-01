@@ -8,10 +8,13 @@
 # more details.
 
 """Multimedia IIIF Image API."""
-
+import datetime
+from email.utils import parsedate
 from io import BytesIO
 
-from flask import current_app, jsonify, redirect, request, send_file, url_for
+import flask
+from flask import Response, current_app, jsonify, redirect, request, \
+    send_file, url_for
 from flask_restful import Resource
 from flask_restful.utils import cors
 from werkzeug import LocalProxy
@@ -21,7 +24,7 @@ from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
 from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
-from .utils import should_cache
+from .utils import datetime_to_float, should_cache
 
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
@@ -171,6 +174,8 @@ class IIIFImageAPI(Resource):
             if should_cache(request.args):
                 cache_handler.set(key, to_serve.getvalue())
 
+        last_modified = cache_handler.get_last_modification(key)
+
         # decide the mime_type from the requested image_format
         mimetype = current_app.config['IIIF_FORMATS'].get(
             image_format, 'image/jpeg'
@@ -183,8 +188,16 @@ class IIIFImageAPI(Resource):
 
         # Trigger event after proccess the api request
         iiif_after_process_request.send(self, **api_after_request_parameters)
-
         send_file_kwargs = {'mimetype': mimetype}
+        # last_modified is not supported before flask 0.12
+        additional_headers = []
+        if last_modified and flask.__version__ in ['0.10.1', '0.11', '0.11.1']:
+            additional_headers = [
+                (u'Last-Modified', (datetime_to_float(last_modified)))
+            ]
+        elif last_modified:
+            send_file_kwargs.update(last_modified=last_modified)
+
         if 'dl' in request.args:
             filename = secure_filename(request.args.get('dl', ''))
             if filename.lower() in {'', '1', 'true'}:
@@ -195,5 +208,14 @@ class IIIFImageAPI(Resource):
                 as_attachment=True,
                 attachment_filename=secure_filename(filename),
             )
-
-        return send_file(to_serve, **send_file_kwargs)
+        if_modified_since_raw = request.headers.get('If-Modified-Since')
+        if if_modified_since_raw:
+            if_modified_since = datetime.datetime(
+                *parsedate(if_modified_since_raw)[:6]
+            )
+            if if_modified_since and if_modified_since >= last_modified:
+                return Response(status=304)
+        response = send_file(to_serve, **send_file_kwargs)
+        if additional_headers:
+            response.headers.extend(additional_headers)
+        return response

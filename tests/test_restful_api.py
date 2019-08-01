@@ -179,7 +179,6 @@ class TestRestAPI(IIIFTestCase):
         image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
         image.save(tmp_file, 'png')
         tmp_file.seek(0)
-
         get_the_response = self.get(
             'iiifimageapi',
             urlargs=dict(
@@ -192,11 +191,37 @@ class TestRestAPI(IIIFTestCase):
                 image_format='png'
             )
         )
+        # Check if returns `Last-Modified` key in headers
+        # required for `If-Modified-Since`
+        self.assertTrue(
+            'Last-Modified' in get_the_response.headers
+        )
+
+        last_modified = get_the_response.headers['Last-Modified']
 
         self.assertEqual(
             get_the_response.data,
             tmp_file.getvalue()
         )
+
+        # Test `If-Modified-Since` recognized properly
+        get_the_response = self.get(
+            'iiifimageapi',
+            urlargs=dict(
+                uuid=u'valid:id-üni',
+                version='v2',
+                region='full',
+                size='full',
+                rotation='0',
+                quality='default',
+                image_format='png'
+            ),
+            headers={
+                'If-Modified-Since': last_modified
+            }
+        )
+
+        self.assertEqual(get_the_response.status_code, 304)
 
         urlargs = dict(
             uuid=u'valid:id-üni',
