@@ -17,7 +17,7 @@ from flask import Response, current_app, jsonify, redirect, request, \
     send_file, url_for
 from flask_restful import Resource
 from flask_restful.utils import cors
-from werkzeug import LocalProxy
+from werkzeug.local import LocalProxy
 from werkzeug.utils import secure_filename
 
 from .api import IIIFImageAPIWrapper
