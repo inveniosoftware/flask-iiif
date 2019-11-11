@@ -13,7 +13,7 @@ from functools import wraps
 
 from flask import current_app
 from flask_restful import abort
-from werkzeug import LocalProxy
+from werkzeug.local import LocalProxy
 
 from .errors import IIIFValidatorError, MultimediaError, \
     MultimediaImageCropError, MultimediaImageFormatError, \
