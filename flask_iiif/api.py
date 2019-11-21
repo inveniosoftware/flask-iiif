@@ -17,7 +17,7 @@ import re
 from flask import current_app
 from PIL import Image
 from six import BytesIO, string_types
-from werkzeug import import_string
+from werkzeug.utils import import_string
 
 from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageFormatError, MultimediaImageNotFound, \
