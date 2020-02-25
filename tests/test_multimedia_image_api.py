@@ -100,7 +100,7 @@ class TestMultimediaAPI(IIIFTestCase):
         self.image_gif.resize('!400,220')
         self.assertEqual(self.image_gif.image.is_animated, True)
         self.assertEqual(self.image_gif.image.n_frames, 5)
-        self.assertEqual(str(self.image_gif.size()), str((400, 220)))
+        self.assertEqual(str(self.image_gif.size()), str((232, 220)))
 
     def test_image_resize(self):
         """Test image resize function."""
@@ -126,7 +126,7 @@ class TestMultimediaAPI(IIIFTestCase):
 
         # Resize.image_resize to !100,100
         self.image_resize.resize('!100,100')
-        self.assertEqual(str(self.image_resize.size()), str((100, 100)))
+        self.assertEqual(str(self.image_resize.size()), str((100, 94)))
 
     def test_errors(self):
         """Test errors."""

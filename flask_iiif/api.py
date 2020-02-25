@@ -23,7 +23,7 @@ from .errors import IIIFValidatorError, MultimediaImageCropError, \
     MultimediaImageFormatError, MultimediaImageNotFound, \
     MultimediaImageQualityError, MultimediaImageResizeError, \
     MultimediaImageRotateError
-from .utils import fill_background, resize_gif, resize_with_background_gif
+from .utils import resize_gif
 
 
 class MultimediaObject(object):
@@ -131,7 +131,7 @@ class MultimediaImage(MultimediaObject):
 
         """
         real_width, real_height = self.image.size
-        fits, point_x, point_y = True, 0, 0
+        point_x, point_y = 0, 0
         if resample is None:
             if isinstance(current_app.config['IIIF_RESIZE_RESAMPLE'],
                           string_types):
@@ -171,9 +171,6 @@ class MultimediaImage(MultimediaObject):
             # calculate the dimensions
             width = max(1, int(real_width * ratio))
             height = max(1, int(real_height * ratio))
-            # check if it's not too small for the requested window
-            if not (width == point_x and height == point_y):
-                fits = False
 
         # Check if it is `w,`
         elif dimensions.endswith(','):
@@ -202,18 +199,9 @@ class MultimediaImage(MultimediaObject):
 
         arguments = dict(size=(width, height), resample=resample)
         if self.image.format == 'GIF':
-            if not fits:
-                self.image = resize_with_background_gif(
-                    self.image, demand_w=point_x, demand_h=point_y,
-                    **arguments)
-            else:
-                self.image = resize_gif(self.image, **arguments)
+            self.image = resize_gif(self.image, **arguments)
         else:
-            if fits:
-                self.image = self.image.resize(**arguments)
-            else:
-                self.image = fill_background(self.image.resize(**arguments),
-                                             point_x, point_y)
+            self.image = self.image.resize(**arguments)
 
     def crop(self, coordinates):
         """Crop the image.
