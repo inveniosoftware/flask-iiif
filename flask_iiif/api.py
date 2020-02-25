@@ -294,15 +294,16 @@ class MultimediaImage(MultimediaObject):
         self.image = self.image.crop((start_x, start_y, max_x, max_y))
 
     def rotate(self, degrees, mirror=False):
-        """Rotate the image by given degrees.
+        """Rotate the image clockwise by given degrees.
 
         :param float degrees: The degrees, should be in range of [0, 360]
         :param bool mirror: Flip image from left to right
         """
+        # PIL wants to do anti-clockwise rotation so swap these around
         transforms = {
-            '90': Image.ROTATE_90,
+            '90': Image.ROTATE_270,
             '180': Image.ROTATE_180,
-            '270': Image.ROTATE_270,
+            '270': Image.ROTATE_90,
             'mirror': Image.FLIP_LEFT_RIGHT,
         }
 
@@ -313,15 +314,16 @@ class MultimediaImage(MultimediaObject):
                 format(degrees)
             )
 
+        # mirror must be applied before rotation
+        if mirror:
+            self.image = self.image.transpose(transforms.get('mirror'))
+
         if str(degrees) in transforms.keys():
             self.image = self.image.transpose(transforms.get(str(degrees)))
         else:
             # transparent background if degrees not multiple of 90
             self.image = self.image.convert('RGBA')
-            self.image = self.image.rotate(float(degrees), expand=0)
-
-        if mirror:
-            self.image = self.image.transpose(transforms.get('mirror'))
+            self.image = self.image.rotate(float(degrees), expand=1)
 
     def quality(self, quality):
         """Change the image format.
@@ -552,13 +554,17 @@ class IIIFImageAPIWrapper(MultimediaImage):
         """IIIF apply rotate.
 
         Apply :func:`~flask_iiif.api.MultimediaImage.rotate`.
+
+        .. note::
+            PIL rotates anti-clockwise, IIIF specifies clockwise
+
         """
         mirror = False
         degrees = value
         if value.startswith('!'):
             mirror = True
             degrees = value[1:]
-        self.rotate(degrees, mirror=mirror)
+        self.rotate(360-float(degrees), mirror=mirror)
 
     def apply_quality(self, value):
         """IIIF apply quality.
