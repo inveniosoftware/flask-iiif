@@ -407,14 +407,20 @@ class MultimediaImage(MultimediaObject):
             converted to `RGB` mode.
 
         """
-        image_format = self.sanitize_format_name(requested_format)
+        pil_map = current_app.config['IIIF_FORMATS_PIL_MAP']
+        pil_keys = pil_map.keys()
         format_keys = current_app.config['IIIF_FORMATS'].keys()
 
-        if image_format not in format_keys:
+        if (
+            requested_format not in format_keys or
+            requested_format not in pil_keys
+        ):
             raise MultimediaImageFormatError(
-                ("{0} does not supported, please select on of the valid"
+                ("{0} is not supported, please select one of the valid"
                  " formats: {1}").format(requested_format, format_keys)
             )
+        else:
+            image_format = pil_map[requested_format]
 
         # If the the `requested_format` is pdf or jpeg force mode to RGB
         if image_format in ("pdf", "jpeg"):
@@ -431,11 +437,6 @@ class MultimediaImage(MultimediaObject):
     def percent_to_number(number):
         """Calculate the percentage."""
         return float(number) / 100.0
-
-    @staticmethod
-    def sanitize_format_name(value):
-        """Lowercase formats and make sure that jpg is written as jpeg."""
-        return value.lower().replace("jpg", "jpeg")
 
 
 class IIIFImageAPIWrapper(MultimediaImage):
