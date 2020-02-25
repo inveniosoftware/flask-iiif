@@ -95,7 +95,10 @@ class IIIFImageInfo(Resource):
         # Trigger event after proccess the api request
         iiif_after_info_request.send(self, **data)
 
-        return jsonify(data)
+        resp = jsonify(data)
+        if 'application/ld+json' in request.headers.get('Accept', ''):
+            resp.mimetype = 'application/ld+json'
+        return resp
 
 
 class IIIFImageAPI(Resource):
