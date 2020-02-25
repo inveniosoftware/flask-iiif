@@ -209,7 +209,7 @@ class TestMultimediaAPI(IIIFTestCase):
         self.assertEqual(str(self.image_rotate.size()), str((1024, 1280)))
 
         self.image_rotate.rotate(120)
-        self.assertEqual(str(self.image_rotate.size()), str((1024, 1280)))
+        self.assertEqual(str(self.image_rotate.size()), str((1622, 1528)))
 
     def test_image_mode(self):
         """Test image mode."""
