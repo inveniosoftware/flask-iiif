@@ -86,11 +86,24 @@ IIIF_CONVERTERS = '', 'L', 'L', '1', '', ''
 # Supported multimedia image API formats
 IIIF_FORMATS = {
     'gif': 'image/gif',
+    'jp2': 'image/jp2',
     'jpeg': 'image/jpeg',
     'jpg': 'image/jpeg',
     'pdf': 'application/pdf',
     'png': 'image/png',
     'tif': 'image/tiff',
+    'tiff': 'image/tiff'
+}
+
+IIIF_FORMATS_PIL_MAP = {
+    'gif': 'gif',
+    'jp2': 'jpeg2000',
+    'jpeg': 'jpeg',
+    'jpg': 'jpeg',
+    'pdf': 'pdf',
+    'png': 'png',
+    'tif': 'tiff',
+    'tiff': 'tiff'
 }
 
 # Regular expressions to validate each parameter
@@ -115,7 +128,7 @@ IIIF_VALIDATIONS = {
         },
         "image_format": {
             "ignore": "",
-            "validate": "(jpg|png|gif|jp2|jpeg|pdf|tif)"
+            "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"
         }
     },
     "v2": {
@@ -138,7 +151,7 @@ IIIF_VALIDATIONS = {
         },
         "image_format": {
             "ignore": "",
-            "validate": "(jpg|png|gif|jp2|jpeg|pdf|tif)"
+            "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"
         }
     }
 }
