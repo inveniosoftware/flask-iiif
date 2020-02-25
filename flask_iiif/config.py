@@ -78,10 +78,10 @@ IIIF_CACHE_REDIS_URL = 'redis://localhost:6379/0'
 
 # Supported qualities
 IIIF_QUALITIES = (
-    'default', 'grey', 'bitonal', 'color', 'native'
+    'default', 'gray', 'grey', 'bitonal', 'color', 'native'
 )
 # Suported coverters
-IIIF_CONVERTERS = '', 'L', '1', '', ''
+IIIF_CONVERTERS = '', 'L', 'L', '1', '', ''
 
 # Supported multimedia image API formats
 IIIF_FORMATS = {
@@ -111,7 +111,7 @@ IIIF_VALIDATIONS = {
         },
         "quality": {
             "ignore": "default",
-            "validate": "(native|color|grey|bitonal)"
+            "validate": "(native|color|gr[ae]y|bitonal)"
         },
         "image_format": {
             "ignore": "",
@@ -134,7 +134,7 @@ IIIF_VALIDATIONS = {
         },
         "quality": {
             "ignore": "default",
-            "validate": "(default|color|grey|bitonal)"
+            "validate": "(default|color|gr[ae]y|bitonal)"
         },
         "image_format": {
             "ignore": "",
@@ -146,14 +146,14 @@ IIIF_VALIDATIONS = {
 # Qualities per image mode
 IIIF_MODE = {
     '1': ['default', 'bitonal'],
-    'L': ['default', 'gray', 'bitonal'],
-    'P': ['default', 'gray', 'bitonal'],
-    'RGB': ['default', 'color', 'gray', 'bitonal'],
-    'RGBA': ['default', 'color', 'gray', 'bitonal'],
-    'CMYK': ['default', 'color', 'gray', 'bitonal'],
-    'YCbCr': ['default', 'color', 'gray', 'bitonal'],
-    'I': ['default', 'color', 'gray', 'bitonal'],
-    'F': ['default', 'color', 'gray', 'bitonal']
+    'L': ['default', 'gray', 'grey', 'bitonal'],
+    'P': ['default', 'gray', 'grey', 'bitonal'],
+    'RGB': ['default', 'color', 'gray', 'grey', 'bitonal'],
+    'RGBA': ['default', 'color', 'gray', 'grey', 'bitonal'],
+    'CMYK': ['default', 'color', 'gray', 'grey', 'bitonal'],
+    'YCbCr': ['default', 'color', 'gray', 'grey', 'bitonal'],
+    'I': ['default', 'color', 'gray', 'grey', 'bitonal'],
+    'F': ['default', 'color', 'gray', 'grey', 'bitonal']
 }
 
 # API Info
