@@ -73,7 +73,7 @@ install_requires = [
     'Flask-RESTful>=0.2.12',
     'blinker>=1.4',
     'six>=1.7.2',
-    'pillow>=3.4',
+    'pillow>=4.0',
 ]
 
 extra_require = {
