@@ -13,7 +13,6 @@ import datetime
 from email.utils import parsedate
 from io import BytesIO
 
-import flask
 from flask import Response, current_app, jsonify, redirect, request, \
     send_file, url_for
 from flask_restful import Resource
@@ -25,7 +24,7 @@ from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
 from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
-from .utils import datetime_to_float, should_cache
+from .utils import should_cache
 
 current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
 
@@ -60,16 +59,19 @@ class IIIFImageInfo(Resource):
         # Trigger event before proccess the api request
         iiif_before_info_request.send(self, version=version, uuid=uuid)
 
-        # Check if its cached
-        cache_handler = current_iiif.cache()
-
         # build the image key
         key = u"iiif:info:{0}/{1}".format(
             version, uuid
         ).encode('utf8')
 
         # Check if its cached
-        cached = cache_handler.get(key)
+        try:
+            cached = current_iiif.cache.get(key)
+        except Exception:
+            if current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+                cached = None
+            else:
+                raise
 
         # If the image size is cached loaded from cache
         if cached:
@@ -79,7 +81,13 @@ class IIIFImageInfo(Resource):
             image = IIIFImageAPIWrapper.open_image(data)
             width, height = image.size()
             if should_cache(request.args):
-                cache_handler.set(key, "{0},{1}".format(width, height))
+                try:
+                    current_iiif.cache.set(
+                        key, "{0},{1}".format(width, height))
+                except Exception:
+                    if not current_app.config.get(
+                            'IIIF_CACHE_IGNORE_ERRORS', False):
+                        raise
 
         data = current_app.config['IIIF_API_INFO_RESPONSE_SKELETON'][version]
 
@@ -145,15 +153,19 @@ class IIIFImageAPI(Resource):
         # Validate IIIF parameters
         IIIFImageAPIWrapper.validate_api(**api_parameters)
 
-        cache_handler = current_iiif.cache()
-
         # build the image key
         key = u'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
             uuid, region, size, quality, rotation, image_format
         ).encode('utf8')
 
         # Check if its cached
-        cached = cache_handler.get(key)
+        try:
+            cached = current_iiif.cache.get(key)
+        except Exception:
+            if current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+                cached = None
+            else:
+                raise
 
         # If the image is cached loaded from cache
         if cached:
@@ -176,9 +188,19 @@ class IIIFImageAPI(Resource):
             to_serve = image.serve(image_format=image_format)
             # to_serve = image.serve(image_format=image_format)
             if should_cache(request.args):
-                cache_handler.set(key, to_serve.getvalue())
+                try:
+                    current_iiif.cache.set(key, to_serve.getvalue())
+                except Exception:
+                    if not current_app.config.get(
+                            'IIIF_CACHE_IGNORE_ERRORS', False):
+                        raise
 
-        last_modified = cache_handler.get_last_modification(key)
+        try:
+            last_modified = current_iiif.cache.get_last_modification(key)
+        except Exception:
+            if not current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+                raise
+            last_modified = None
 
         # decide the mime_type from the requested image_format
         mimetype = current_app.config['IIIF_FORMATS'].get(
@@ -195,11 +217,7 @@ class IIIFImageAPI(Resource):
         send_file_kwargs = {'mimetype': mimetype}
         # last_modified is not supported before flask 0.12
         additional_headers = []
-        if last_modified and flask.__version__ in ['0.10.1', '0.11', '0.11.1']:
-            additional_headers = [
-                (u'Last-Modified', (datetime_to_float(last_modified)))
-            ]
-        elif last_modified:
+        if last_modified:
             send_file_kwargs.update(last_modified=last_modified)
 
         if 'dl' in request.args:

@@ -30,7 +30,7 @@ from __future__ import absolute_import
 from flask import current_app
 from six import string_types
 from werkzeug.urls import url_join
-from werkzeug.utils import import_string
+from werkzeug.utils import cached_property, import_string
 
 from . import config
 from .utils import iiif_image_url
@@ -47,8 +47,8 @@ class IIIF(object):
         if app is not None:
             self.init_app(app)
 
-    @staticmethod
-    def cache():
+    @cached_property
+    def cache(self):
         """Return the cache handler.
 
         .. note::
@@ -62,7 +62,7 @@ class IIIF(object):
         if isinstance(handler, string_types):
             handler = import_string(handler)
         if callable(handler):
-            handler = handler()
+            handler = handler(self.app)
         assert isinstance(handler, ImageCache)
         return handler
 
@@ -178,4 +178,8 @@ class IIIF(object):
         """
         self.api_decorator_callback = callback
 
-__all__ = ('IIIF', '__version__')
+
+__all__ = (
+    'IIIF',
+    '__version__',
+)

@@ -50,7 +50,7 @@ class ImageRedisCache(ImageCache):
         :type value: `BytesIO` object
         :param timeout: the cache timeout in seconds
         """
-        timeout = timeout if timeout else self.timeout
+        timeout = timeout or self.timeout
         self.cache.set(key, value, timeout=timeout)
         self.set_last_modification(key, timeout=timeout)
 
@@ -59,8 +59,7 @@ class ImageRedisCache(ImageCache):
 
         :param key: the file object's key
         """
-        last = self.cache.get(self._last_modification_key_name(key))
-        return last
+        return self.get(self._last_modification_key_name(key))
 
     def set_last_modification(self, key, last_modification=None, timeout=None):
         """Set last modification of cached file.
@@ -71,11 +70,9 @@ class ImageRedisCache(ImageCache):
         :type last_modification: datetime.datetime
         :param timeout: the cache timeout in seconds
         """
-        if not key:
-            return
         if not last_modification:
             last_modification = datetime.utcnow().replace(microsecond=0)
-        timeout = timeout if timeout else self.timeout
+        timeout = timeout or self.timeout
         self.cache.set(
             self._last_modification_key_name(key),
             last_modification,
@@ -84,9 +81,8 @@ class ImageRedisCache(ImageCache):
 
     def delete(self, key):
         """Delete the specific key."""
-        if key:
-            self.cache.delete(key)
-            self.cache.delete(self._last_modification_key_name(key))
+        self.cache.delete(key)
+        self.cache.delete(self._last_modification_key_name(key))
 
     def flush(self):
         """Flush the cache."""
