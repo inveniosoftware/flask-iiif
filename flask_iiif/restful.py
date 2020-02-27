@@ -79,7 +79,7 @@ class IIIFImageInfo(Resource):
             try:
                 image = IIIFImageAPIWrapper.open_image(data)
             except:
-                raise(MultimediaImageNotFound)
+                raise MultimediaImageNotFound()
             width, height = image.size()
             if should_cache(request.args):
                 cache_handler.set(key, "{0},{1}".format(width, height))
@@ -168,7 +168,7 @@ class IIIFImageAPI(Resource):
             try:
                 image = IIIFImageAPIWrapper.open_image(data)
             except:
-                raise(MultimediaImageNotFound)
+                raise MultimediaImageNotFound()
             image.apply_api(
                 version=version,
                 region=region,
