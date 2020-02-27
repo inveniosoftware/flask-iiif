@@ -17,7 +17,6 @@ from flask_testing import TestCase
 
 
 class IIIFTestCase(TestCase):
-
     """IIIF REST test case."""
 
     def create_app(self):

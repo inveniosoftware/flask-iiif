@@ -72,3 +72,7 @@ class ImageCache(object):
 
     def flush(self):
         """Flush the cache."""
+
+    def __call__(self, app=None):
+        """Backwards-compatibility method returning ``self``."""
+        return self

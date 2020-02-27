@@ -10,6 +10,7 @@
 """Test REST API."""
 
 from io import BytesIO
+from unittest.mock import patch
 
 from flask import url_for
 from PIL import Image
@@ -374,3 +375,28 @@ class TestRestAPI(IIIFTestCase):
             self.assertTrue(cache.get(key))
 
             cache.clear()
+
+    def test_cache_ignore_errors(self):
+        """Test if cache retrieval errors are ignored when configured."""
+        from flask import current_app
+
+        cache = self.app.config['IIIF_CACHE_HANDLER'].cache
+        with patch.object(cache, 'get', side_effect=Exception('test fail')):
+            urlargs = dict(
+                uuid='valid:id',
+                version='v2',
+                region='full',
+                size='full',
+                rotation='0',
+                quality='default',
+                image_format='png'
+            )
+
+            # Ignore errors
+            old_value = current_app.config.get('IIIF_CACHE_IGNORE_ERRORS')
+            current_app.config['IIIF_CACHE_IGNORE_ERRORS'] = True
+
+            get_the_response = self.get('iiifimageapi', urlargs=urlargs)
+            self.assert200(get_the_response)
+
+            current_app.config['IIIF_CACHE_REDIS_PREFIX'] = old_value
