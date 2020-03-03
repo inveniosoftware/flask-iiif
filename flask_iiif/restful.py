@@ -22,7 +22,6 @@ from werkzeug.utils import secure_filename
 
 from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
-from .errors import MultimediaImageNotFound
 from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
 from .utils import datetime_to_float, should_cache
@@ -76,10 +75,7 @@ class IIIFImageInfo(Resource):
             width, height = map(int, cached.split(','))
         else:
             data = current_iiif.uuid_to_image_opener(uuid)
-            try:
-                image = IIIFImageAPIWrapper.open_image(data)
-            except:
-                raise(MultimediaImageNotFound)
+            image = IIIFImageAPIWrapper.open_image(data)
             width, height = image.size()
             if should_cache(request.args):
                 cache_handler.set(key, "{0},{1}".format(width, height))
@@ -165,10 +161,8 @@ class IIIFImageAPI(Resource):
         # Otherwise create the image
         else:
             data = current_iiif.uuid_to_image_opener(uuid)
-            try:
-                image = IIIFImageAPIWrapper.open_image(data)
-            except:
-                raise(MultimediaImageNotFound)
+            image = IIIFImageAPIWrapper.open_image(data)
+
             image.apply_api(
                 version=version,
                 region=region,
