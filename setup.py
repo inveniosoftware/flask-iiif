@@ -64,8 +64,9 @@ tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.6.1',
-    'Werkzeug>=0.15',
+    'pytest>=3.7.0',
+    # Flask-Testing is not yet compatible with Werkzeug >= 1.0.0
+    'werkzeug>=0.15.3,<1.0.0',
 ]
 
 install_requires = [
