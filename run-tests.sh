@@ -9,6 +9,6 @@
 
 pydocstyle flask_iiif && \
 isort -c -c -df **/*.py && \
-check-manifest --ignore ".travis-*" --ignore docs/_themes && \
+check-manifest --ignore ".travis-*" && \
 sphinx-build -qnNW docs docs/_build/html && \
 python setup.py test
