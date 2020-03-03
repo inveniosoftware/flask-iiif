@@ -13,7 +13,7 @@ from __future__ import absolute_import
 
 from datetime import datetime
 
-from werkzeug.contrib.cache import SimpleCache
+from cachelib.simple import SimpleCache
 
 from .cache import ImageCache
 
