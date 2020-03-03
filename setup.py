@@ -79,7 +79,7 @@ install_requires = [
 
 extra_require = {
     'docs': [
-        'Sphinx>=1.4.2',
+        'Sphinx>=1.5.1',
     ],
     'redis': [
         'redis>=2.10.5',
