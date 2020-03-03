@@ -56,7 +56,7 @@ class ImageCache(object):
         :param key: the file object's key
         :param last_modification: Last modification date of
             file represented by the key
-        :type last_modification: datetime
+        :type last_modification: datetime.datetime
         :param timeout: the cache timeout in seconds
         """
 
