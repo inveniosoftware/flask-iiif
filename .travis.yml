@@ -55,4 +55,4 @@ deploy:
   on:
     tags: true
     python: "2.7"
-    conditions: $REQUIREMENTS = release
+    condition: $REQUIREMENTS = release
