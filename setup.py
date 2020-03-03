@@ -72,7 +72,7 @@ install_requires = [
     'blinker>=1.4',
     'cachelib>=0.1',
     'Flask>=1.0.4',
-    'Flask-RESTful>=0.2.12',
+    'Flask-RESTful>=0.3.7',
     'pillow>=4.0',
     'six>=1.7.2',
 ]
