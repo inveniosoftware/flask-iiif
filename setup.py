@@ -65,14 +65,16 @@ tests_require = [
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.6.1',
+    'Werkzeug>=0.15',
 ]
 
 install_requires = [
-    'Flask>=0.10.1',
-    'Flask-RESTful>=0.2.12',
     'blinker>=1.4',
-    'six>=1.7.2',
+    'cachelib>=0.1',
+    'Flask>=1.0.4',
+    'Flask-RESTful>=0.2.12',
     'pillow>=4.0',
+    'six>=1.7.2',
 ]
 
 extra_require = {

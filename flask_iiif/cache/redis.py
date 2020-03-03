@@ -13,9 +13,9 @@ from __future__ import absolute_import
 
 from datetime import datetime
 
+from cachelib.redis import RedisCache
 from flask import current_app
 from redis import StrictRedis
-from werkzeug.contrib.cache import RedisCache
 
 from .cache import ImageCache
 
