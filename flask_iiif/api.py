@@ -2,6 +2,7 @@
 #
 # This file is part of Flask-IIIF
 # Copyright (C) 2014, 2015, 2016, 2017 CERN.
+# Copyright (C) 2020 data-futures.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
