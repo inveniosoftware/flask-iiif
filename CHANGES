@@ -4,12 +4,17 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.6.0 (released 2019-03-13)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Removes support for Python 2.7
+
 Version 0.5.3 (released 2019-11-21)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Adds Last-Lodified and If-Modified-Since to imageapi
-- Removes warning message for LocalProxy 
-- Fixes werkzeug deprecation warning 
+- Removes warning message for LocalProxy
+- Fixes werkzeug deprecation warning
 
 Version 0.5.2 (released 2019-07-25)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
