@@ -15,15 +15,15 @@ cache:
   - pip
 
 services:
-  - redis-server
+  - redis
 
 env:
   - REQUIREMENTS=lowest
   - REQUIREMENTS=release
 
 python:
-  - "2.7"
-  - "3.5"
+  - "3.6"
+  - "3.7"
 
 before_install:
   - "travis_retry pip install --upgrade pip setuptools py"
@@ -35,7 +35,6 @@ before_install:
 install:
   - "travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt"
   - "pip install -e .[all]"
-  - "pip freeze"
 
 script:
   - "./run-tests.sh"
@@ -52,7 +51,8 @@ deploy:
   password:
     secure: "Oz5MXWgL+vP+6/JdG0S9RRsftPhGsl3COp+ijzagnK1vkYvhAMbd9SZG10TNBadiOVR0pQZ1ikqOsyQwRxd9m2QYM7pMCl6fRFlPox+O6rdIRhl+VEHGswBMH/GNoQYEvn+4Nt/BdTnTxwZLybBWv3YuYbhdvynmEOSaqyXn6GE="
   distributions: "sdist bdist_wheel"
+  skip_existing: true
   on:
     tags: true
-    python: "2.7"
+    python: "3.6"
     condition: $REQUIREMENTS = release
