@@ -21,9 +21,9 @@ from .cache import ImageCache
 class ImageSimpleCache(ImageCache):
     """Simple image cache."""
 
-    def __init__(self):
+    def __init__(self, app=None):
         """Initialize the cache."""
-        super(ImageSimpleCache, self).__init__()
+        super(ImageSimpleCache, self).__init__(app=app)
         self.cache = SimpleCache()
 
     def get(self, key):

@@ -23,11 +23,12 @@ from .cache import ImageCache
 class ImageRedisCache(ImageCache):
     """Redis image cache."""
 
-    def __init__(self):
+    def __init__(self, app=None):
         """Initialize the cache."""
-        super(ImageRedisCache, self).__init__()
-        redis_url = current_app.config['IIIF_CACHE_REDIS_URL']
-        prefix = current_app.config.get('IIIF_CACHE_REDIS_PREFIX', 'iiif')
+        super(ImageRedisCache, self).__init__(app=app)
+        app = app or current_app
+        redis_url = app.config['IIIF_CACHE_REDIS_URL']
+        prefix = app.config.get('IIIF_CACHE_REDIS_PREFIX', 'iiif')
         self.cache = RedisCache(
             host=StrictRedis.from_url(redis_url),
             key_prefix=prefix

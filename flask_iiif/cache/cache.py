@@ -21,7 +21,7 @@ from werkzeug.utils import cached_property
 class ImageCache(object):
     """Abstract cache layer."""
 
-    def __init__(self):
+    def __init__(self, app=None):
         """Initialize the cache."""
 
     @cached_property

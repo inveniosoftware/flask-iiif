@@ -33,6 +33,7 @@ from werkzeug.urls import url_join
 from werkzeug.utils import cached_property, import_string
 
 from . import config
+from .cache.cache import ImageCache
 from .utils import iiif_image_url
 from .version import __version__
 
@@ -57,7 +58,6 @@ class IIIF(object):
             :py:attr:`~flask_iiif.config.IIIF_CACHE_HANDLER`. More infos
             could be found in :py:mod:`~flask_iiif.cache.cache`.
         """
-        from .cache.cache import ImageCache
         handler = current_app.config['IIIF_CACHE_HANDLER']
         if isinstance(handler, string_types):
             handler = import_string(handler)
