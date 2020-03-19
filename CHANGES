@@ -4,10 +4,26 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
-Version 0.6.0 (released 2019-03-13)
+Version 0.6.1 (released 2020-03-19)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Added missing ``app`` argument for the ``flask_iiif.cache.ImageCache``
+  constructor.
+
+Version 0.6.0 (released 2020-03-13)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Removes support for Python 2.7
+- Image API specification fixes
+    - Support both ``gray`` and ``grey`` as valid qualities.
+    - Rotations are now performed clock-wise.
+    - No padding added to resized images.
+- Better support for image extension conversions (``.tif/.tiff``, ``.jp2``).
+- Pillow bumped to v4.0
+- Introduced ``IIIF_CACHE_IGNORE_ERRORS`` config variable to allow ignoring
+  cache access exceptions.
+- Changed ``current_iiif.cache`` from a callable function to a Werkzeug
+  ``cached_property``.
 
 Version 0.5.3 (released 2019-11-21)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
