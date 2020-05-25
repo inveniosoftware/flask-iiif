@@ -1,7 +1,8 @@
 Flask-IIIF is free software; you can redistribute it and/or modify it
 under the terms of the Revised BSD License quoted below.
 
-Copyright (C) 2014, 2016 CERN.
+Copyright (C) 2014-2020 CERN.
+Copyright (C) 2020 data-futures.
 
 All rights reserved.
 
@@ -32,7 +33,3 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
-
-In applying this license, CERN does not waive the privileges and
-immunities granted to it by virtue of its status as an
-Intergovernmental Organization or submit itself to any jurisdiction.
