@@ -25,31 +25,25 @@ class TestRestAPI(IIIFTestCase):
 
     def test_api_base(self):
         """Test API Base."""
-        data = dict(
-            uuid="valid:id",
-            version="v2"
-        )
-        get_the_response = self.get(
-            'iiifimagebase',
-            urlargs=data
-        )
+        data = dict(uuid="valid:id", version="v2")
+        get_the_response = self.get("iiifimagebase", urlargs=data)
         self.assertEqual(get_the_response.status_code, 303)
 
     def test_api_info(self):
         """Test API Info not found case."""
         from flask import jsonify
+
         id_v1 = url_for(
-            'iiifimagebase', uuid=u"valid:id-üni", version="v1", _external=True
+            "iiifimagebase", uuid=u"valid:id-üni", version="v1", _external=True
         )
         id_v2 = url_for(
-            'iiifimagebase', uuid=u"valid:id-üni", version="v2", _external=True
+            "iiifimagebase", uuid=u"valid:id-üni", version="v2", _external=True
         )
 
         expected = {
             "v1": {
                 "@context": (
-                    "http://library.stanford.edu/iiif/"
-                    "image-api/1.1/context.json"
+                    "http://library.stanford.edu/iiif/" "image-api/1.1/context.json"
                 ),
                 "@id": id_v1,
                 "width": 1280,
@@ -60,9 +54,7 @@ class TestRestAPI(IIIFTestCase):
                 ),
                 "tile_width": 256,
                 "tile_height": 256,
-                "scale_factors": [
-                    1, 2, 4, 8, 16, 32, 64
-                ]
+                "scale_factors": [1, 2, 4, 8, 16, 32, 64],
             },
             "v2": {
                 "@context": "http://iiif.io/api/image/2/context.json",
@@ -70,106 +62,77 @@ class TestRestAPI(IIIFTestCase):
                 "protocol": "http://iiif.io/api/image",
                 "width": 1280,
                 "height": 1024,
-                "tiles": [
-                    {
-                        "width": 256,
-                        "scaleFactors": [
-                            1, 2, 4, 8, 16, 32, 64
-                        ]
-                    }
-                ],
-                "profile": [
-                    "http://iiif.io/api/image/2/level2.json",
-                ]
-            }
+                "tiles": [{"width": 256, "scaleFactors": [1, 2, 4, 8, 16, 32, 64]}],
+                "profile": ["http://iiif.io/api/image/2/level2.json"],
+            },
         }
         get_the_response = self.get(
-            'iiifimageinfo',
-            urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v2',
-            )
+            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v2",)
         )
         self.assert200(get_the_response)
         get_the_response = self.get(
-            'iiifimageinfo',
-            urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v2',
-            )
+            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v2",)
         )
-        self.assertEqual(
-            jsonify(expected.get('v2')).data, get_the_response.data
-        )
+        self.assertEqual(jsonify(expected.get("v2")).data, get_the_response.data)
 
         get_the_response = self.get(
-            'iiifimageinfo',
-            urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v1',
-            )
+            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v1",)
         )
         self.assert200(get_the_response)
-        self.assertEqual(
-            jsonify(expected.get('v1')).data, get_the_response.data
-        )
+        self.assertEqual(jsonify(expected.get("v1")).data, get_the_response.data)
 
     def test_api_info_not_found(self):
         """Test API Info."""
         get_the_response = self.get(
-            'iiifimageinfo',
-            urlargs=dict(
-                uuid='notfound',
-                version='v2',
-            )
+            "iiifimageinfo", urlargs=dict(uuid="notfound", version="v2",)
         )
         self.assert404(get_the_response)
 
     def test_api_not_found(self):
         """Test API not found case."""
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid='notfound',
-                version='v2',
-                region='full',
-                size='full',
-                rotation='0',
-                quality='default',
-                image_format='png'
-            )
+                uuid="notfound",
+                version="v2",
+                region="full",
+                size="full",
+                rotation="0",
+                quality="default",
+                image_format="png",
+            ),
         )
         self.assert404(get_the_response)
 
     def test_api_internal_server_error(self):
         """Test API internal server error case."""
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v2',
-                region='full',
-                size='full',
-                rotation='2220',
-                quality='default',
-                image_format='png'
-            )
+                uuid=u"valid:id-üni",
+                version="v2",
+                region="full",
+                size="full",
+                rotation="2220",
+                quality="default",
+                image_format="png",
+            ),
         )
         self.assert500(get_the_response)
 
     def test_api_iiif_validation_error(self):
         """Test API iiif validation case."""
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid='valid:id-üni',
-                version='v1',
-                region='200',
-                size='full',
-                rotation='2220',
-                quality='default',
-                image_format='png'
-            )
+                uuid="valid:id-üni",
+                version="v1",
+                region="200",
+                size="full",
+                rotation="2220",
+                quality="default",
+                image_format="png",
+            ),
         )
         self.assert400(get_the_response)
 
@@ -178,165 +141,140 @@ class TestRestAPI(IIIFTestCase):
         tmp_file = BytesIO()
         # create a new image
         image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
-        image.save(tmp_file, 'png')
+        image.save(tmp_file, "png")
         tmp_file.seek(0)
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v2',
-                region='full',
-                size='full',
-                rotation='0',
-                quality='default',
-                image_format='png'
-            )
+                uuid=u"valid:id-üni",
+                version="v2",
+                region="full",
+                size="full",
+                rotation="0",
+                quality="default",
+                image_format="png",
+            ),
         )
         # Check if returns `Last-Modified` key in headers
         # required for `If-Modified-Since`
-        self.assertTrue(
-            'Last-Modified' in get_the_response.headers
-        )
+        self.assertTrue("Last-Modified" in get_the_response.headers)
 
-        last_modified = get_the_response.headers['Last-Modified']
+        last_modified = get_the_response.headers["Last-Modified"]
 
-        self.assertEqual(
-            get_the_response.data,
-            tmp_file.getvalue()
-        )
+        self.assertEqual(get_the_response.data, tmp_file.getvalue())
 
         # Test `If-Modified-Since` recognized properly
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid=u'valid:id-üni',
-                version='v2',
-                region='full',
-                size='full',
-                rotation='0',
-                quality='default',
-                image_format='png'
+                uuid=u"valid:id-üni",
+                version="v2",
+                region="full",
+                size="full",
+                rotation="0",
+                quality="default",
+                image_format="png",
             ),
-            headers={
-                'If-Modified-Since': last_modified
-            }
+            headers={"If-Modified-Since": last_modified},
         )
 
         self.assertEqual(get_the_response.status_code, 304)
 
         urlargs = dict(
-            uuid=u'valid:id-üni',
-            version='v2',
-            region='200,200,200,200',
-            size='300,300',
-            rotation='!50',
-            quality='color',
-            image_format='pdf',
+            uuid=u"valid:id-üni",
+            version="v2",
+            region="200,200,200,200",
+            size="300,300",
+            rotation="!50",
+            quality="color",
+            image_format="pdf",
         )
 
-        get_the_response = self.get(
-            'iiifimageapi',
-            urlargs=urlargs,
-        )
+        get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
         self.assert200(get_the_response)
 
-        default_name = u'{name}-200200200200-300300-color-50.pdf'.format(
-            name=secure_filename(urlargs['uuid'])
+        default_name = u"{name}-200200200200-300300-color-50.pdf".format(
+            name=secure_filename(urlargs["uuid"])
         )
-        for dl, name in (('', default_name), ('1', default_name),
-                         ('foo.pdf', 'foo.pdf')):
-            urlargs['dl'] = dl
-            get_the_response = self.get(
-                'iiifimageapi',
-                urlargs=urlargs,
-            )
+        for dl, name in (
+            ("", default_name),
+            ("1", default_name),
+            ("foo.pdf", "foo.pdf"),
+        ):
+            urlargs["dl"] = dl
+            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
             self.assert200(get_the_response)
             self.assertEqual(
-                get_the_response.headers['Content-Disposition'],
-                'attachment; filename={name}'.format(name=name)
+                get_the_response.headers["Content-Disposition"],
+                "attachment; filename={name}".format(name=name),
             )
 
     def test_api_decorator(self):
         """Test API decorator."""
         get_the_response = self.get(
-            'iiifimageapi',
+            "iiifimageapi",
             urlargs=dict(
-                uuid='valid:decorator:id',
-                version='v2',
-                region='full',
-                size='full',
-                rotation='0',
-                quality='default',
-                image_format='png'
-            )
+                uuid="valid:decorator:id",
+                version="v2",
+                region="full",
+                size="full",
+                rotation="0",
+                quality="default",
+                image_format="png",
+            ),
         )
         self.assert403(get_the_response)
 
     def test_api_abort_all_methods_except_get(self):
         """Abort all methods but GET."""
         data = dict(
-            uuid='valid:id-üni',
-            version='v2',
-            region='full',
-            size='full',
-            rotation='0',
-            quality='default',
-            image_format='png'
+            uuid="valid:id-üni",
+            version="v2",
+            region="full",
+            size="full",
+            rotation="0",
+            quality="default",
+            image_format="png",
         )
-        get_the_response = self.post(
-            'iiifimageapi',
-            urlargs=data
-        )
+        get_the_response = self.post("iiifimageapi", urlargs=data)
         self.assert405(get_the_response)
 
-        get_the_response = self.put(
-            'iiifimageapi',
-            urlargs=data
-        )
+        get_the_response = self.put("iiifimageapi", urlargs=data)
         self.assert405(get_the_response)
 
-        get_the_response = self.delete(
-            'iiifimageapi',
-            urlargs=data
-        )
+        get_the_response = self.delete("iiifimageapi", urlargs=data)
         self.assert405(get_the_response)
 
-        get_the_response = self.patch(
-            'iiifimageapi',
-            urlargs=data
-        )
+        get_the_response = self.patch("iiifimageapi", urlargs=data)
         self.assert405(get_the_response)
 
     def test_api_cache_control(self):
         """Test cache-control headers"""
 
         urlargs = dict(
-            uuid=u'valid:id-üni',
-            version='v2',
-            region='200,200,200,200',
-            size='300,300',
-            rotation='!50',
-            quality='color',
-            image_format='pdf',
+            uuid=u"valid:id-üni",
+            version="v2",
+            region="200,200,200,200",
+            size="300,300",
+            rotation="!50",
+            quality="color",
+            image_format="pdf",
         )
 
-        key = u'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
-            urlargs['uuid'],
-            urlargs['region'],
-            urlargs['size'],
-            urlargs['quality'],
-            urlargs['rotation'],
-            urlargs['image_format']
-        ).encode('utf8')
+        key = u"iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
+            urlargs["uuid"],
+            urlargs["region"],
+            urlargs["size"],
+            urlargs["quality"],
+            urlargs["rotation"],
+            urlargs["image_format"],
+        ).encode("utf8")
 
-        cache = self.app.config['IIIF_CACHE_HANDLER'].cache
+        cache = self.app.config["IIIF_CACHE_HANDLER"].cache
 
-        get_the_response = self.get(
-            'iiifimageapi',
-            urlargs=urlargs,
-        )
+        get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
 
-        self.assertFalse('cache-control' in urlargs)
+        self.assertFalse("cache-control" in urlargs)
 
         self.assert200(get_the_response)
 
@@ -344,15 +282,11 @@ class TestRestAPI(IIIFTestCase):
 
         cache.clear()
 
-        for cache_control, name in (('no-cache', "foo.pdf"),
-                                    ('no-store', "foo.pdf")):
+        for cache_control, name in (("no-cache", "foo.pdf"), ("no-store", "foo.pdf")):
 
-            urlargs['cache-control'] = cache_control
+            urlargs["cache-control"] = cache_control
 
-            get_the_response = self.get(
-                'iiifimageapi',
-                urlargs=urlargs,
-            )
+            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
 
             self.assert200(get_the_response)
 
@@ -360,15 +294,11 @@ class TestRestAPI(IIIFTestCase):
 
             cache.clear()
 
-        for cache_control, name in (('public', "foo.pdf"),
-                                    ('no-transform', "foo.pdf")):
+        for cache_control, name in (("public", "foo.pdf"), ("no-transform", "foo.pdf")):
 
-            urlargs['cache-control'] = cache_control
+            urlargs["cache-control"] = cache_control
 
-            get_the_response = self.get(
-                'iiifimageapi',
-                urlargs=urlargs,
-            )
+            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
 
             self.assert200(get_the_response)
 
@@ -380,30 +310,34 @@ class TestRestAPI(IIIFTestCase):
         """Test if cache retrieval errors are ignored when configured."""
         from flask import current_app
 
-        info_args = dict(uuid=u'valid:id', version='v2')
+        info_args = dict(uuid=u"valid:id", version="v2")
         api_args = dict(
-            uuid='valid:id', version='v2',
-            region='full', size='full', rotation='0',
-            quality='default', image_format='png'
+            uuid="valid:id",
+            version="v2",
+            region="full",
+            size="full",
+            rotation="0",
+            quality="default",
+            image_format="png",
         )
 
-        cache = self.app.config['IIIF_CACHE_HANDLER'].cache
-        with patch.object(cache, 'get', side_effect=Exception('test fail')):
+        cache = self.app.config["IIIF_CACHE_HANDLER"].cache
+        with patch.object(cache, "get", side_effect=Exception("test fail")):
             # Without ignoring errors
             self.assertRaisesRegex(
-                Exception, 'test fail',
-                self.get, 'iiifimageinfo', urlargs=info_args)
+                Exception, "test fail", self.get, "iiifimageinfo", urlargs=info_args
+            )
             self.assertRaisesRegex(
-                Exception, 'test fail',
-                self.get, 'iiifimageapi', urlargs=api_args)
+                Exception, "test fail", self.get, "iiifimageapi", urlargs=api_args
+            )
 
             # Ignore errors
-            old_value = current_app.config.get('IIIF_CACHE_IGNORE_ERRORS')
-            current_app.config['IIIF_CACHE_IGNORE_ERRORS'] = True
+            old_value = current_app.config.get("IIIF_CACHE_IGNORE_ERRORS")
+            current_app.config["IIIF_CACHE_IGNORE_ERRORS"] = True
 
-            resp = self.get('iiifimageinfo', urlargs=info_args)
+            resp = self.get("iiifimageinfo", urlargs=info_args)
             self.assert200(resp)
-            resp = self.get('iiifimageapi', urlargs=api_args)
+            resp = self.get("iiifimageapi", urlargs=api_args)
             self.assert200(resp)
 
-            current_app.config['IIIF_CACHE_REDIS_PREFIX'] = old_value
+            current_app.config["IIIF_CACHE_REDIS_PREFIX"] = old_value

@@ -26,35 +26,37 @@ class TestIIIF(TestCase):
     def setUp(self):
         """Setup up."""
         app = Flask(__name__)
-        app.config['DEBUG'] = True
-        app.config['TESTING'] = True
+        app.config["DEBUG"] = True
+        app.config["TESTING"] = True
         app.logger.disabled = True
         self.app = app
 
     def test_version(self):
         """Assert that version number can be parsed."""
-        from flask_iiif import __version__
         from distutils.version import LooseVersion
+
+        from flask_iiif import __version__
+
         LooseVersion(__version__)
 
     def test_creation(self):
         """Test extension creation."""
-        assert 'iiif' not in self.app.extensions
+        assert "iiif" not in self.app.extensions
         IIIF(app=self.app)
-        assert isinstance(self.app.extensions['iiif'], IIIF)
+        assert isinstance(self.app.extensions["iiif"], IIIF)
 
     def test_creation_old_flask(self):
         """Simulate old Flask (pre 0.9)."""
         del self.app.extensions
         IIIF(app=self.app)
-        assert isinstance(self.app.extensions['iiif'], IIIF)
+        assert isinstance(self.app.extensions["iiif"], IIIF)
 
     def test_creation_init(self):
         """Test extension creation init."""
-        assert 'iiif' not in self.app.extensions
+        assert "iiif" not in self.app.extensions
         r = IIIF()
         r.init_app(app=self.app)
-        assert isinstance(self.app.extensions['iiif'], IIIF)
+        assert isinstance(self.app.extensions["iiif"], IIIF)
 
     def test_double_creation(self):
         """Test extension double creation."""
@@ -65,5 +67,5 @@ class TestIIIF(TestCase):
         """Test extension default configuration."""
         IIIF(app=self.app)
         for k in dir(default_config):
-            if k.startswith('IIIF_'):
+            if k.startswith("IIIF_"):
                 assert self.app.config.get(k) == getattr(default_config, k)

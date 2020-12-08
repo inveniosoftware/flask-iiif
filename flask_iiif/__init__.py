@@ -58,7 +58,7 @@ class IIIF(object):
             :py:attr:`~flask_iiif.config.IIIF_CACHE_HANDLER`. More infos
             could be found in :py:mod:`~flask_iiif.cache.cache`.
         """
-        handler = current_app.config['IIIF_CACHE_HANDLER']
+        handler = current_app.config["IIIF_CACHE_HANDLER"]
         if isinstance(handler, string_types):
             handler = import_string(handler)
         if callable(handler):
@@ -70,27 +70,25 @@ class IIIF(object):
         """Initialize a Flask application."""
         self.app = app
         # Follow the Flask guidelines on usage of app.extensions
-        if not hasattr(app, 'extensions'):
+        if not hasattr(app, "extensions"):
             app.extensions = {}
-        if 'iiif' in app.extensions:
+        if "iiif" in app.extensions:
             raise RuntimeError("Flask application already initialized")
-        app.extensions['iiif'] = self
+        app.extensions["iiif"] = self
 
         # Set default configuration
         for k in dir(config):
-            if k.startswith('IIIF_'):
+            if k.startswith("IIIF_"):
                 self.app.config.setdefault(k, getattr(config, k))
 
         # Register context processors
-        if hasattr(app, 'add_template_global'):
+        if hasattr(app, "add_template_global"):
             app.add_template_global(iiif_image_url)
         else:
-            ctx = dict(
-                iiif_image_url=iiif_image_url
-            )
+            ctx = dict(iiif_image_url=iiif_image_url)
             app.context_processor(lambda: ctx)
 
-    def init_restful(self, api, prefix='/api/multimedia/image/'):
+    def init_restful(self, api, prefix="/api/multimedia/image/"):
         """Set up the urls.
 
         :param str prefix: the url perfix
@@ -110,12 +108,10 @@ class IIIF(object):
             `IIIF IMAGE API URI Syntax
             <http://iiif.io/api/image/2.0/#uri-syntax>`
         """
-        from .restful import IIIFImageAPI, IIIFImageInfo, IIIFImageBase
+        from .restful import IIIFImageAPI, IIIFImageBase, IIIFImageInfo
 
-        if not prefix.startswith('/') or not prefix.endswith('/'):
-            raise RuntimeError(
-                "The `prefix` must always start and end with `/`"
-            )
+        if not prefix.startswith("/") or not prefix.endswith("/"):
+            raise RuntimeError("The `prefix` must always start and end with `/`")
 
         api.add_resource(
             IIIFImageAPI,
@@ -125,23 +121,15 @@ class IIIF(object):
                     "<string:version>/<string:uuid>/"
                     "<string:region>/<string:size>/<string:rotation>/"
                     "<string:quality>.<string:image_format>"
-                )
-            )
+                ),
+            ),
         )
 
         api.add_resource(
-            IIIFImageInfo,
-            url_join(
-                prefix,
-                "<string:version>/<string:uuid>/info.json"
-            )
+            IIIFImageInfo, url_join(prefix, "<string:version>/<string:uuid>/info.json")
         )
         api.add_resource(
-            IIIFImageBase,
-            url_join(
-                prefix,
-                "<string:version>/<string:uuid>"
-            )
+            IIIFImageBase, url_join(prefix, "<string:version>/<string:uuid>")
         )
 
     def uuid_to_image_opener_handler(self, callback):
@@ -180,6 +168,6 @@ class IIIF(object):
 
 
 __all__ = (
-    'IIIF',
-    '__version__',
+    "IIIF",
+    "__version__",
 )

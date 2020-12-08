@@ -21,17 +21,18 @@ class IIIFTestCase(TestCase):
 
     def create_app(self):
         """Create the app."""
-        from flask_iiif import IIIF
         from flask_restful import Api
+
+        from flask_iiif import IIIF
         from flask_iiif.cache.simple import ImageSimpleCache
 
         app = Flask(__name__)
-        app.config['DEBUG'] = True
-        app.config['TESTING'] = True
-        app.config['SERVER_NAME'] = "shield.worker.node.1"
-        app.config['SITE_URL'] = "http://shield.worker.node.1"
-        app.config['IIIF_CACHE_HANDLER'] = ImageSimpleCache()
-        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+        app.config["DEBUG"] = True
+        app.config["TESTING"] = True
+        app.config["SERVER_NAME"] = "shield.worker.node.1"
+        app.config["SITE_URL"] = "http://shield.worker.node.1"
+        app.config["IIIF_CACHE_HANDLER"] = ImageSimpleCache()
+        app.config["PRESERVE_CONTEXT_ON_EXCEPTION"] = False
         app.logger.disabled = True
 
         api = Api(app=app)
@@ -41,7 +42,7 @@ class IIIFTestCase(TestCase):
         iiif.uuid_to_image_opener_handler(self.create_image)
 
         def api_decorator_test(*args, **kwargs):
-            if 'decorator' in kwargs.get('uuid'):
+            if "decorator" in kwargs.get("uuid"):
                 abort(403)
 
         iiif.api_decorator_handler(api_decorator_test)
@@ -73,24 +74,22 @@ class IIIFTestCase(TestCase):
         """Simulate a request."""
         url = url_for(endpoint, **(urlargs or {}))
         response = client_func(
-            url,
-            base_url=self.app.config['SITE_URL'],
-            *args,
-            **kwargs
+            url, base_url=self.app.config["SITE_URL"], *args, **kwargs
         )
         return response
 
     def create_image(self, uuid):
         """Create a test image."""
-        if uuid.startswith('valid'):
+        if uuid.startswith("valid"):
             from PIL import Image
+
             tmp_file = BytesIO()
             # create a new image
             image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
-            image.save(tmp_file, 'png')
+            image.save(tmp_file, "png")
             tmp_file.seek(0)
             return tmp_file
-        return ''
+        return ""
 
 
 @contextmanager
@@ -111,6 +110,7 @@ def signal_listener(signal):
             # Assert the results here
 
     """
+
     class _Signal(object):
         def __init__(self):
             self.heard = []

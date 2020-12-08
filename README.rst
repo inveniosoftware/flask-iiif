@@ -2,8 +2,8 @@
  Flask-IIIF
 ============
 
-.. image:: https://img.shields.io/travis/inveniosoftware/flask-iiif.svg
-        :target: https://travis-ci.org/inveniosoftware/flask-iiif
+.. image:: https://github.com/inveniosoftware/flask-iiif/workflows/CI/badge.svg
+        :target: https://github.com/inveniosoftware/flask-iiif/actions
 
 .. image:: https://img.shields.io/coveralls/inveniosoftware/flask-iiif.svg
         :target: https://coveralls.io/r/inveniosoftware/flask-iiif

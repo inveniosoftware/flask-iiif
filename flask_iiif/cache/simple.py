@@ -67,9 +67,7 @@ class ImageSimpleCache(ImageCache):
             last_modification = datetime.utcnow().replace(microsecond=0)
         timeout = timeout or self.timeout
         self.cache.set(
-            self._last_modification_key_name(key),
-            last_modification,
-            timeout
+            self._last_modification_key_name(key), last_modification, timeout
         )
 
     def delete(self, key):
