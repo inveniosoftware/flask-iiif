@@ -18,7 +18,7 @@ from os.path import dirname, join
 from flask import abort, url_for
 from PIL import Image, ImageSequence
 
-__all__ = ('iiif_image_url', )
+__all__ = ("iiif_image_url",)
 
 
 def iiif_image_url(**kwargs):
@@ -45,21 +45,21 @@ def iiif_image_url(**kwargs):
         * `version = v2`
     """
     try:
-        assert kwargs.get('uuid') is not None
+        assert kwargs.get("uuid") is not None
     except AssertionError:
         abort(404)
     else:
-        url_for_args = {k: v for k, v in kwargs.items() if k.startswith('_')}
+        url_for_args = {k: v for k, v in kwargs.items() if k.startswith("_")}
 
         return url_for(
-            'iiifimageapi',
-            image_format=kwargs.get('image_format', 'png'),
-            quality=kwargs.get('quality', 'default'),
-            region=kwargs.get('region', 'full'),
-            rotation=kwargs.get('rotation', 0),
-            size=kwargs.get('size', 'full'),
-            uuid=kwargs.get('uuid'),
-            version=kwargs.get('version', 'v2'),
+            "iiifimageapi",
+            image_format=kwargs.get("image_format", "png"),
+            quality=kwargs.get("quality", "default"),
+            region=kwargs.get("region", "full"),
+            rotation=kwargs.get("rotation", 0),
+            size=kwargs.get("size", "full"),
+            uuid=kwargs.get("uuid"),
+            version=kwargs.get("version", "v2"),
             **url_for_args
         )
 
@@ -77,14 +77,12 @@ def create_gif_from_frames(frames, duration=500, loop=0):
     """
     # Save GIF to temporary file
     tmp = tempfile.mkdtemp(dir=dirname(__file__))
-    tmp_file = join(tmp, 'temp.gif')
+    tmp_file = join(tmp, "temp.gif")
 
     head, tail = frames[0], frames[1:]
-    head.save(tmp_file, 'GIF',
-              save_all=True,
-              append_images=tail,
-              duration=duration,
-              loop=loop)
+    head.save(
+        tmp_file, "GIF", save_all=True, append_images=tail, duration=duration, loop=loop
+    )
 
     gif_image = Image.open(tmp_file)
     assert gif_image.is_animated
@@ -104,8 +102,12 @@ def resize_gif(image, size, resample):
     :returns: resized GIF image
     :rtype: PIL.Image
     """
-    return create_gif_from_frames([frame.resize(size, resample=resample)
-                                  for frame in ImageSequence.Iterator(image)])
+    return create_gif_from_frames(
+        [
+            frame.resize(size, resample=resample)
+            for frame in ImageSequence.Iterator(image)
+        ]
+    )
 
 
 def should_cache(request_args):
@@ -113,8 +115,10 @@ def should_cache(request_args):
 
     :param request_args: flask request args
     """
-    if "cache-control" in request_args \
-            and request_args['cache-control'] in ["no-cache", "no-store"]:
+    if "cache-control" in request_args and request_args["cache-control"] in [
+        "no-cache",
+        "no-store",
+    ]:
         return False
     return True
 

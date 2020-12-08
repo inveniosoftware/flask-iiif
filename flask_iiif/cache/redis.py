@@ -27,12 +27,9 @@ class ImageRedisCache(ImageCache):
         """Initialize the cache."""
         super(ImageRedisCache, self).__init__(app=app)
         app = app or current_app
-        redis_url = app.config['IIIF_CACHE_REDIS_URL']
-        prefix = app.config.get('IIIF_CACHE_REDIS_PREFIX', 'iiif')
-        self.cache = RedisCache(
-            host=StrictRedis.from_url(redis_url),
-            key_prefix=prefix
-        )
+        redis_url = app.config["IIIF_CACHE_REDIS_URL"]
+        prefix = app.config.get("IIIF_CACHE_REDIS_PREFIX", "iiif")
+        self.cache = RedisCache(host=StrictRedis.from_url(redis_url), key_prefix=prefix)
 
     def get(self, key):
         """Return the key value.
@@ -75,9 +72,7 @@ class ImageRedisCache(ImageCache):
             last_modification = datetime.utcnow().replace(microsecond=0)
         timeout = timeout or self.timeout
         self.cache.set(
-            self._last_modification_key_name(key),
-            last_modification,
-            timeout
+            self._last_modification_key_name(key), last_modification, timeout
         )
 
     def delete(self, key):

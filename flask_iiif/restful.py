@@ -26,7 +26,7 @@ from .signals import iiif_after_info_request, iiif_after_process_request, \
     iiif_before_info_request, iiif_before_process_request
 from .utils import should_cache
 
-current_iiif = LocalProxy(lambda: current_app.extensions['iiif'])
+current_iiif = LocalProxy(lambda: current_app.extensions["iiif"])
 
 
 class IIIFImageBase(Resource):
@@ -40,9 +40,7 @@ class IIIFImageBase(Resource):
             It will redirect to ``iiifimageinfo`` endpoint with status code
             303.
         """
-        return redirect(
-            url_for('iiifimageinfo', version=version, uuid=uuid), code=303
-        )
+        return redirect(url_for("iiifimageinfo", version=version, uuid=uuid), code=303)
 
 
 class IIIFImageInfo(Resource):
@@ -53,50 +51,41 @@ class IIIFImageInfo(Resource):
         api_decorator,
     ]
 
-    @cors.crossdomain(origin='*', methods='GET')
+    @cors.crossdomain(origin="*", methods="GET")
     def get(self, version, uuid):
         """Get IIIF Image Info."""
         # Trigger event before proccess the api request
         iiif_before_info_request.send(self, version=version, uuid=uuid)
 
         # build the image key
-        key = u"iiif:info:{0}/{1}".format(
-            version, uuid
-        ).encode('utf8')
+        key = u"iiif:info:{0}/{1}".format(version, uuid).encode("utf8")
 
         # Check if its cached
         try:
             cached = current_iiif.cache.get(key)
         except Exception:
-            if current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+            if current_app.config.get("IIIF_CACHE_IGNORE_ERRORS", False):
                 cached = None
             else:
                 raise
 
         # If the image size is cached loaded from cache
         if cached:
-            width, height = map(int, cached.split(','))
+            width, height = map(int, cached.split(","))
         else:
             data = current_iiif.uuid_to_image_opener(uuid)
             image = IIIFImageAPIWrapper.open_image(data)
             width, height = image.size()
             if should_cache(request.args):
                 try:
-                    current_iiif.cache.set(
-                        key, "{0},{1}".format(width, height))
+                    current_iiif.cache.set(key, "{0},{1}".format(width, height))
                 except Exception:
-                    if not current_app.config.get(
-                            'IIIF_CACHE_IGNORE_ERRORS', False):
+                    if not current_app.config.get("IIIF_CACHE_IGNORE_ERRORS", False):
                         raise
 
-        data = current_app.config['IIIF_API_INFO_RESPONSE_SKELETON'][version]
+        data = current_app.config["IIIF_API_INFO_RESPONSE_SKELETON"][version]
 
-        base_uri = url_for(
-            'iiifimagebase',
-            uuid=uuid,
-            version=version,
-            _external=True
-        )
+        base_uri = url_for("iiifimagebase", uuid=uuid, version=version, _external=True)
         data["@id"] = base_uri
         data["width"] = width
         data["height"] = height
@@ -105,8 +94,8 @@ class IIIFImageInfo(Resource):
         iiif_after_info_request.send(self, **data)
 
         resp = jsonify(data)
-        if 'application/ld+json' in request.headers.get('Accept', ''):
-            resp.mimetype = 'application/ld+json'
+        if "application/ld+json" in request.headers.get("Accept", ""):
+            resp.mimetype = "application/ld+json"
         return resp
 
 
@@ -135,8 +124,7 @@ class IIIFImageAPI(Resource):
         api_decorator,
     ]
 
-    def get(self, version, uuid, region, size, rotation, quality,
-            image_format):
+    def get(self, version, uuid, region, size, rotation, quality, image_format):
         """Run IIIF Image API workflow."""
         api_parameters = dict(
             version=version,
@@ -145,7 +133,7 @@ class IIIFImageAPI(Resource):
             size=size,
             rotation=rotation,
             quality=quality,
-            image_format=image_format
+            image_format=image_format,
         )
         # Trigger event before proccess the api request
         iiif_before_process_request.send(self, **api_parameters)
@@ -154,15 +142,15 @@ class IIIFImageAPI(Resource):
         IIIFImageAPIWrapper.validate_api(**api_parameters)
 
         # build the image key
-        key = u'iiif:{0}/{1}/{2}/{3}/{4}.{5}'.format(
+        key = u"iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
             uuid, region, size, quality, rotation, image_format
-        ).encode('utf8')
+        ).encode("utf8")
 
         # Check if its cached
         try:
             cached = current_iiif.cache.get(key)
         except Exception:
-            if current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+            if current_app.config.get("IIIF_CACHE_IGNORE_ERRORS", False):
                 cached = None
             else:
                 raise
@@ -181,7 +169,7 @@ class IIIFImageAPI(Resource):
                 region=region,
                 size=size,
                 rotation=rotation,
-                quality=quality
+                quality=quality,
             )
 
             # prepare image to be serve
@@ -191,50 +179,41 @@ class IIIFImageAPI(Resource):
                 try:
                     current_iiif.cache.set(key, to_serve.getvalue())
                 except Exception:
-                    if not current_app.config.get(
-                            'IIIF_CACHE_IGNORE_ERRORS', False):
+                    if not current_app.config.get("IIIF_CACHE_IGNORE_ERRORS", False):
                         raise
 
         try:
             last_modified = current_iiif.cache.get_last_modification(key)
         except Exception:
-            if not current_app.config.get('IIIF_CACHE_IGNORE_ERRORS', False):
+            if not current_app.config.get("IIIF_CACHE_IGNORE_ERRORS", False):
                 raise
             last_modified = None
 
         # decide the mime_type from the requested image_format
-        mimetype = current_app.config['IIIF_FORMATS'].get(
-            image_format, 'image/jpeg'
-        )
+        mimetype = current_app.config["IIIF_FORMATS"].get(image_format, "image/jpeg")
         # Built the after request parameters
-        api_after_request_parameters = dict(
-            mimetype=mimetype,
-            image=to_serve
-        )
+        api_after_request_parameters = dict(mimetype=mimetype, image=to_serve)
 
         # Trigger event after proccess the api request
         iiif_after_process_request.send(self, **api_after_request_parameters)
-        send_file_kwargs = {'mimetype': mimetype}
+        send_file_kwargs = {"mimetype": mimetype}
         # last_modified is not supported before flask 0.12
         additional_headers = []
         if last_modified:
             send_file_kwargs.update(last_modified=last_modified)
 
-        if 'dl' in request.args:
-            filename = secure_filename(request.args.get('dl', ''))
-            if filename.lower() in {'', '1', 'true'}:
-                filename = u'{0}-{1}-{2}-{3}-{4}.{5}'.format(
+        if "dl" in request.args:
+            filename = secure_filename(request.args.get("dl", ""))
+            if filename.lower() in {"", "1", "true"}:
+                filename = u"{0}-{1}-{2}-{3}-{4}.{5}".format(
                     uuid, region, size, quality, rotation, image_format
                 )
             send_file_kwargs.update(
-                as_attachment=True,
-                attachment_filename=secure_filename(filename),
+                as_attachment=True, attachment_filename=secure_filename(filename),
             )
-        if_modified_since_raw = request.headers.get('If-Modified-Since')
+        if_modified_since_raw = request.headers.get("If-Modified-Since")
         if if_modified_since_raw:
-            if_modified_since = datetime.datetime(
-                *parsedate(if_modified_since_raw)[:6]
-            )
+            if_modified_since = datetime.datetime(*parsedate(if_modified_since_raw)[:6])
             if if_modified_since and if_modified_since >= last_modified:
                 return Response(status=304)
         response = send_file(to_serve, **send_file_kwargs)

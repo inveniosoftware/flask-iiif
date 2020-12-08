@@ -14,3 +14,4 @@ include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
 include docs/*.rst docs/*.py docs/Makefile docs/requirements.txt
 include tests/*.py
 recursive-include flask_iiif *.py
+recursive-include .github/workflows *.yml

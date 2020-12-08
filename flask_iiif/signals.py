@@ -42,10 +42,10 @@ from blinker import Namespace
 _signals = Namespace()
 
 # Before request
-iiif_before_process_request = _signals.signal('iiif-before-process-request')
+iiif_before_process_request = _signals.signal("iiif-before-process-request")
 # After request
-iiif_after_process_request = _signals.signal('iiif-after-process-request')
+iiif_after_process_request = _signals.signal("iiif-after-process-request")
 # Before info.json request
-iiif_before_info_request = _signals.signal('iiif-before-info-request')
+iiif_before_info_request = _signals.signal("iiif-before-info-request")
 # After info.json request
-iiif_after_info_request = _signals.signal('iiif-after-info-request')
+iiif_after_info_request = _signals.signal("iiif-after-info-request")

@@ -27,7 +27,7 @@ class ImageCache(object):
     @cached_property
     def timeout(self):
         """Return default timeout from config."""
-        return current_app.config['IIIF_CACHE_TIME']
+        return current_app.config["IIIF_CACHE_TIME"]
 
     def get(self, key):
         """Return the key value.

@@ -64,10 +64,10 @@
 
 """
 # Resampling method
-IIIF_RESIZE_RESAMPLE = 'PIL.Image:BICUBIC'
+IIIF_RESIZE_RESAMPLE = "PIL.Image:BICUBIC"
 
 # Cache handler
-IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
+IIIF_CACHE_HANDLER = "flask_iiif.cache.simple:ImageSimpleCache"
 
 # Cache duration
 # 60 seconds * 60 minutes (1 hour) * 24 (24 hours) * 2 (2 days) = 172800 secs
@@ -75,36 +75,34 @@ IIIF_CACHE_HANDLER = 'flask_iiif.cache.simple:ImageSimpleCache'
 IIIF_CACHE_TIME = 60 * 60 * 24 * 2
 
 # Redis URL Cache
-IIIF_CACHE_REDIS_URL = 'redis://localhost:6379/0'
+IIIF_CACHE_REDIS_URL = "redis://localhost:6379/0"
 
 # Supported qualities
-IIIF_QUALITIES = (
-    'default', 'gray', 'grey', 'bitonal', 'color', 'native'
-)
+IIIF_QUALITIES = ("default", "gray", "grey", "bitonal", "color", "native")
 # Suported coverters
-IIIF_CONVERTERS = '', 'L', 'L', '1', '', ''
+IIIF_CONVERTERS = "", "L", "L", "1", "", ""
 
 # Supported multimedia image API formats
 IIIF_FORMATS = {
-    'gif': 'image/gif',
-    'jp2': 'image/jp2',
-    'jpeg': 'image/jpeg',
-    'jpg': 'image/jpeg',
-    'pdf': 'application/pdf',
-    'png': 'image/png',
-    'tif': 'image/tiff',
-    'tiff': 'image/tiff'
+    "gif": "image/gif",
+    "jp2": "image/jp2",
+    "jpeg": "image/jpeg",
+    "jpg": "image/jpeg",
+    "pdf": "application/pdf",
+    "png": "image/png",
+    "tif": "image/tiff",
+    "tiff": "image/tiff",
 }
 
 IIIF_FORMATS_PIL_MAP = {
-    'gif': 'gif',
-    'jp2': 'jpeg2000',
-    'jpeg': 'jpeg',
-    'jpg': 'jpeg',
-    'pdf': 'pdf',
-    'png': 'png',
-    'tif': 'tiff',
-    'tiff': 'tiff'
+    "gif": "gif",
+    "jp2": "jpeg2000",
+    "jpeg": "jpeg",
+    "jpg": "jpeg",
+    "pdf": "pdf",
+    "png": "png",
+    "tif": "tiff",
+    "tiff": "tiff",
 }
 
 # Regular expressions to validate each parameter
@@ -116,21 +114,13 @@ IIIF_VALIDATIONS = {
         },
         "size": {
             "ignore": "full",
-            "validate": ("(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+,"
-                         "[\d.]+|![\d.]+,[\d.]+)")
+            "validate": (
+                "(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+," "[\d.]+|![\d.]+,[\d.]+)"
+            ),
         },
-        "rotation": {
-            "ignore": "0",
-            "validate": "^[\d.]+$"
-        },
-        "quality": {
-            "ignore": "default",
-            "validate": "(native|color|gr[ae]y|bitonal)"
-        },
-        "image_format": {
-            "ignore": "",
-            "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"
-        }
+        "rotation": {"ignore": "0", "validate": "^[\d.]+$"},
+        "quality": {"ignore": "default", "validate": "(native|color|gr[ae]y|bitonal)"},
+        "image_format": {"ignore": "", "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"},
     },
     "v2": {
         "region": {
@@ -139,43 +129,33 @@ IIIF_VALIDATIONS = {
         },
         "size": {
             "ignore": "full",
-            "validate": ("(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+,"
-                         "[\d.]+|![\d.]+,[\d.]+)")
+            "validate": (
+                "(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+," "[\d.]+|![\d.]+,[\d.]+)"
+            ),
         },
-        "rotation": {
-            "ignore": "0",
-            "validate": "^!?[\d.]+$"
-        },
-        "quality": {
-            "ignore": "default",
-            "validate": "(default|color|gr[ae]y|bitonal)"
-        },
-        "image_format": {
-            "ignore": "",
-            "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"
-        }
-    }
+        "rotation": {"ignore": "0", "validate": "^!?[\d.]+$"},
+        "quality": {"ignore": "default", "validate": "(default|color|gr[ae]y|bitonal)"},
+        "image_format": {"ignore": "", "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"},
+    },
 }
 
 # Qualities per image mode
 IIIF_MODE = {
-    '1': ['default', 'bitonal'],
-    'L': ['default', 'gray', 'grey', 'bitonal'],
-    'P': ['default', 'gray', 'grey', 'bitonal'],
-    'RGB': ['default', 'color', 'gray', 'grey', 'bitonal'],
-    'RGBA': ['default', 'color', 'gray', 'grey', 'bitonal'],
-    'CMYK': ['default', 'color', 'gray', 'grey', 'bitonal'],
-    'YCbCr': ['default', 'color', 'gray', 'grey', 'bitonal'],
-    'I': ['default', 'color', 'gray', 'grey', 'bitonal'],
-    'F': ['default', 'color', 'gray', 'grey', 'bitonal']
+    "1": ["default", "bitonal"],
+    "L": ["default", "gray", "grey", "bitonal"],
+    "P": ["default", "gray", "grey", "bitonal"],
+    "RGB": ["default", "color", "gray", "grey", "bitonal"],
+    "RGBA": ["default", "color", "gray", "grey", "bitonal"],
+    "CMYK": ["default", "color", "gray", "grey", "bitonal"],
+    "YCbCr": ["default", "color", "gray", "grey", "bitonal"],
+    "I": ["default", "color", "gray", "grey", "bitonal"],
+    "F": ["default", "color", "gray", "grey", "bitonal"],
 }
 
 # API Info
 IIIF_API_INFO_RESPONSE_SKELETON = {
     "v1": {
-        "@context": (
-            "http://library.stanford.edu/iiif/image-api/1.1/context.json"
-        ),
+        "@context": ("http://library.stanford.edu/iiif/image-api/1.1/context.json"),
         "@id": "",
         "width": "",
         "height": "",
@@ -184,9 +164,7 @@ IIIF_API_INFO_RESPONSE_SKELETON = {
         ),
         "tile_width": 256,
         "tile_height": 256,
-        "scale_factors": [
-            1, 2, 4, 8, 16, 32, 64
-        ]
+        "scale_factors": [1, 2, 4, 8, 16, 32, 64],
     },
     "v2": {
         "@context": "http://iiif.io/api/image/2/context.json",
@@ -194,18 +172,9 @@ IIIF_API_INFO_RESPONSE_SKELETON = {
         "protocol": "http://iiif.io/api/image",
         "width": "",
         "height": "",
-        "tiles": [
-            {
-                "width": 256,
-                "scaleFactors": [
-                    1, 2, 4, 8, 16, 32, 64
-                ]
-            }
-        ],
-        "profile": [
-            "http://iiif.io/api/image/2/level2.json",
-        ]
-    }
+        "tiles": [{"width": 256, "scaleFactors": [1, 2, 4, 8, 16, 32, 64]}],
+        "profile": ["http://iiif.io/api/image/2/level2.json"],
+    },
 }
 
 # Raise errors during interactions with the cache.

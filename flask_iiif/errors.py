@@ -21,8 +21,11 @@ class MultimediaError(Exception):
 
     def __str__(self):
         """Error message."""
-        return repr("Error message: {message}. Error code: {code}"
-                    .format(message=self.message, code=self.code))
+        return repr(
+            "Error message: {message}. Error code: {code}".format(
+                message=self.message, code=self.code
+            )
+        )
 
 
 class MultimediaImageNotFound(MultimediaError):

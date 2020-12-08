@@ -24,6 +24,7 @@ class TestImageSimpleCache(IIIFTestCase):
         """Run before the test."""
         # Create a simple cache object
         from PIL import Image
+
         from flask_iiif.cache.simple import ImageSimpleCache
 
         # Initialize the cache object
@@ -32,7 +33,7 @@ class TestImageSimpleCache(IIIFTestCase):
         tmp_file = BytesIO()
         # create a new image
         image = Image.new("RGBA", (1280, 1024), (255, 0, 0, 0))
-        image.save(tmp_file, 'png')
+        image.save(tmp_file, "png")
         # Store the image
         tmp_file.seek(0)
         self.image_file = tmp_file
@@ -42,9 +43,9 @@ class TestImageSimpleCache(IIIFTestCase):
         # Seek position
         self.image_file.seek(0)
         # Add image to cache
-        self.cache.set('image_1', self.image_file.getvalue())
+        self.cache.set("image_1", self.image_file.getvalue())
         # Get image from cache
-        image_string = self.cache.get('image_1')
+        image_string = self.cache.get("image_1")
         # test if the cache image is equal to the real
         self.assertEqual(image_string, self.image_file.getvalue())
 
@@ -55,9 +56,9 @@ class TestImageSimpleCache(IIIFTestCase):
         # Seek position
         self.image_file.seek(0)
         # Add the image to cache
-        self.cache.set('image_2', self.image_file.getvalue())
+        self.cache.set("image_2", self.image_file.getvalue())
         # Get image from cache
-        image_string = self.cache.get('image_2')
+        image_string = self.cache.get("image_2")
         # Create a ByteIO object
         cached_image = BytesIO(image_string)
         # Seek object to the right position
@@ -69,18 +70,18 @@ class TestImageSimpleCache(IIIFTestCase):
 
     def test_cache_deletion(self):
         """Test cache delete function."""
-        self.cache.set('foo', 'bar')
-        self.assertEqual(self.cache.get('foo'), 'bar')
-        self.cache.delete('foo')
-        self.assertEqual(self.cache.get('foo'), None)
+        self.cache.set("foo", "bar")
+        self.assertEqual(self.cache.get("foo"), "bar")
+        self.cache.delete("foo")
+        self.assertEqual(self.cache.get("foo"), None)
 
     def test_cache_flush(self):
         """Test cache flush function."""
-        self.cache.set('foo_1', 'bar')
-        self.cache.set('foo_2', 'bar')
-        self.cache.set('foo_3', 'bar')
+        self.cache.set("foo_1", "bar")
+        self.cache.set("foo_2", "bar")
+        self.cache.set("foo_3", "bar")
         for i in [1, 2, 3]:
-            self.assertEqual(self.cache.get('foo_{0}'.format(i)), 'bar')
+            self.assertEqual(self.cache.get("foo_{0}".format(i)), "bar")
         self.cache.flush()
         for i in [1, 2, 3]:
-            self.assertEqual(self.cache.get('foo_{0}'.format(i)), None)
+            self.assertEqual(self.cache.get("foo_{0}".format(i)), None)
