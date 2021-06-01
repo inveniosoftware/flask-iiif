@@ -76,6 +76,7 @@ class IIIFImageInfo(Resource):
             data = current_iiif.uuid_to_image_opener(uuid)
             image = IIIFImageAPIWrapper.open_image(data)
             width, height = image.size()
+            image.close_image()
             if should_cache(request.args):
                 try:
                     current_iiif.cache.set(key, "{0},{1}".format(width, height))
@@ -174,7 +175,7 @@ class IIIFImageAPI(Resource):
 
             # prepare image to be serve
             to_serve = image.serve(image_format=image_format)
-            # to_serve = image.serve(image_format=image_format)
+            image.close_image()
             if should_cache(request.args):
                 try:
                     current_iiif.cache.set(key, to_serve.getvalue())

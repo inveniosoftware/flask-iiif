@@ -581,3 +581,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
         except (AttributeError, IOError):
             raise MultimediaImageNotFound("The requested image cannot be opened")
         return cls(image)
+
+    def close_image(self):
+        """Close an image file descriptor."""
+        self.image.close()
