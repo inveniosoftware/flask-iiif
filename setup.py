@@ -59,10 +59,9 @@ with open(os.path.join("flask_iiif", "version.py"), "rt") as fp:
     version = g["__version__"]
 
 tests_require = [
-    "flask-testing>=0.4.1",
+    "flask-testing>=0.6.0",
     "pytest-invenio>=1.4.0",
-    # Flask-Testing is not yet compatible with Werkzeug >= 1.0.0
-    "werkzeug>=0.15.3,<1.0.0",
+    "werkzeug>=0.15.3",
 ]
 
 install_requires = [
