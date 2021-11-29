@@ -15,7 +15,7 @@ import tempfile
 from email.utils import formatdate
 from os.path import dirname, join
 
-from flask import abort, url_for
+from flask import abort, current_app, url_for
 from PIL import Image, ImageSequence
 
 __all__ = ("iiif_image_url",)
@@ -76,7 +76,7 @@ def create_gif_from_frames(frames, duration=500, loop=0):
     .. note:: Uses ``tempfile``, as PIL allows GIF creation only on ``save``.
     """
     # Save GIF to temporary file
-    tmp = tempfile.mkdtemp(dir=dirname(__file__))
+    tmp = tempfile.mkdtemp(dir=current_app.config["IIIF_GIF_TEMP_FOLDER_PATH"])
     tmp_file = join(tmp, "temp.gif")
 
     head, tail = frames[0], frames[1:]
