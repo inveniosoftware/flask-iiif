@@ -58,7 +58,7 @@ class IIIFImageInfo(Resource):
         iiif_before_info_request.send(self, version=version, uuid=uuid)
 
         # build the image key
-        key = u"iiif:info:{0}/{1}".format(version, uuid).encode("utf8")
+        key = u"iiif:info:{0}/{1}".format(version, uuid)
 
         # Check if its cached
         try:
@@ -145,7 +145,7 @@ class IIIFImageAPI(Resource):
         # build the image key
         key = u"iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
             uuid, region, size, quality, rotation, image_format
-        ).encode("utf8")
+        )
 
         # Check if its cached
         try:

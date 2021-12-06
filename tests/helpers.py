@@ -92,6 +92,42 @@ class IIIFTestCase(TestCase):
         return ""
 
 
+class IIIFTestCaseWithRedis(IIIFTestCase):
+    """IIIF REST test case with Redis cache."""
+
+    def create_app(self):
+        """Create the app."""
+        from flask_restful import Api
+
+        from flask_iiif import IIIF
+        from flask_iiif.cache.redis import ImageRedisCache
+
+        app = Flask(__name__)
+        app.config["DEBUG"] = True
+        app.config["TESTING"] = True
+        app.config["SERVER_NAME"] = "shield.worker.node.1"
+        app.config["SITE_URL"] = "http://shield.worker.node.1"
+        app.config["IIIF_CACHE_REDIS_URL"] = "redis://localhost:6379/0"
+        app.config["IIIF_CACHE_HANDLER"] = ImageRedisCache(app)
+        app.config["PRESERVE_CONTEXT_ON_EXCEPTION"] = False
+        app.logger.disabled = True
+
+        api = Api(app=app)
+
+        iiif = IIIF(app=app)
+
+        iiif.uuid_to_image_opener_handler(self.create_image)
+
+        def api_decorator_test(*args, **kwargs):
+            if "decorator" in kwargs.get("uuid"):
+                abort(403)
+
+        iiif.api_decorator_handler(api_decorator_test)
+
+        iiif.init_restful(api)
+        return app
+
+
 @contextmanager
 def signal_listener(signal):
     """Context Manager that listen to signals.

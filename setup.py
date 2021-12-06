@@ -74,7 +74,7 @@ install_requires = [
 ]
 
 extra_require = {
-    "docs": ["Sphinx>=3",],
+    "docs": ["Sphinx>=3", "docutils>=0.14,<0.18"],
     "redis": ["redis>=2.10.5",],
     "tests": tests_require,
 }
