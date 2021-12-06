@@ -180,4 +180,4 @@ IIIF_API_INFO_RESPONSE_SKELETON = {
 # Raise errors during interactions with the cache.
 IIIF_CACHE_IGNORE_ERRORS = False
 
-IIIF_GIF_TEMP_FOLDER_PATH="/tmp"
+IIIF_GIF_TEMP_FOLDER_PATH = "/tmp"

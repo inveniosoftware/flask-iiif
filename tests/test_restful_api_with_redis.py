@@ -16,10 +16,10 @@ from flask import url_for
 from PIL import Image
 from werkzeug.utils import secure_filename
 
-from .helpers import IIIFTestCase
+from .helpers import IIIFTestCaseWithRedis
 
 
-class TestRestAPI(IIIFTestCase):
+class TestRestAPI(IIIFTestCaseWithRedis):
 
     """Test signals and decorators."""
 
