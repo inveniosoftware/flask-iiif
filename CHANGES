@@ -4,6 +4,16 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.6.2 (released 2021-12-09)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Removes encoding of key, due to incompatibility with python3
+- Makes temp folder location regarding the generation of gif files configurable
+- Removes upper pinning of Werkzeug
+- Closes image after usage to avoid leaking memory during api requests
+- Migrates CI to gh-actions
+- Updates copyright and contributors
+
 Version 0.6.1 (released 2020-03-19)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
