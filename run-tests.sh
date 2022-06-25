@@ -3,6 +3,7 @@
 #
 # This file is part of Invenio.
 # Copyright (C) 2014-2020 CERN.
+# Copyright (C) 2022 Graz University of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -20,7 +21,7 @@ function cleanup() {
 trap cleanup EXIT
 
 
-python -m check_manifest --ignore ".*-requirements.txt"
+python -m check_manifest
 python -m sphinx.cmd.build -qnNW docs docs/_build/html
 eval "$(docker-services-cli up --cache ${CACHE:-redis} --env)"
 python -m pytest
