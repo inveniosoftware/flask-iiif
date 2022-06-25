@@ -20,10 +20,15 @@ from PIL import Image
 from six import BytesIO, string_types
 from werkzeug.utils import import_string
 
-from .errors import IIIFValidatorError, MultimediaImageCropError, \
-    MultimediaImageFormatError, MultimediaImageNotFound, \
-    MultimediaImageQualityError, MultimediaImageResizeError, \
-    MultimediaImageRotateError
+from .errors import (
+    IIIFValidatorError,
+    MultimediaImageCropError,
+    MultimediaImageFormatError,
+    MultimediaImageNotFound,
+    MultimediaImageQualityError,
+    MultimediaImageResizeError,
+    MultimediaImageRotateError,
+)
 from .utils import resize_gif
 
 

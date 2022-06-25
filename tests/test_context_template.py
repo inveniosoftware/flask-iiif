@@ -23,7 +23,7 @@ class TestContextTemplates(IIIFTestCase):
         from flask_iiif.utils import iiif_image_url
 
         with self.app.app_context():
-            image_url_default = iiif_image_url(uuid=u"test-ünicode")
+            image_url_default = iiif_image_url(uuid="test-ünicode")
             image_url_default_answer = (
                 "/api/multimedia/image/v2/" "test-%C3%BCnicode/full/full/0/default.png"
             )
@@ -33,7 +33,7 @@ class TestContextTemplates(IIIFTestCase):
                 "test-%C3%BCnicode/full/full/180/default.jpg"
             )
             image_url_custom = iiif_image_url(
-                uuid=u"test-ünicode", image_format="jpg", rotation=180, version="v1"
+                uuid="test-ünicode", image_format="jpg", rotation=180, version="v1"
             )
             self.assertEqual(image_url_custom_answer, image_url_custom)
             self.assertRaises(NotFound, iiif_image_url, size="200,")

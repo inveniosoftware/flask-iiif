@@ -19,9 +19,12 @@ class TestRestAPISignals(IIIFTestCase):
 
     def test_api_signals(self):
         """Test API signals."""
-        from flask_iiif.signals import iiif_after_info_request, \
-            iiif_after_process_request, iiif_before_info_request, \
-            iiif_before_process_request
+        from flask_iiif.signals import (
+            iiif_after_info_request,
+            iiif_after_process_request,
+            iiif_before_info_request,
+            iiif_before_process_request,
+        )
 
         data = dict(
             uuid="valid:id",

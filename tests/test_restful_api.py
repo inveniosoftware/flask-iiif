@@ -34,10 +34,10 @@ class TestRestAPI(IIIFTestCase):
         from flask import jsonify
 
         id_v1 = url_for(
-            "iiifimagebase", uuid=u"valid:id-üni", version="v1", _external=True
+            "iiifimagebase", uuid="valid:id-üni", version="v1", _external=True
         )
         id_v2 = url_for(
-            "iiifimagebase", uuid=u"valid:id-üni", version="v2", _external=True
+            "iiifimagebase", uuid="valid:id-üni", version="v2", _external=True
         )
 
         expected = {
@@ -67,16 +67,28 @@ class TestRestAPI(IIIFTestCase):
             },
         }
         get_the_response = self.get(
-            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v2",)
+            "iiifimageinfo",
+            urlargs=dict(
+                uuid="valid:id-üni",
+                version="v2",
+            ),
         )
         self.assert200(get_the_response)
         get_the_response = self.get(
-            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v2",)
+            "iiifimageinfo",
+            urlargs=dict(
+                uuid="valid:id-üni",
+                version="v2",
+            ),
         )
         self.assertEqual(jsonify(expected.get("v2")).data, get_the_response.data)
 
         get_the_response = self.get(
-            "iiifimageinfo", urlargs=dict(uuid=u"valid:id-üni", version="v1",)
+            "iiifimageinfo",
+            urlargs=dict(
+                uuid="valid:id-üni",
+                version="v1",
+            ),
         )
         self.assert200(get_the_response)
         self.assertEqual(jsonify(expected.get("v1")).data, get_the_response.data)
@@ -84,7 +96,11 @@ class TestRestAPI(IIIFTestCase):
     def test_api_info_not_found(self):
         """Test API Info."""
         get_the_response = self.get(
-            "iiifimageinfo", urlargs=dict(uuid="notfound", version="v2",)
+            "iiifimageinfo",
+            urlargs=dict(
+                uuid="notfound",
+                version="v2",
+            ),
         )
         self.assert404(get_the_response)
 
@@ -109,7 +125,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             "iiifimageapi",
             urlargs=dict(
-                uuid=u"valid:id-üni",
+                uuid="valid:id-üni",
                 version="v2",
                 region="full",
                 size="full",
@@ -146,7 +162,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             "iiifimageapi",
             urlargs=dict(
-                uuid=u"valid:id-üni",
+                uuid="valid:id-üni",
                 version="v2",
                 region="full",
                 size="full",
@@ -167,7 +183,7 @@ class TestRestAPI(IIIFTestCase):
         get_the_response = self.get(
             "iiifimageapi",
             urlargs=dict(
-                uuid=u"valid:id-üni",
+                uuid="valid:id-üni",
                 version="v2",
                 region="full",
                 size="full",
@@ -181,7 +197,7 @@ class TestRestAPI(IIIFTestCase):
         self.assertEqual(get_the_response.status_code, 304)
 
         urlargs = dict(
-            uuid=u"valid:id-üni",
+            uuid="valid:id-üni",
             version="v2",
             region="200,200,200,200",
             size="300,300",
@@ -190,10 +206,13 @@ class TestRestAPI(IIIFTestCase):
             image_format="pdf",
         )
 
-        get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
+        get_the_response = self.get(
+            "iiifimageapi",
+            urlargs=urlargs,
+        )
         self.assert200(get_the_response)
 
-        default_name = u"{name}-200200200200-300300-color-50.pdf".format(
+        default_name = "{name}-200200200200-300300-color-50.pdf".format(
             name=secure_filename(urlargs["uuid"])
         )
         for dl, name in (
@@ -202,7 +221,10 @@ class TestRestAPI(IIIFTestCase):
             ("foo.pdf", "foo.pdf"),
         ):
             urlargs["dl"] = dl
-            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
+            get_the_response = self.get(
+                "iiifimageapi",
+                urlargs=urlargs,
+            )
             self.assert200(get_the_response)
             self.assertEqual(
                 get_the_response.headers["Content-Disposition"],
@@ -252,7 +274,7 @@ class TestRestAPI(IIIFTestCase):
         """Test cache-control headers"""
 
         urlargs = dict(
-            uuid=u"valid:id-üni",
+            uuid="valid:id-üni",
             version="v2",
             region="200,200,200,200",
             size="300,300",
@@ -261,7 +283,7 @@ class TestRestAPI(IIIFTestCase):
             image_format="pdf",
         )
 
-        key = u"iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
+        key = "iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
             urlargs["uuid"],
             urlargs["region"],
             urlargs["size"],
@@ -272,7 +294,10 @@ class TestRestAPI(IIIFTestCase):
 
         cache = self.app.config["IIIF_CACHE_HANDLER"].cache
 
-        get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
+        get_the_response = self.get(
+            "iiifimageapi",
+            urlargs=urlargs,
+        )
 
         self.assertFalse("cache-control" in urlargs)
 
@@ -286,7 +311,10 @@ class TestRestAPI(IIIFTestCase):
 
             urlargs["cache-control"] = cache_control
 
-            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
+            get_the_response = self.get(
+                "iiifimageapi",
+                urlargs=urlargs,
+            )
 
             self.assert200(get_the_response)
 
@@ -298,7 +326,10 @@ class TestRestAPI(IIIFTestCase):
 
             urlargs["cache-control"] = cache_control
 
-            get_the_response = self.get("iiifimageapi", urlargs=urlargs,)
+            get_the_response = self.get(
+                "iiifimageapi",
+                urlargs=urlargs,
+            )
 
             self.assert200(get_the_response)
 
@@ -310,7 +341,7 @@ class TestRestAPI(IIIFTestCase):
         """Test if cache retrieval errors are ignored when configured."""
         from flask import current_app
 
-        info_args = dict(uuid=u"valid:id", version="v2")
+        info_args = dict(uuid="valid:id", version="v2")
         api_args = dict(
             uuid="valid:id",
             version="v2",

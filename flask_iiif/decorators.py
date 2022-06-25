@@ -15,10 +15,16 @@ from flask import current_app
 from flask_restful import abort
 from werkzeug.local import LocalProxy
 
-from .errors import IIIFValidatorError, MultimediaError, \
-    MultimediaImageCropError, MultimediaImageFormatError, \
-    MultimediaImageNotFound, MultimediaImageQualityError, \
-    MultimediaImageResizeError, MultimediaImageRotateError
+from .errors import (
+    IIIFValidatorError,
+    MultimediaError,
+    MultimediaImageCropError,
+    MultimediaImageFormatError,
+    MultimediaImageNotFound,
+    MultimediaImageQualityError,
+    MultimediaImageResizeError,
+    MultimediaImageRotateError,
+)
 
 __all__ = (
     "api_decorator",

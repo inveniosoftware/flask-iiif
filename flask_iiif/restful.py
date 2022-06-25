@@ -13,8 +13,7 @@ import datetime
 from email.utils import parsedate
 from io import BytesIO
 
-from flask import Response, current_app, jsonify, redirect, request, \
-    send_file, url_for
+from flask import Response, current_app, jsonify, redirect, request, send_file, url_for
 from flask_restful import Resource
 from flask_restful.utils import cors
 from werkzeug.local import LocalProxy
@@ -22,8 +21,12 @@ from werkzeug.utils import secure_filename
 
 from .api import IIIFImageAPIWrapper
 from .decorators import api_decorator, error_handler
-from .signals import iiif_after_info_request, iiif_after_process_request, \
-    iiif_before_info_request, iiif_before_process_request
+from .signals import (
+    iiif_after_info_request,
+    iiif_after_process_request,
+    iiif_before_info_request,
+    iiif_before_process_request,
+)
 from .utils import should_cache
 
 current_iiif = LocalProxy(lambda: current_app.extensions["iiif"])
@@ -58,7 +61,7 @@ class IIIFImageInfo(Resource):
         iiif_before_info_request.send(self, version=version, uuid=uuid)
 
         # build the image key
-        key = u"iiif:info:{0}/{1}".format(version, uuid)
+        key = "iiif:info:{0}/{1}".format(version, uuid)
 
         # Check if its cached
         try:
@@ -143,7 +146,7 @@ class IIIFImageAPI(Resource):
         IIIFImageAPIWrapper.validate_api(**api_parameters)
 
         # build the image key
-        key = u"iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
+        key = "iiif:{0}/{1}/{2}/{3}/{4}.{5}".format(
             uuid, region, size, quality, rotation, image_format
         )
 
@@ -206,11 +209,12 @@ class IIIFImageAPI(Resource):
         if "dl" in request.args:
             filename = secure_filename(request.args.get("dl", ""))
             if filename.lower() in {"", "1", "true"}:
-                filename = u"{0}-{1}-{2}-{3}-{4}.{5}".format(
+                filename = "{0}-{1}-{2}-{3}-{4}.{5}".format(
                     uuid, region, size, quality, rotation, image_format
                 )
             send_file_kwargs.update(
-                as_attachment=True, attachment_filename=secure_filename(filename),
+                as_attachment=True,
+                attachment_filename=secure_filename(filename),
             )
         if_modified_since_raw = request.headers.get("If-Modified-Since")
         if if_modified_since_raw:

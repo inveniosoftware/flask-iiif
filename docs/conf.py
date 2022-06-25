@@ -47,9 +47,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"Flask-IIIF"
-copyright = u"2014-2020, CERN"
-author = u"CERN"
+project = "Flask-IIIF"
+copyright = "2014-2020, CERN"
+author = "CERN"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -241,7 +241,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Flask-IIIF.tex", u"Flask-IIIF Documentation", u"CERN", "manual"),
+    (master_doc, "Flask-IIIF.tex", "Flask-IIIF Documentation", "CERN", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -269,7 +269,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "flask-iiif", u"Flask-IIIF Documentation", [author], 1)]
+man_pages = [(master_doc, "flask-iiif", "Flask-IIIF Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -284,7 +284,7 @@ texinfo_documents = [
     (
         master_doc,
         "Flask-IIIF",
-        u"Flask-IIIF Documentation",
+        "Flask-IIIF Documentation",
         author,
         "flask-iiif",
         "Flask-IIIF extension provides easy IIIF API standard integration.",

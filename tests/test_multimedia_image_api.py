@@ -130,9 +130,13 @@ class TestMultimediaAPI(IIIFTestCase):
 
     def test_errors(self):
         """Test errors."""
-        from flask_iiif.errors import MultimediaImageCropError, \
-            MultimediaImageFormatError, MultimediaImageNotFound, \
-            MultimediaImageQualityError, MultimediaImageResizeError
+        from flask_iiif.errors import (
+            MultimediaImageCropError,
+            MultimediaImageFormatError,
+            MultimediaImageNotFound,
+            MultimediaImageQualityError,
+            MultimediaImageResizeError,
+        )
 
         # Test resize errors
         self.assertRaises(
