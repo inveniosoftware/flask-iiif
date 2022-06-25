@@ -35,7 +35,6 @@ from werkzeug.utils import cached_property, import_string
 from . import config
 from .cache.cache import ImageCache
 from .utils import iiif_image_url
-from .version import __version__
 
 
 class IIIF(object):
@@ -166,6 +165,8 @@ class IIIF(object):
         """
         self.api_decorator_callback = callback
 
+
+__version__ = "0.6.2"
 
 __all__ = (
     "IIIF",
