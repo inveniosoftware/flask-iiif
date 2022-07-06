@@ -29,7 +29,6 @@ from .errors import (
     MultimediaImageResizeError,
     MultimediaImageRotateError,
 )
-from .utils import resize_gif
 
 
 class MultimediaObject(object):
@@ -207,10 +206,7 @@ class MultimediaImage(MultimediaObject):
             )
 
         arguments = dict(size=(width, height), resample=resample)
-        if self.image.format == "GIF":
-            self.image = resize_gif(self.image, **arguments)
-        else:
-            self.image = self.image.resize(**arguments)
+        self.image = self.image.resize(**arguments)
 
     def crop(self, coordinates):
         """Crop the image.

@@ -16,7 +16,6 @@ import pytest
 from PIL import Image
 
 from flask_iiif.api import MultimediaImage
-from flask_iiif.utils import create_gif_from_frames
 
 from .helpers import IIIFTestCase
 
@@ -36,17 +35,8 @@ class TestMultimediaAPI(IIIFTestCase):
         # create a new image
         image = Image.new("RGBA", (width, height), (255, 0, 0, 0))
         image.save(tmp_file, "png")
-
-        # create a new gif image
-        self.image_gif = MultimediaImage(
-            create_gif_from_frames(
-                [
-                    Image.new("RGB", (width, height), color)
-                    for color in ["blue", "yellow", "red", "black", "white"]
-                ]
-            )
-        )
         self.width, self.height = width, height
+
         # Initialize it for our object and create and instance for
         # each test
         tmp_file.seek(0)
@@ -83,25 +73,6 @@ class TestMultimediaAPI(IIIFTestCase):
         image.save(tmp_file, "tiff")
         tmp_file.seek(0)
         self.image_tiff = MultimediaImage.from_string(tmp_file)
-
-    def test_gif_resize(self):
-        """Test image resize function on GIF images."""
-        # Check original size and GIF properties
-        self.assertEqual(self.image_gif.image.is_animated, True)
-        self.assertEqual(self.image_gif.image.n_frames, 5)
-        self.assertEqual(str(self.image_gif.size()), str((self.width, self.height)))
-
-        # Assert proper resize and preservation of GIF properties
-        self.image_gif.resize("720,680")
-        self.assertEqual(self.image_gif.image.is_animated, True)
-        self.assertEqual(self.image_gif.image.n_frames, 5)
-        self.assertEqual(str(self.image_gif.size()), str((720, 680)))
-
-        # test gif resize best fit
-        self.image_gif.resize("!400,220")
-        self.assertEqual(self.image_gif.image.is_animated, True)
-        self.assertEqual(self.image_gif.image.n_frames, 5)
-        self.assertEqual(str(self.image_gif.size()), str((232, 220)))
 
     def test_image_resize(self):
         """Test image resize function."""
