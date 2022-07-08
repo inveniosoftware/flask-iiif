@@ -4,6 +4,11 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 0.6.3 (released 2022-07-08)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- remove custom resizing of GIF
+
 Version 0.6.2 (released 2021-12-09)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
