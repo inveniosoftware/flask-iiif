@@ -308,7 +308,6 @@ class TestRestAPI(IIIFTestCaseWithRedis):
         cache.clear()
 
         for cache_control, name in (("no-cache", "foo.pdf"), ("no-store", "foo.pdf")):
-
             urlargs["cache-control"] = cache_control
 
             get_the_response = self.get(
@@ -323,7 +322,6 @@ class TestRestAPI(IIIFTestCaseWithRedis):
             cache.clear()
 
         for cache_control, name in (("public", "foo.pdf"), ("no-transform", "foo.pdf")):
-
             urlargs["cache-control"] = cache_control
 
             get_the_response = self.get(
