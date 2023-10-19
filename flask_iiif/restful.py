@@ -214,7 +214,7 @@ class IIIFImageAPI(Resource):
                 )
             send_file_kwargs.update(
                 as_attachment=True,
-                attachment_filename=secure_filename(filename),
+                download_name=secure_filename(filename),
             )
         if_modified_since_raw = request.headers.get("If-Modified-Since")
         if if_modified_since_raw:
