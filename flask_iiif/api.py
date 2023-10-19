@@ -122,7 +122,7 @@ class MultimediaImage(MultimediaObject):
         """Resize the image.
 
         :param str dimensions: The dimensions to resize the image
-        :param resample: The algorithm to be used
+        :param resample: The algorithm to be used. Use Pillow default if not supplied.
         :type resample: :py:mod:`PIL.Image` algorithm
 
         .. note::
@@ -200,7 +200,7 @@ class MultimediaImage(MultimediaObject):
                 ).format(width, height)
             )
 
-        arguments = dict(size=(width, height), resample=resample)
+        arguments = dict(size=(width, height))
         if resample:
             arguments["resample"] = resample
         self.image = self.image.resize(**arguments)
