@@ -138,11 +138,6 @@ class MultimediaImage(MultimediaObject):
         """
         real_width, real_height = self.image.size
         point_x, point_y = 0, 0
-        if resample is None:
-            if isinstance(current_app.config["IIIF_RESIZE_RESAMPLE"], string_types):
-                resample = import_string(current_app.config["IIIF_RESIZE_RESAMPLE"])
-            else:
-                resample = current_app.config["IIIF_RESIZE_RESAMPLE"]
 
         # Check if it is `pct:`
         if dimensions.startswith("pct:"):
@@ -206,6 +201,8 @@ class MultimediaImage(MultimediaObject):
             )
 
         arguments = dict(size=(width, height), resample=resample)
+        if resample:
+            arguments["resample"] = resample
         self.image = self.image.resize(**arguments)
 
     def crop(self, coordinates):

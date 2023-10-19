@@ -63,9 +63,6 @@
         <http://iiif.io/api/image/2.0/#information-request>`_
 
 """
-# Resampling method
-IIIF_RESIZE_RESAMPLE = "PIL.Image:BICUBIC"
-
 # Cache handler
 IIIF_CACHE_HANDLER = "flask_iiif.cache.simple:ImageSimpleCache"
 
