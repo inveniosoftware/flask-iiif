@@ -4,6 +4,13 @@ Changes
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
+Version 1.0.0 (released 2023-10-27)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- api: fix resize of greyscale source images
+- bump flask to >=2.0, pin Werkzeug <3.0
+- fix deprecated use of ``attachment_filename``
+
 Version 0.6.3 (released 2022-07-08)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
