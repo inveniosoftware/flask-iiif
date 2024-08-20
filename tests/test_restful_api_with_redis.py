@@ -20,7 +20,6 @@ from .helpers import IIIFTestCaseWithRedis
 
 
 class TestRestAPI(IIIFTestCaseWithRedis):
-
     """Test signals and decorators."""
 
     def test_api_base(self):

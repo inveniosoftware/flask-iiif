@@ -17,7 +17,6 @@ from .helpers import IIIFTestCase
 
 
 class TestImageRedisCache(IIIFTestCase):
-
     """Multimedia Image Redis Cache test case."""
 
     def setUp(self):

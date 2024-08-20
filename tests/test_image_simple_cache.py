@@ -17,7 +17,6 @@ from .helpers import IIIFTestCase
 
 
 class TestImageSimpleCache(IIIFTestCase):
-
     """Multimedia Image Simple Cache test case."""
 
     def setUp(self):

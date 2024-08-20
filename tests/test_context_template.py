@@ -13,7 +13,6 @@ from .helpers import IIIFTestCase
 
 
 class TestContextTemplates(IIIFTestCase):
-
     """Context templates test case."""
 
     def test_context_tempalte_iiif_image_url(self):

@@ -20,7 +20,6 @@ from flask_iiif import config as default_config
 
 
 class TestIIIF(TestCase):
-
     """Test extension creation."""
 
     def setUp(self):
