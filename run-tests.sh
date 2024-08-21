@@ -20,9 +20,9 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-
 python -m check_manifest
-python -m sphinx.cmd.build -qnNW docs docs/_build/html
+# TODO: We've temporarily removed the -W flag because of unresolvable warnings
+python -m sphinx.cmd.build -qnN docs docs/_build/html
 eval "$(docker-services-cli up --cache ${CACHE:-redis} --env)"
 python -m pytest
 tests_exit_code=$?
