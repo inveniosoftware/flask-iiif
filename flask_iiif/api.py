@@ -152,9 +152,14 @@ class MultimediaImage(MultimediaObject):
             width = max(1, int(real_width * percent))
             height = max(1, int(real_height * percent))
 
-        # Check if it is `,h`
-        elif dimensions.startswith(","):
-            height = int(dimensions[1:])
+        # Check if it is `,h` or `^,h`,
+        # the '^' case is handled the same way as just height being present
+        elif dimensions.startswith((",", "^,")):
+            if dimensions.startswith(","):  # Handle `,h`
+                height = int(dimensions[1:])
+            else:  # Handle `^,h`
+                height = int(dimensions[2:])
+
             # find the ratio
             ratio = self.reduce_by(height, real_height)
             # calculate width (minimum 1)
@@ -172,9 +177,18 @@ class MultimediaImage(MultimediaObject):
             width = max(1, int(real_width * ratio))
             height = max(1, int(real_height * ratio))
 
-        # Check if it is `w,`
-        elif dimensions.endswith(","):
-            width = int(dimensions[:-1])
+        # Check if it is `w,` or `^w,`
+        # the '^' case is handled the same way as just width being present
+        elif dimensions.endswith(",") or (
+            (dimensions.startswith("^") and dimensions.endswith(","))
+        ):
+            if dimensions.endswith(",") and not dimensions.startswith(
+                "^"
+            ):  # Handle `w,`
+                width = int(dimensions[:-1])
+            else:  # Handle `^w,`
+                width = int(dimensions[1:-1])
+
             # find the ratio
             ratio = self.reduce_by(width, real_width)
             # calculate the height
