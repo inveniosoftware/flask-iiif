@@ -133,7 +133,7 @@ RESTful
 .. automodule:: flask_iiif.restful
     :members:
 
-.. include:: ../CHANGES
+.. include:: ../CHANGES.rst
 
 .. include:: ../CONTRIBUTING.rst
 

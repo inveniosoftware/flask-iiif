@@ -10,7 +10,7 @@
 include *.py *.sh
 include .coveragerc .travis.yml pytest.ini run-tests.sh
 include .editorconfig
-include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
+include README.rst CHANGES.rst CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
 include docs/*.rst docs/*.py docs/Makefile docs/requirements.txt
 include tests/*.py
 recursive-include flask_iiif *.py
