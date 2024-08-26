@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version v1.1.0 (released 2024-08-26)
+
+- resize: added upscaling params for h & w
+
 Here you can see the full list of changes between each Flask-IIIF
 release.
 
