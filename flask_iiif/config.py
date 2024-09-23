@@ -107,32 +107,35 @@ IIIF_VALIDATIONS = {
     "v1": {
         "region": {
             "ignore": "full",
-            "validate": "(^full|(pct:)?([\d.]+,){3}([\d.]+))",
+            "validate": r"(^full|(pct:)?([\d.]+,){3}([\d.]+))",
         },
         "size": {
             "ignore": "full",
             "validate": (
-                "(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+," "[\d.]+|![\d.]+,[\d.]+)"
+                r"(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+,[\d.]+|![\d.]+,[\d.]+)"
             ),
         },
-        "rotation": {"ignore": "0", "validate": "^[\d.]+$"},
-        "quality": {"ignore": "default", "validate": "(native|color|gr[ae]y|bitonal)"},
-        "image_format": {"ignore": "", "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"},
+        "rotation": {"ignore": "0", "validate": r"^[\d.]+$"},
+        "quality": {"ignore": "default", "validate": r"(native|color|gr[ae]y|bitonal)"},
+        "image_format": {"ignore": "", "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?)"},
     },
     "v2": {
         "region": {
             "ignore": "full",
-            "validate": "(^full|(pct:)?([\d.]+,){3}([\d.]+))",
+            "validate": r"(^full|(pct:)?([\d.]+,){3}([\d.]+))",
         },
         "size": {
             "ignore": "full",
             "validate": (
-                "(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+," "[\d.]+|![\d.]+,[\d.]+)"
+                r"(^full|[\d.]+,|,[\d.]+|pct:[\d.]+|[\d.]+,[\d.]+|![\d.]+,[\d.]+)"
             ),
         },
-        "rotation": {"ignore": "0", "validate": "^!?[\d.]+$"},
-        "quality": {"ignore": "default", "validate": "(default|color|gr[ae]y|bitonal)"},
-        "image_format": {"ignore": "", "validate": "(gif|jp2|jpe?g|pdf|png|tiff?)"},
+        "rotation": {"ignore": "0", "validate": r"^!?[\d.]+$"},
+        "quality": {
+            "ignore": "default",
+            "validate": r"(default|color|gr[ae]y|bitonal)",
+        },
+        "image_format": {"ignore": "", "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?)"},
     },
 }
 
