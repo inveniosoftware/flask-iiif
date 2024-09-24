@@ -2,6 +2,7 @@
 #
 # This file is part of Flask-IIIF
 # Copyright (C) 2014, 2015, 2016, 2017 CERN.
+# Copyright (C) 2024 Graz University of Technology.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -27,9 +28,10 @@ or alternatively using the factory pattern:
 
 from __future__ import absolute_import
 
+from urllib.parse import urljoin as url_join
+
 from flask import current_app
 from six import string_types
-from werkzeug.urls import url_join
 from werkzeug.utils import cached_property, import_string
 
 from . import config
