@@ -168,7 +168,7 @@ class IIIF(object):
         self.api_decorator_callback = callback
 
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 __all__ = (
     "IIIF",
