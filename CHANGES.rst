@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version v1.1.1 (released 2024-11-05)
+
+- setup: remove werkzeug pin
+
 Version v1.1.0 (released 2024-08-26)
 
 - resize: added upscaling params for h & w
