@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 1.2.0 (released 2024-12-12)
+
+- fix: docs reference target not found
+- setup: remove werkzeug pin
+
 Version v1.1.1 (released 2024-11-05)
 
 - setup: remove werkzeug pin
