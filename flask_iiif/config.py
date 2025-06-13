@@ -89,6 +89,7 @@ IIIF_FORMATS = {
     "png": "image/png",
     "tif": "image/tiff",
     "tiff": "image/tiff",
+    "webp": "image/webp",
 }
 
 IIIF_FORMATS_PIL_MAP = {
@@ -100,6 +101,7 @@ IIIF_FORMATS_PIL_MAP = {
     "png": "png",
     "tif": "tiff",
     "tiff": "tiff",
+    "webp": "webp",
 }
 
 # Regular expressions to validate each parameter
@@ -117,7 +119,10 @@ IIIF_VALIDATIONS = {
         },
         "rotation": {"ignore": "0", "validate": r"^[\d.]+$"},
         "quality": {"ignore": "default", "validate": r"(native|color|gr[ae]y|bitonal)"},
-        "image_format": {"ignore": "", "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?)"},
+        "image_format": {
+            "ignore": "",
+            "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?|webp)",
+        },
     },
     "v2": {
         "region": {
@@ -135,7 +140,10 @@ IIIF_VALIDATIONS = {
             "ignore": "default",
             "validate": r"(default|color|gr[ae]y|bitonal)",
         },
-        "image_format": {"ignore": "", "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?)"},
+        "image_format": {
+            "ignore": "",
+            "validate": r"(gif|jp2|jpe?g|pdf|png|tiff?|webp)",
+        },
     },
 }
 
