@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of Invenio.
 # Copyright (C) 2020-2024 CERN.
+# Copyright (C) 2020 Northwestern University.
 # Copyright (C) 2022 Graz University of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
@@ -13,47 +13,25 @@ on:
   push:
     branches:
       - master
+      - "feature/*"
+      - "maint-**"
   pull_request:
     branches:
       - master
+      - "maint-**"
+      - "feature/**"
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 3 * * 6'
+    - cron: "0 3 * * 6"
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Reason'
+        description: "Reason"
         required: false
-        default: 'Manual trigger'
+        default: "Manual trigger"
 
 jobs:
-  Tests:
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-          python-version: ["3.9", "3.12"]
-          requirements-level: [pypi]
-          cache-service: [redis]
-
-    env:
-      CACHE: ${{ matrix.cache-service }}
-      EXTRAS: tests
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: setup.cfg
-
-      - name: Install dependencies
-        run: |
-          pip install ".[$EXTRAS]"
-          pip freeze
-          docker version
-
-      - name: Run tests
-        run: ./run-tests.sh
+  Python:
+      uses: inveniosoftware/workflows/.github/workflows/tests-python.yml@master
+      with:
+        extras: "tests"
