@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version 1.2.1 (released 2025-06-13)
+
+- feat: support webp images (#98)
+
 Version 1.2.0 (released 2024-12-12)
 
 - fix: docs reference target not found
