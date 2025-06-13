@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015-2024 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -13,7 +13,6 @@ from .helpers import IIIFTestCase
 
 
 class TestContextTemplates(IIIFTestCase):
-
     """Context templates test case."""
 
     def test_context_tempalte_iiif_image_url(self):

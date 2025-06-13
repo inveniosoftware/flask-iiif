@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Flask-IIIF
-# Copyright (C) 2014-2020 CERN.
+# Copyright (C) 2014-2024 CERN.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -10,7 +10,7 @@
 include *.py *.sh
 include .coveragerc .travis.yml pytest.ini run-tests.sh
 include .editorconfig
-include README.rst CHANGES CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
+include README.rst CHANGES.rst CONTRIBUTING.rst AUTHORS LICENSE MANIFEST.in
 include docs/*.rst docs/*.py docs/Makefile docs/requirements.txt
 include tests/*.py
 recursive-include flask_iiif *.py

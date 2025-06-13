@@ -2,7 +2,7 @@
 #
 # This file is part of Flask-IIIF
 # Copyright (C) 2014-2020 CERN.
-# Copyright (C) 2022 Graz University of Technology.
+# Copyright (C) 2022-2024 Graz University of Technology.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -316,4 +316,9 @@ intersphinx_mapping = {
 # Autodoc configuraton.
 autoclass_content = "both"
 
-nitpick_ignore = [("py:class", "type")]
+nitpick_ignore = [
+    ("py:class", "type"),
+    ("py:class", "t.ClassVar"),
+    ("py:class", "t.Optional"),
+    ("py:class", "t.Collection"),
+]

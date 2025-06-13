@@ -14,7 +14,6 @@ from .helpers import IIIFTestCase, signal_listener
 
 
 class TestRestAPISignals(IIIFTestCase):
-
     """Test REST API signals."""
 
     def test_api_signals(self):
