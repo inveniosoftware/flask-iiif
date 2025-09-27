@@ -3,6 +3,7 @@
 # This file is part of Flask-IIIF
 # Copyright (C) 2014, 2015, 2016, 2017 CERN.
 # Copyright (C) 2020 data-futures.
+# Copyright (C) 2026 Graz University of Technology.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -218,7 +219,9 @@ class IIIFImageAPI(Resource):
             )
         if_modified_since_raw = request.headers.get("If-Modified-Since")
         if if_modified_since_raw:
-            if_modified_since = datetime.datetime(*parsedate(if_modified_since_raw)[:6])
+            if_modified_since = datetime.datetime(
+                *parsedate(if_modified_since_raw)[:6], tzinfo=datetime.timezone.utc
+            )
             if if_modified_since and if_modified_since >= last_modified:
                 return Response(status=304)
         response = send_file(to_serve, **send_file_kwargs)

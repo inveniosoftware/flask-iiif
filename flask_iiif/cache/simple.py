@@ -2,6 +2,7 @@
 #
 # This file is part of Flask-IIIF
 # Copyright (C) 2014, 2015, 2016, 2017 CERN.
+# Copyright (C) 2025 Graz University of Technology.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -11,7 +12,7 @@
 
 from __future__ import absolute_import
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from cachelib.simple import SimpleCache
 
@@ -64,7 +65,7 @@ class ImageSimpleCache(ImageCache):
         :param timeout: the cache timeout in seconds
         """
         if not last_modification:
-            last_modification = datetime.utcnow().replace(microsecond=0)
+            last_modification = datetime.now(timezone.utc).replace(microsecond=0)
         timeout = timeout or self.timeout
         self.cache.set(
             self._last_modification_key_name(key), last_modification, timeout
