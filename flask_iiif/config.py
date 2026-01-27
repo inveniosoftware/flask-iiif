@@ -63,6 +63,7 @@
         <http://iiif.io/api/image/2.0/#information-request>`_
 
 """
+
 # Cache handler
 IIIF_CACHE_HANDLER = "flask_iiif.cache.simple:ImageSimpleCache"
 
