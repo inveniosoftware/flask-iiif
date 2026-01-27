@@ -2,7 +2,7 @@
 #
 # This file is part of Flask-IIIF
 # Copyright (C) 2014, 2015, 2016, 2017 CERN.
-# Copyright (C) 2024 Graz University of Technology.
+# Copyright (C) 2024-2026 Graz University of Technology.
 #
 # Flask-IIIF is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
@@ -168,7 +168,7 @@ class IIIF(object):
         self.api_decorator_callback = callback
 
 
-__version__ = "1.2.1"
+__version__ = "2.0.0"
 
 __all__ = (
     "IIIF",

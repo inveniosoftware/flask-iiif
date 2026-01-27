@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version v2.0.0 (released 2026-01-27)
+
+- chore(black): update formatting to >= 26.0
+- fix(chore): DeprecationWarning stdlib
+
 Version 1.2.1 (released 2025-06-25)
 
 - feat: support webp images (#98)
