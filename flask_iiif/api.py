@@ -16,7 +16,7 @@ import os
 import re
 
 from flask import current_app
-from PIL import Image
+from PIL import Image, ImageOps
 from six import BytesIO, string_types
 from werkzeug.utils import import_string
 
@@ -104,6 +104,7 @@ class MultimediaImage(MultimediaObject):
             )
 
         image = Image.open(path)
+        ImageOps.exif_transpose(image, in_place=True)
         return cls(image)
 
     @classmethod
@@ -116,6 +117,7 @@ class MultimediaImage(MultimediaObject):
                   instance
         """
         image = Image.open(source)
+        ImageOps.exif_transpose(image, in_place=True)
         return cls(image)
 
     def resize(self, dimensions, resample=None):
@@ -590,6 +592,7 @@ class IIIFImageAPIWrapper(MultimediaImage):
         """
         try:
             image = Image.open(source)
+            ImageOps.exif_transpose(image, in_place=True)
         except (AttributeError, IOError):
             raise MultimediaImageNotFound("The requested image cannot be opened")
         return cls(image)
