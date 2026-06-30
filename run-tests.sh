@@ -15,7 +15,6 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-python -m check_manifest
 # TODO: We've temporarily removed the -W flag because of unresolvable warnings
 python -m sphinx.cmd.build -qnN docs docs/_build/html
 eval "$(docker-services-cli up --cache ${CACHE:-redis} --env)"

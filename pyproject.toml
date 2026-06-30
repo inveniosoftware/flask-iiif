@@ -1,4 +1,63 @@
-[build-system]
-requires = ["setuptools", "wheel", "babel>2.8"]
-build-backend = "setuptools.build_meta"
+# SPDX-FileCopyrightText: 2014-2017 CERN.
+# SPDX-FileCopyrightText: 2020 data-futures.
+# SPDX-FileCopyrightText: 2022-2024 Graz University of Technology.
+# SPDX-FileCopyrightText: 2026 TU Wien.
+# SPDX-License-Identifier: MIT
 
+[project]
+name = "flask-iiif"
+description = "Flask-IIIF extension provides easy IIIF API standard integration."
+readme = "README.rst"
+requires-python = ">=3.7"
+license = "BSD-3-Clause"
+authors = [
+  { name = "Invenio collaboration", email = "info@inveniosoftware.org" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+]
+dependencies = [
+  "blinker>=1.4",
+  "cachelib>=0.1",
+  "flask>=2.0",
+  "flask-restful>=0.3.7",
+  "pillow>=7.0",
+  "six>=1.7.2",
+]
+dynamic = ["version"]
+
+[project.urls]
+Repository = "http://github.com/inveniosoftware/flask-iiif/"
+
+[project.optional-dependencies]
+tests = [
+  "flask-testing>=0.6.0",
+  "pytest-black>=0.6.0",
+  "pytest-invenio>=1.4.0",
+  "redis>=3.5",
+  "sphinx>=4.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "flask_iiif/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/flask_iiif",
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+add_ignore = ""
+
+[tool.pytest.ini_options]
+addopts = '--black --isort --pydocstyle --doctest-glob="*.rst" --doctest-modules --cov=flask_iiif --cov-report=term-missing'
+filterwarnings = ["ignore::pytest.PytestDeprecationWarning"]
+testpaths = "tests flask_iiif"
+live_server_scope = "module"
