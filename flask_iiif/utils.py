@@ -55,7 +55,7 @@ def iiif_image_url(**kwargs):
             size=kwargs.get("size", "full"),
             uuid=kwargs.get("uuid"),
             version=kwargs.get("version", "v2"),
-            **url_for_args
+            **url_for_args,
         )
 
 
