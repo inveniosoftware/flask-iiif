@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2014, 2015, 2016, 2017 CERN.
 # SPDX-FileCopyrightText: 2020 data-futures.
+# SPDX-FileCopyrightText: 2026 TU Wien.
 # SPDX-License-Identifier: BSD-3-Clause
 
 """Multimedia Image API."""
@@ -94,7 +95,8 @@ class MultimediaImage(MultimediaObject):
         """
         if not os.path.exists(path):
             raise MultimediaImageNotFound(
-                "The requested image {0} not found".format(path)
+                "The requested image '%(path)s' was not found" % {"path": path},
+                image=path,
             )
 
         image = Image.open(path)
@@ -138,9 +140,8 @@ class MultimediaImage(MultimediaObject):
             percent = float(dimensions.split(":")[1]) * 0.01
             if percent < 0:
                 raise MultimediaImageResizeError(
-                    (
-                        "Image percentage could not be negative, {0} has been" " given"
-                    ).format(percent)
+                    "Image percentage cannot be negative, %(percent)s was given"
+                    % {"percent": percent},
                 )
 
             width = max(1, int(real_width * percent))
@@ -203,9 +204,9 @@ class MultimediaImage(MultimediaObject):
         ):
             raise MultimediaImageResizeError(
                 (
-                    "Width and height cannot be zero or negative, {0},{1} has"
-                    " been given"
-                ).format(width, height)
+                    "Width and height cannot be zero or negative, %(width)s,%(height)s was given"
+                    % {"width": width, "height": height}
+                )
             )
 
         arguments = dict(size=(width, height))
@@ -244,20 +245,20 @@ class MultimediaImage(MultimediaObject):
         dimensions_length = len(dimensions)
         if dimensions_length != 4:
             raise MultimediaImageCropError(
-                "Must have 4 dimensions {0} has been given".format(dimensions_length)
+                "Must have 4 dimensions; %(dimensions_length)s was given"
+                % {"dimensions_length": dimensions_length}
             )
 
         # Make sure that there is not any negative dimension
         if any(coordinate < 0 for coordinate in dimensions):
             raise MultimediaImageCropError(
-                "Dimensions cannot be negative {0} has been given".format(dimensions)
+                "Dimensions cannot be negative; %(dimensions)s was given"
+                % {"dimensions": dimensions}
             )
 
         if percentage:
             if any(coordinate > 100.0 for coordinate in dimensions):
-                raise MultimediaImageCropError(
-                    "Dimensions could not be grater than 100%"
-                )
+                raise MultimediaImageCropError("Dimensions cannot be greater than 100%")
 
             # Calculate the dimensions
             start_x, start_y, width, height = [
@@ -274,7 +275,8 @@ class MultimediaImage(MultimediaObject):
         # Check if any of the requested axis is outside of image borders
         if any(axis > next(real_dimensions) for axis in (start_x, start_y)):
             raise MultimediaImageCropError(
-                "Outside of image borders {0},{1}".format(real_width, real_height)
+                "Outside of image borders %(real_width)s,%(real_height)s"
+                % {"real_width": real_width, "real_height": real_height}
             )
 
         # Calculate the final dimensions
@@ -307,7 +309,9 @@ class MultimediaImage(MultimediaObject):
         # Check if we have the right degrees
         if not 0.0 <= float(degrees) <= 360.0:
             raise MultimediaImageRotateError(
-                "Degrees must be between 0 and 360, {0} has been given".format(degrees)
+                "Degrees must be between 0 and 360; %(degrees)s was given"
+                % {"degrees": degrees},
+                degrees=degrees,
             )
 
         # mirror must be applied before rotation
@@ -339,9 +343,11 @@ class MultimediaImage(MultimediaObject):
         if quality not in qualities:
             raise MultimediaImageQualityError(
                 (
-                    "{0} is not supported, please select one of the"
-                    " valid qualities: {1}"
-                ).format(quality, qualities)
+                    "%(quality)s is not supported, please select one of the valid qualities: %(qualities)s"
+                    % {"quality": quality, "qualities": qualities}
+                ),
+                requested_quality=quality,
+                supported_qualities=qualities,
             )
 
         qualities_by_code = zip(qualities, current_app.config["IIIF_CONVERTERS"])
@@ -424,11 +430,15 @@ class MultimediaImage(MultimediaObject):
         format_keys = current_app.config["IIIF_FORMATS"].keys()
 
         if requested_format not in format_keys or requested_format not in pil_keys:
+            supported_formats = list(format_keys)
             raise MultimediaImageFormatError(
-                (
-                    "{0} is not supported, please select one of the valid"
-                    " formats: {1}"
-                ).format(requested_format, format_keys)
+                "%(requested_format)s is not supported, please select one of the valid formats: %(supported_formats)s"
+                % {
+                    "requested_format": requested_format,
+                    "supported_formats": supported_formats,
+                },
+                requested_format=requested_format,
+                supported_formats=supported_formats,
             )
         else:
             image_format = pil_map[requested_format]
@@ -484,10 +494,12 @@ class IIIFImageAPIWrapper(MultimediaImage):
         for key in cases.keys():
             # If the parameter don't match with iiif casess
             if not re.search(cases.get(key, {}).get("validate", ""), kwargs.get(key)):
+                invalid_value = kwargs.get(key)
                 raise IIIFValidatorError(
-                    ("value: `{0}` for parameter: `{1}` is not supported").format(
-                        kwargs.get(key), key
-                    )
+                    "The value: `%(value)s` for parameter: `%(key)s` is not supported"
+                    % {"value": invalid_value, "key": key},
+                    parameter=key,
+                    value=invalid_value,
                 )
 
     def apply_api(self, **kwargs):
