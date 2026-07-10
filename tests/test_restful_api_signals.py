@@ -8,6 +8,7 @@
 # more details.
 
 """Test REST API signals."""
+
 import json
 
 from .helpers import IIIFTestCase, signal_listener
