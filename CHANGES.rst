@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version 1.3.0 (released 2025-07-10)
+
+- feat(errors): enhance errors with further information
+
 Version 1.2.1 (released 2025-06-25)
 
 - feat: support webp images (#98)
