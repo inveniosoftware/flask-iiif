@@ -2,19 +2,19 @@ Changes
 =======
 
 Version v2.1.0 (released 2026-07-09)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - feat(errors): enhance errors with further information
 
 Version v2.0.1 (released 2026-07-02)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - chore(setup): migrate from setuptools to hatchling
 - chore(format): reformat with black
 - chore(licenses): update license headers to use SPDX
 
 Version v2.0.0 (released 2026-01-27)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - chore(black): update formatting to >= 26.0
 - fix(chore): DeprecationWarning stdlib
@@ -31,12 +31,12 @@ Version 1.2.0 (released 2024-12-12)
 - setup: remove werkzeug pin
 
 Version v1.1.1 (released 2024-11-05)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - setup: remove werkzeug pin
 
 Version v1.1.0 (released 2024-08-26)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - resize: added upscaling params for h & w
 
