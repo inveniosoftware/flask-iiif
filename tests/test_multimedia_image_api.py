@@ -9,7 +9,8 @@ from io import BytesIO
 import pytest
 from PIL import Image
 
-from flask_iiif.api import MultimediaImage
+from flask_iiif.api import IIIFImageAPIWrapper, MultimediaImage
+from flask_iiif.errors import IIIFValidatorError
 
 from .helpers import IIIFTestCase
 
@@ -183,3 +184,76 @@ class TestMultimediaAPI(IIIFTestCase):
     def test_image_tiff_support(self):
         """Test TIFF image support."""
         self.assertEqual(self.image_tiff.image.format, "TIFF")
+
+
+class TestIIIFImageAPIValidation(IIIFTestCase):
+    """Validation test case for `IIIFImageAPIWrapper.validate_api`."""
+
+    def valid_kwargs(self, version="v2", **overrides):
+        """Build a known-good set of API arguments."""
+        kwargs = dict(
+            version=version,
+            region="full",
+            size="full",
+            rotation="0",
+            quality="native" if version == "v1" else "default",
+            image_format="png",
+        )
+        kwargs.update(overrides)
+        return kwargs
+
+    def test_validation_rejects_trailing_and_leading_junk(self):
+        """A parameter is validated over its whole length, not just a substring.
+
+        Each of these embeds a valid token in a longer string, so an unanchored
+        search accepts them even though the whole value is not a valid IIIF
+        parameter.
+        """
+        cases = [
+            ("quality", "XXXcolorYYY"),
+            ("quality", "../../etc/passwd#color"),
+            ("image_format", "evil.png.exe"),
+            ("region", "junk1,2,3,4junk"),
+            ("size", "junk100,junk"),
+        ]
+        for key, value in cases:
+            with pytest.raises(IIIFValidatorError):
+                IIIFImageAPIWrapper.validate_api(**self.valid_kwargs(**{key: value}))
+
+    def test_validation_accepts_valid_values(self):
+        """Every value valid under the IIIF Image API keeps validating."""
+        cases = [
+            ("v1", "region", "full"),
+            ("v1", "region", "0,0,100,100"),
+            ("v1", "region", "pct:10,10,50,50"),
+            ("v2", "region", "full"),
+            ("v2", "region", "0,0,100,100"),
+            ("v2", "region", "pct:10,10,50,50"),
+            ("v2", "size", "full"),
+            ("v2", "size", "100,"),
+            ("v2", "size", ",100"),
+            ("v2", "size", "pct:50"),
+            ("v2", "size", "100,200"),
+            ("v2", "size", "!100,200"),
+            ("v1", "rotation", "90"),
+            ("v2", "rotation", "90"),
+            ("v2", "rotation", "!90"),
+            ("v1", "quality", "native"),
+            ("v2", "quality", "default"),
+            ("v2", "quality", "color"),
+            ("v2", "quality", "gray"),
+            ("v2", "quality", "grey"),
+            ("v2", "quality", "bitonal"),
+            ("v2", "image_format", "gif"),
+            ("v2", "image_format", "jp2"),
+            ("v2", "image_format", "jpg"),
+            ("v2", "image_format", "jpeg"),
+            ("v2", "image_format", "pdf"),
+            ("v2", "image_format", "png"),
+            ("v2", "image_format", "tif"),
+            ("v2", "image_format", "tiff"),
+            ("v2", "image_format", "webp"),
+        ]
+        for version, key, value in cases:
+            kwargs = self.valid_kwargs(version=version, **{key: value})
+            IIIFImageAPIWrapper.validate_api(**kwargs)
