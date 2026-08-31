@@ -493,7 +493,9 @@ class IIIFImageAPIWrapper(MultimediaImage):
         cases = current_app.config["IIIF_VALIDATIONS"].get(version)
         for key in cases.keys():
             # If the parameter don't match with iiif casess
-            if not re.search(cases.get(key, {}).get("validate", ""), kwargs.get(key)):
+            if not re.fullmatch(
+                cases.get(key, {}).get("validate", ""), kwargs.get(key)
+            ):
                 invalid_value = kwargs.get(key)
                 raise IIIFValidatorError(
                     "The value: `%(value)s` for parameter: `%(key)s` is not supported"
