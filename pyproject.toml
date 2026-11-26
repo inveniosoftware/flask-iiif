@@ -8,7 +8,7 @@
 name = "flask-iiif"
 description = "Flask-IIIF extension provides easy IIIF API standard integration."
 readme = "README.rst"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 license = "BSD-3-Clause"
 authors = [
   { name = "Invenio collaboration", email = "info@inveniosoftware.org" },
